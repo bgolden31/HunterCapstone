@@ -9,16 +9,17 @@ import { recipe } from '../../models/recipe.model';
 })
 export class NewpageComponent implements OnInit {
   stuff: Object;
+  ing: string;
 
   constructor(private recipeService: RecipeService) {
   }
 
   ngOnInit() {
-    this.getRecipes();
+    //this.getRecipes(ingredients);
   }
 
-  getRecipes() {
-    this.recipeService.getRecipes()
+  getRecipes(ing) {
+    this.recipeService.getRecipes(ing)
       .subscribe((data: Object) => {
           this.stuff = data;
       });
