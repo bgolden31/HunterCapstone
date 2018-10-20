@@ -7,6 +7,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.json.JSONObject;
+
 @Path("recipe")
 public class RecipeAPI {
 	RecipeDatabase dataBase = new RecipeDatabase();
@@ -25,6 +27,17 @@ public class RecipeAPI {
 	public String insertRecipe (Recipe data){
 		return dataBase.insertrecipe(data);
 	}
+	
+	//new 10/20/2018
+	@Path("insert2")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String insertRecipe (String data){
+		JSONObject temp = new JSONObject(data);
+		return dataBase.insertrecipe(temp);
+	}
+	//end
 	
 	@Path("get")
 	@POST
