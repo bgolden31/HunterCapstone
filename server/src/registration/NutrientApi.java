@@ -23,7 +23,7 @@ public class NutrientApi {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Nutrient getNutrient (Nutrient data) {
 		System.out.print("start");
-		return dataBase.getNutrient(data.getNutrients_id() );
+		return dataBase.getNutrient(data.getNutrientsId() );
 	}
 	
 	@Path("insert")

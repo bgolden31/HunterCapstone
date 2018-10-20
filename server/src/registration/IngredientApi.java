@@ -23,7 +23,7 @@ public class IngredientApi {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Ingredient getIngredient (Ingredient data) {
 		System.out.print("start");
-		return dataBase.getIngredient(data.getRecipe_id() );
+		return dataBase.getIngredient(data.getRecipeId());
 	}
 	
 	@Path("insert")
@@ -31,6 +31,6 @@ public class IngredientApi {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String insertNutrient (Ingredient data){
-		return dataBase.insertIngredient(data );
+		return dataBase.insertIngredient(data);
 	}
 }

@@ -2,7 +2,7 @@ package registration;
 
 public class Ingredient {
 	private int weight;
-	private int recipe_id;
+	private int recipeId;
 	private String ingredients;
 	
 	
@@ -13,12 +13,12 @@ public class Ingredient {
 	public void setWeight(int weight){
 		this.weight=weight;
 	}
-	public int getRecipe_id(){
-		return recipe_id;
+	public int getRecipeId(){
+		return recipeId;
 	}
 
-	public void setRecipe_id(int recipe_id){
-		this.recipe_id=recipe_id;
+	public void setRecipeId(int recipeId){
+		this.recipeId=recipeId;
 	}
 
 	public String getIngredients(){

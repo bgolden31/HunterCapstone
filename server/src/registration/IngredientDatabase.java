@@ -20,14 +20,15 @@ public class IngredientDatabase {
 		String sql = "select * from ingredient where recipeId = ?";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
-			st.setInt(1, Ingredient.getRecipe_id() );
+			st.setInt(1, Ingredient.getRecipeId() );
+			System.out.println(Ingredient.getRecipeId() );
 			ResultSet rs = st.executeQuery();
 			if(rs.next())
 				return "This recipe already exists";
 			sql = "insert into ingredient (weight, recipeId, ingredients) value (?,?,?)";
 			st = con.prepareStatement(sql);
 			st.setInt(1, Ingredient.getWeight() );
-			st.setInt(2, Ingredient.getRecipe_id() );
+			st.setInt(2, Ingredient.getRecipeId() );
 			st.setString(3, Ingredient.getIngredients() );
 			st.executeUpdate();
 			st.close();
@@ -55,7 +56,7 @@ public class IngredientDatabase {
 			}
 			//System.out.println("1 :"+rs.getInt(1) + "2 :"+rs.getInt(2)); 
 			temp.setWeight(rs.getInt(1));
-			temp.setRecipe_id(rs.getInt(2));
+			temp.setRecipeId(rs.getInt(2));
 			temp.setIngredients(rs.getString(3));
 			st.close();
 			return temp;

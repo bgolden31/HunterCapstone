@@ -19,14 +19,14 @@ private Connection con=null;
 		String sql = "select * from nutrient where nutrientsId = ?";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
-			st.setInt(1, nutrient.getNutrients_id());
+			st.setInt(1, nutrient.getNutrientsId());
 			ResultSet rs = st.executeQuery();
 			if(rs.next())
 				return "This Nutrient already exists";
 			sql = "insert into nutrient (nutrientsId, fat, sugar, protein, fiber, "
 					+ "sodium, cholesterol, carbs) value (?,?,?,?,?,?,?,?)";
 			st = con.prepareStatement(sql);
-			st.setInt(1, nutrient.getNutrients_id() );
+			st.setInt(1, nutrient.getNutrientsId() );
 			st.setDouble(2, nutrient.getFat() );
 			st.setDouble(3, nutrient.getSugar() );
 			st.setDouble(4, nutrient.getProtein() );
@@ -59,7 +59,7 @@ private Connection con=null;
 				return null;
 			}
 			System.out.println("1 :"+rs.getInt(1) + "2 :"+rs.getInt(2)); 
-			temp.setNutrients_id(rs.getInt(1));
+			temp.setNutrientsId(rs.getInt(1));
 			temp.setFat(rs.getDouble(2));
 			temp.setSugar(rs.getDouble(3));
 			temp.setProtein(rs.getDouble(4));

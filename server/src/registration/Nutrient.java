@@ -1,7 +1,7 @@
 package registration;
 
 public class Nutrient {
-	private int nutrients_id;
+	private int nutrientsId;
 	private double fat;
 	private double sugar;
 	private double protein;
@@ -10,12 +10,12 @@ public class Nutrient {
 	private double cholesterol;
 	private double carbs;
 
-	public int getNutrients_id(){
-		return nutrients_id;
+	public int getNutrientsId(){
+		return nutrientsId;
 	}
 
-	public void setNutrients_id(int nutrients_id){
-		this.nutrients_id=nutrients_id;
+	public void setNutrientsId(int nutrients_id){
+		this.nutrientsId=nutrients_id;
 	}
 	public double getFat(){
 		return fat;
