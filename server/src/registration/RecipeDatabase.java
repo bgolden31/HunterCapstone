@@ -11,37 +11,20 @@ public class RecipeDatabase {
 	
 	//connect to database
 	public RecipeDatabase(){
-		 String dbName = ("sys");
-         String userName = ("RIP");
-         String password = ("Food1516");
-         String hostname = ("aa1pxec1pjycn9h.cpquhfohdb53.us-east-2.rds.amazonaws.com");
-         String port = ("3306");
-         try {
-			Class.forName("com.mysql.jdbc.Driver");
-		
-         String jdbcUrl = "JDBC:mysql://" + hostname + ":" + port + "/" + dbName + "?autoReconnect=true&useSSL=false";
-			con = DriverManager.getConnection(jdbcUrl, userName, password);
-			if(con == null)
-				System.out.println("Connection to database failed");
-			else
-				System.out.println("Connection to database success");			
-		}catch(Exception e){
-			System.out.println(e);
-		}
+		con = DataBaseConnector.connect(con);
 	}
 	
 	//register,1. get add username from database table, 2.compare to user input, 3. register, or reject
 	public String insertrecipe(Recipe recipe) {
 		//List<String> name = new ArrayList<>(); 
-		String sql = "select * from recipe where Recipe_Id = ?";
+		String sql = "select * from recipe where recipeId = ?";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, recipe.getrecipeId());
 			ResultSet rs = st.executeQuery();
 			if(rs.next())
 				return "This recipe already exists";
-			sql = "insert into recipe (Recipe_Id, nutrients_Id, label, description, servings, "
-					+ "calories, total_time) value (?,?,?,?,?,?,?)";
+			sql = "insert into recipe (recipeId, nutrientsId, label, description, servings, calories, totalTime) value (?,?,?,?,?,?,?)";
 			st = con.prepareStatement(sql);
 			st.setInt(1, recipe.getrecipeId() );
 			st.setInt(2, recipe.getnutrientsId() );
@@ -64,7 +47,7 @@ public class RecipeDatabase {
 		// TODO Auto-generated method stub
 		System.out.println(recipeId);
 		Recipe temp = new Recipe();
-		String sql = "select * from recipe where Recipe_Id = ?";
+		String sql = "select * from recipe where recipeId = ?";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, recipeId);
@@ -74,14 +57,14 @@ public class RecipeDatabase {
 				System.out.println(!rs.next());
 				return null;
 			}
-			System.out.println("1 :"+rs.getInt(1) + "2 :"+rs.getInt(2)); 
+			System.out.println("1:"+rs.getInt(5) + " 2 :"+rs.getDouble(6)); 
 			temp.setRecipeId(rs.getInt(1));
 			temp.setnutrientsId(rs.getInt(2));
 			temp.setlabel(rs.getString(3));
 			temp.setdescription(rs.getString(4));
-			temp.setservings(rs.getInt(5));
-			temp.setcalories(rs.getDouble(6));
-			temp.settotalTime(rs.getInt(7));
+			temp.setservings(rs.getInt(7));
+			temp.setcalories(rs.getDouble(8));
+			temp.settotalTime(rs.getInt(9));
 			st.close();
 			return temp;
 		}catch(Exception e) {

@@ -7,8 +7,8 @@ public class Recipe {
 	private int nutrientsId;
 	private String label;
 	private String description;
-	private Blob image;
-	private Blob url;
+	private String image;
+	private String url;
 	private int servings;
 	private double calories;
 	private int totalTime;
@@ -18,21 +18,21 @@ public class Recipe {
 		nutrientsId= 0;
 		label="";
 		description="";
-		//image= 0;
-		//url = 0 ;
+		image= "";
+		url = "" ;
 		servings = 0;
 		calories = 0;
 		totalTime = 0;
 	}
 	
-	public Recipe(int recipeId, int nutrientsId, String label, String description, int servings, 
+	public Recipe(int recipeId, int nutrientsId, String label, String description, String image, String url,int servings, 
 			double calories,  int totalTime) {
 		this.recipeId= recipeId;
 		this.nutrientsId= nutrientsId;
 		this.label= label;
 		this.description= description;
-		//image= 0;
-		//url = 0 ;
+		this.image= image;
+		this.url = url;
 		this.servings= servings;
 		this.calories= calories;
 		this.totalTime= totalTime;

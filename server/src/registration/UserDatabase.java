@@ -14,23 +14,7 @@ public class UserDatabase {
 	
 	//connect to database
 	public UserDatabase(){
-		 String dbName = ("sys");
-         String userName = ("RIP");
-         String password = ("Food1516");
-         String hostname = ("aa1pxec1pjycn9h.cpquhfohdb53.us-east-2.rds.amazonaws.com");
-         String port = ("3306");
-         try {
-			Class.forName("com.mysql.jdbc.Driver");
-		
-         String jdbcUrl = "JDBC:mysql://" + hostname + ":" + port + "/" + dbName + "?autoReconnect=true&useSSL=false";
-			con = DriverManager.getConnection(jdbcUrl, userName, password);
-			if(con == null)
-				System.out.println("Connection to database failed");
-			else
-				System.out.println("Connection to database success");			
-		}catch(Exception e){
-			System.out.println(e);
-		}
+		con = DataBaseConnector.connect(con);
 	}
 	
 	//register,1. get add username from database table, 2.compare to user input, 3. register, or reject
