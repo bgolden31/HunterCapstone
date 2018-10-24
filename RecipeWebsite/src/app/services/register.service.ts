@@ -4,10 +4,10 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class RecipeService {
+export class RegisterService {
      constructor (private http: HttpClient) { }
 
-     getRecipes(ingredients) {
-        return this.http.get('https://api.edamam.com/search?q=' + ingredients + '&app_id=7aede50c&app_key=908364149d33f6c3fa9765757f65fcfb&from=0&to=3');
+     registerUser(User: JSON) {
+        return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/register', User, {responseType: 'text'});
     }
 }
