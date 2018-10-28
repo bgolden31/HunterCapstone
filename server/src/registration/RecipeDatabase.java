@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Iterator;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class RecipeDatabase {
@@ -50,8 +51,8 @@ public class RecipeDatabase {
 			st2.executeUpdate();
 			st2.close();
 			
-			insertNutrient(recipeId, data.getJSONObject("nutrient"));
-			insertIngredient(recipeId, data.getJSONObject("ingredient"));
+			insertNutrient(recipeId, data.getJSONObject("nutrients"));
+			insertIngredient(recipeId, data.getJSONArray("ingredients"));
 			return "Recipe insert success";
 		}catch(Exception e) {
 			System.out.println(e);
@@ -62,7 +63,7 @@ public class RecipeDatabase {
 	//insert the nutrients
 		public void insertNutrient(int id, JSONObject data) {
 			try {
-				if(data.isEmpty())
+				if(data.length() == 0)
 					return ;
 				//System.out.println(data.getDouble("fat") + " || " +data.getDouble("sugar"));
 				String sql = "insert into nutrient (nutrientsId, fat, sugar, protein, fiber, "
@@ -84,21 +85,18 @@ public class RecipeDatabase {
 		}
 		
 		//insert the ingredients
-		public void insertIngredient(int id, JSONObject data) {
-			
+		public void insertIngredient(int id, JSONArray data) {
+			//System.out.println("data : " + data );
 			try {
-				if(data.isEmpty())
+				if(data.length() == 0)
 					return ;
 				String sql = "insert into ingredient (recipeId, weight, ingredients) value (?,?,?)";
 				PreparedStatement st = con.prepareStatement(sql);
-				Iterator<String> keys = data.keys();
-				String key;
-				while(keys.hasNext()) {
-					key = keys.next();
-					st = con.prepareStatement(sql);
+				for(int i = 0; i< data.length(); i++) {
+					JSONObject temp = data.getJSONObject(i);
 					st.setInt(1, id);
-					st.setInt(2, data.getInt(key));
-					st.setString(3, key);
+					st.setInt(2, temp.getInt("amount"));
+					st.setString(3, temp.getString("name"));
 					st.executeUpdate();
 				}
 				st.close();
