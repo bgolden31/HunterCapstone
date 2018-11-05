@@ -34,7 +34,9 @@ public class RecipeAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getRecipe (Recipe data) {
-		return dataBase.getRecipe(data.getrecipeId()).toString();
+	public String getRecipe (String data) {
+		JSONObject temp = new JSONObject(data);
+		int recipe= temp.getInt("recipeId");
+		return dataBase.getRecipe(recipe).toString();
 	}
 }

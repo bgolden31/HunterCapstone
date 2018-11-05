@@ -1,14 +1,9 @@
 package registration;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Iterator;
-
-import javax.json.*;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -106,35 +101,6 @@ public class RecipeDatabase {
 				System.out.println(e);
 			}
 		}
-		
-	// daven add end	10/20/18
-	//register,1. get add username from database table, 2.compare to user input, 3. register, or reject
-	public String insertrecipe(Recipe recipe) {
-		//List<String> name = new ArrayList<>(); 
-		String sql = "select * from recipe where recipeId = ?";
-		try {
-			PreparedStatement st = con.prepareStatement(sql);
-			st.setInt(1, recipe.getrecipeId());
-			ResultSet rs = st.executeQuery();
-			if(rs.next())
-				return "This recipe already exists";
-			sql = "insert into recipe (recipeId, nutrientsId, label, description, servings, calories, totalTime) value (?,?,?,?,?,?,?)";
-			st = con.prepareStatement(sql);
-			st.setInt(1, recipe.getrecipeId() );
-			st.setInt(2, recipe.getnutrientsId() );
-			st.setString(3, recipe.getlabel() );
-			st.setString(4, recipe.getdescription() );
-			st.setInt(5, recipe.getservings() );
-			st.setDouble(6, recipe.getcalories() );
-			st.setInt(7, recipe.gettotalTime() );
-			st.executeUpdate();
-			st.close();
-			return "Recipe insert success";
-		}catch(Exception e) {
-			System.out.println(e);
-		}
-		return "Recipe insert fail";
-	}
 
 	//login 
 	public JSONObject getRecipe(int recipeId) {

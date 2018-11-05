@@ -7,6 +7,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.json.JSONObject;
+
 @Path("login")
 public class LoginAPI {
 
@@ -22,7 +24,10 @@ public class LoginAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public User getProfile(User data){
-		return clients.getUser(data.getUsername(), data.getPassword());
+	public String getProfile(String data){
+		JSONObject temp = new JSONObject(data);
+		String username= temp.getString("username");
+		String password= temp.getString("password");
+		return clients.getUser(username, password).toString();
 	}
 }
