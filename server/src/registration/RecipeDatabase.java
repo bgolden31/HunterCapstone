@@ -23,34 +23,27 @@ public class RecipeDatabase {
 		//Recipe recipe = new Recipe();
 		//System.out.println(data);
 		try {	
-			String sql = "Select count(*) from recipe";
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(sql);
-			int recipeId = 1;
-			if(rs.next()) {
-				recipeId = rs.getInt(1) + 1;
-			}
-			//System.out.println(recipeId);
-			//System.out.println(data.getString("label") + " || " + data.getString("description")  + " || " +  data.getString("image") + " || " +  data.getString("URL") + " || " + data.getInt("servings") + " || " +  data.getDouble("calories") + " || " + data.getInt("totalTime"));
+			String sql = "insert into recipe (label, description, image, url, servings, "
+					+ "calories, totalTime) value (?,?,?,?,?,?,?)";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1, data.getString("label"));
+			st.setString(2, data.getString("description"));
+			st.setString(3, data.getString("image"));
+			st.setString(4, data.getString("URL"));
+			st.setInt(5, data.getInt("servings"));
+			st.setDouble(6, data.getDouble("calories"));
+			st.setInt(7, data.getInt("totalTime"));
+			st.executeUpdate();
 			st.close();
-			sql = "insert into recipe (recipeId, nutrientsId, label, description, image, url, servings, "
-					+ "calories, totalTime) value (?,?,?,?,?,?,?,?,?)";
-			PreparedStatement st2 = con.prepareStatement(sql);
-			st2.setInt(1, recipeId);
-			st2.setInt(2, recipeId);
-			st2.setString(3, data.getString("label"));
-			st2.setString(4, data.getString("description"));
-			st2.setString(5, data.getString("image"));
-			st2.setString(6, data.getString("URL"));
-			st2.setInt(7, data.getInt("servings"));
-			st2.setDouble(8, data.getDouble("calories"));
-			st2.setInt(9, data.getInt("totalTime"));
-			st2.executeUpdate();
-			st2.close();
 			
-			insertNutrient(recipeId, data.getJSONObject("nutrients"));
-			insertIngredient(recipeId, data.getJSONArray("ingredients"));
+			sql = "select LAST_INSERT_ID()";
+			Statement st2 = con.createStatement();
+			ResultSet rs = st2.executeQuery(sql);
+			if(rs.next()) {
+			insertNutrient(rs.getInt(1), data.getJSONObject("nutrients"));
+			insertIngredient(rs.getInt(1), data.getJSONArray("ingredients"));
 			return "Recipe insert success";
+			}
 		}catch(Exception e) {
 			System.out.println(e);
 		}
