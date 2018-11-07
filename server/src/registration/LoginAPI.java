@@ -27,7 +27,11 @@ public class LoginAPI {
 	public String getProfile(String data){
 		JSONObject temp = new JSONObject(data);
 		String username= temp.getString("username");
+<<<<<<< HEAD
 		String password= temp.getString("password"); 
+=======
+		String password= temp.getString("password");
+>>>>>>> ed4658efbf7df79fe42e913aa5c0a135dc2b01e9
 		return clients.getUser(username, password).toString();
 	}
 }
