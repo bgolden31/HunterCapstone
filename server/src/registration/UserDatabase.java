@@ -1,12 +1,11 @@
 package registration;
 
+import security.PasswordUtils;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import org.json.JSONObject;
 
 public class UserDatabase {
 	
@@ -18,23 +17,32 @@ public class UserDatabase {
 	}
 	
 	//register,1. get add username from database table, 2.compare to user input, 3. register, or reject
-	public String register(User user) {
+	public String register(JSONObject user) {
 		//List<String> name = new ArrayList<>(); 
+		// TODO Auto-generated method stub
+        String Password = user.getString("password");
+        
+        // Generate Salt. The generated value can be stored in DB. 
+        String salt = PasswordUtils.getSalt(50);
+        
+        // Protect user's password. The generated value can be stored in DB.
+        String securePassword = PasswordUtils.generateSecurePassword(Password, salt);
+		
 		String sql = "select * from user where username = ?";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
-			st.setString(1, user.getUsername());
+			st.setString(1, user.getString("username"));
 			ResultSet rs = st.executeQuery();
 			if(rs.next())
 				return "This account exists";
-			sql = "insert into user (user_id, username, password, email, age, name) value (?,?,?,?,?,?)";
+			sql = "insert into user (username, password, email, age, name, salt) value (?,?,?,?,?,?)";
 			st = con.prepareStatement(sql);
-			st.setInt(1, user.getUser_id());
-			st.setString(2, user.getUsername());
-			st.setString(3, user.getPassword());
-			st.setString(4, user.getEmail());
-			st.setInt(5, user.getAge());
-			st.setString(6, user.getName());
+			st.setString(1, user.getString("username"));
+			st.setString(2, securePassword);
+			st.setString(3, user.getString("email"));
+			st.setInt(4, user.getInt("age"));
+			st.setString(5, user.getString("name"));
+			st.setString(6, salt);
 			st.executeUpdate();
 			st.close();
 			return "Register success";
@@ -45,30 +53,31 @@ public class UserDatabase {
 	}
 
 	//login 
-	public User getUser(String username, String password) {
-		// TODO Auto-generated method stub
-		System.out.println(username + password);
-		User temp = new User();
-		String sql = "select * from user where username = ? and password = ?";
+	public JSONObject getUser(String username, String password) {
+		JSONObject response = new JSONObject();
+		System.out.println("Getting user");  
+		//System.out.println(verifyUserPassword(password, securedPassword, salt));
+		String sql = "select username, email, age, name, password, salt from user where username = ?";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, username);
-			st.setString(2, password);
 			ResultSet rs = st.executeQuery();
-			System.out.println("Getting user"); //xxxxx
 			if(!rs.next()) {
 				System.out.println(!rs.next());
 				return null;
 			}
-			System.out.println("1 :"+rs.getInt(1) + "2 :"+rs.getString(2)); 
-			temp.setUser_id(rs.getInt(1));
-			temp.setUsername(rs.getString(2));
-			temp.setPassword(rs.getString(3));
-			temp.setEmail(rs.getString(4));
-			temp.setAge(rs.getInt(5));
-			temp.setName(rs.getString(6));
-			st.close();
-			return temp;
+			String securedPassword = rs.getString(5);
+			String salt = rs.getString(6);
+			System.out.println(securedPassword + PasswordUtils.verifyUserPassword(password, securedPassword, salt));//xxxxx
+			if(PasswordUtils.verifyUserPassword(password, securedPassword, salt)) {
+				System.out.println("Getting user"); 
+				response.put("userName", rs.getString(1));
+				response.put("email",rs.getString(2));
+				response.put("age",rs.getInt(3));
+				response.put("name", rs.getString(4));
+				st.close();
+				return response;
+			}
 		}catch(Exception e) {
 			System.out.println(e);
 		}		

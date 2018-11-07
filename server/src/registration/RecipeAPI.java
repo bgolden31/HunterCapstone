@@ -24,15 +24,6 @@ public class RecipeAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String insertRecipe (Recipe data){
-		return dataBase.insertrecipe(data);
-	}
-	
-	//new 10/20/2018
-	@Path("insert2")
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public String insertRecipe (String data){
 		JSONObject temp = new JSONObject(data);
 		return dataBase.insertrecipe(temp);
@@ -43,8 +34,10 @@ public class RecipeAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Recipe getRecipe (Recipe data) {
-		System.out.print("start");
-		return dataBase.getRecipe(data.getrecipeId());
+	public String getRecipe (String data) {
+		JSONObject temp = new JSONObject(data);
+		int recipe= temp.getInt("recipeId");
+		return dataBase.getRecipe(recipe).toString();
 	}
+	
 }

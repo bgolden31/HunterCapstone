@@ -9,10 +9,9 @@ import javax.ws.rs.core.MediaType;
 
 import org.json.JSONObject;
 
-@Path("login")
-public class LoginAPI {
-
-	UserDatabase clients = new UserDatabase();
+@Path("UserHistory")
+public class UserHistoryAPI {
+	UserHistoryDatabase dataBase = new UserHistoryDatabase();
 	
 	@GET
 	@Produces(MediaType.TEXT_HTML)
@@ -20,14 +19,25 @@ public class LoginAPI {
 		System.out.print("start");
 		return "GET success";
 	}
-	
+
+	//new 10/20/2018
+	@Path("insert")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getProfile(String data){
+	public String insertRecipe (String data){
+		JSONObject temp = new JSONObject(data);
+		return dataBase.insertUserHistory(temp);
+	}
+	//end
+	
+	@Path("get")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getRecipe (String data) {
 		JSONObject temp = new JSONObject(data);
 		String username= temp.getString("username");
-		String password= temp.getString("password"); 
-		return clients.getUser(username, password).toString();
+		return dataBase.getUserHistory(username).toString();
 	}
 }

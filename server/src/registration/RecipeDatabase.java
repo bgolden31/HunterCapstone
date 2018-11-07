@@ -1,12 +1,9 @@
 package registration;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Iterator;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -104,41 +101,10 @@ public class RecipeDatabase {
 				System.out.println(e);
 			}
 		}
-		
-	// daven add end	10/20/18
-	//register,1. get add username from database table, 2.compare to user input, 3. register, or reject
-	public String insertrecipe(Recipe recipe) {
-		//List<String> name = new ArrayList<>(); 
-		String sql = "select * from recipe where recipeId = ?";
-		try {
-			PreparedStatement st = con.prepareStatement(sql);
-			st.setInt(1, recipe.getrecipeId());
-			ResultSet rs = st.executeQuery();
-			if(rs.next())
-				return "This recipe already exists";
-			sql = "insert into recipe (recipeId, nutrientsId, label, description, servings, calories, totalTime) value (?,?,?,?,?,?,?)";
-			st = con.prepareStatement(sql);
-			st.setInt(1, recipe.getrecipeId() );
-			st.setInt(2, recipe.getnutrientsId() );
-			st.setString(3, recipe.getlabel() );
-			st.setString(4, recipe.getdescription() );
-			st.setInt(5, recipe.getservings() );
-			st.setDouble(6, recipe.getcalories() );
-			st.setInt(7, recipe.gettotalTime() );
-			st.executeUpdate();
-			st.close();
-			return "Recipe insert success";
-		}catch(Exception e) {
-			System.out.println(e);
-		}
-		return "Recipe insert fail";
-	}
 
 	//login 
-	public Recipe getRecipe(int recipeId) {
-		// TODO Auto-generated method stub
+	public JSONObject getRecipe(int recipeId) {
 		System.out.println(recipeId);
-		Recipe temp = new Recipe();
 		String sql = "select * from recipe where recipeId = ?";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
@@ -149,19 +115,78 @@ public class RecipeDatabase {
 				System.out.println(!rs.next());
 				return null;
 			}
-			System.out.println("1:"+rs.getInt(5) + " 2 :"+rs.getDouble(6)); 
-			temp.setRecipeId(rs.getInt(1));
-			temp.setnutrientsId(rs.getInt(2));
-			temp.setlabel(rs.getString(3));
-			temp.setdescription(rs.getString(4));
-			temp.setservings(rs.getInt(7));
-			temp.setcalories(rs.getDouble(8));
-			temp.settotalTime(rs.getInt(9));
+			System.out.println("lol"); 
+			JSONObject recipeInfo = new JSONObject();
+			recipeInfo.put("recipeId", recipeId);
+			recipeInfo.put("nutrientId", recipeId);
+			recipeInfo.put("label", rs.getString(3));
+			recipeInfo.put("description", rs.getString(4));
+			recipeInfo.put("image", rs.getString(5));
+			recipeInfo.put("URL",rs.getString(6));
+			recipeInfo.put("servings", rs.getInt(7));
+			recipeInfo.put("calories", rs.getDouble(8));
+			recipeInfo.put("totalTime", rs.getInt(9));
 			st.close();
-			return temp;
+
+			recipeInfo.put("nutrient", getNutrientInfo(recipeId));
+			recipeInfo.put("ingredient", getIngredientInfo(recipeId));
+		    return recipeInfo;
+
+		}catch(Exception e) {
+			System.out.println(e);
+		}		
+		return null;
+	}
+
+
+	public JSONObject getNutrientInfo(int recipeId) {
+		JSONObject nutrientInfo = new JSONObject();
+		String sql = "select * from nutrient where NutrientsId = ?";
+		try {
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setInt(1, recipeId);
+			ResultSet rs = st.executeQuery();
+			System.out.println("Getting nutrient"); //xxxxx
+			if(!rs.next()) {
+				System.out.println(!rs.next());
+				return null;
+			}
+			nutrientInfo.put("nutrientId", rs.getInt(1));
+			nutrientInfo.put("fat", rs.getDouble(2));
+			nutrientInfo.put("sugar", rs.getDouble(3));
+			nutrientInfo.put("protein", rs.getDouble(4));
+			nutrientInfo.put("fiber", rs.getDouble(5));
+			nutrientInfo.put("sodium", rs.getDouble(6));
+			nutrientInfo.put("cholesterol", rs.getDouble(7));
+			nutrientInfo.put("carbs", rs.getDouble(8));
+			st.close();
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+		return nutrientInfo;
+	}
+
+	public JSONObject getIngredientInfo(int recipeId) {
+		String sql = "select * from ingredient where recipeId = ?";
+		try {
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setInt(1, recipeId);
+			ResultSet rs = st.executeQuery();
+			System.out.println("Getting ingredient"); //xxxxx
+			//if(!rs.next()) {
+			//	System.out.println(!rs.next());
+			//	return null;
+			//}
+			JSONObject ingredientInfo = new JSONObject();
+			while (rs.next()) {
+				ingredientInfo.put( rs.getString(3), Integer.toString(rs.getInt(1) ));	
+			}
+			st.close();
+			return ingredientInfo;
 		}catch(Exception e) {
 			System.out.println(e);
 		}		
 		return null;
 	}
 }
+
