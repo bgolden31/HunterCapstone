@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="133dp"
+        android:layout_marginBottom="26dp"
+        android:text="Button" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="71dp"
+        android:layout_marginTop="35dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        tools:text="Enter Ingredient" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="96dp"
+        android:text="Diet" />
+
+    <Switch
+        android:id="@+id/bal_switch"
+        android:layout_width="335dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_alignStart="@+id/textView2"
+        android:text="Balanced" />
+
+    <Switch
+        android:id="@+id/protein_switch"
+        android:layout_width="335dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bal_switch"
+        android:layout_alignStart="@+id/textView2"
+        android:text="High Protein" />
+
+    <Switch
+        android:id="@+id/carb_switch"
+        android:layout_width="334dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/protein_switch"
+        android:layout_alignStart="@+id/textView2"
+        android:text="Low Carb" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="211dp"
+        android:text="Health" />
+
+    <Switch
+        android:id="@+id/alco_switch"
+        android:layout_width="332dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView4"
+        android:layout_alignStart="@+id/textView2"
+        android:text="Alcohol-free" />
+
+    <Switch
+        android:id="@+id/vegan_switch"
+        android:layout_width="331dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alco_switch"
+        android:layout_alignStart="@+id/textView2"
+        android:text="Vegan" />
+
+    <Switch
+        android:id="@+id/peanut_switch"
+        android:layout_width="332dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vegan_switch"
+        android:layout_alignStart="@+id/textView2"
+        android:text="No Peanut" />
+
+    <Switch
+        android:id="@+id/vegetarian_switch"
+        android:layout_width="328dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/peanut_switch"
+        android:layout_alignStart="@+id/textView2"
+        android:text="Vegetarian" />
+
+    <Button
+        android:id="@+id/button_his"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/vegetarian_switch"
+        android:layout_alignBottom="@+id/button"
+        android:text="History" />
+
+</RelativeLayout>
