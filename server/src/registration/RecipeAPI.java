@@ -40,4 +40,28 @@ public class RecipeAPI {
 		return dataBase.getRecipe(recipe).toString();
 	}
 	
+	@Path("update")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String updateRecipe (String data) {
+		JSONObject temp = new JSONObject(data);
+		int recipe= temp.getInt("recipeId");
+		return dataBase.updateRecipe(recipe).toString();
+	}
+	
+	@Path("delete")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String deleteRecipe (String data) {
+		JSONObject temp = new JSONObject(data);
+		int recipe= temp.getInt("recipeId");
+		return dataBase.deleteRecipe(recipe).toString();
+	}
+	
+	
+	
+	
+	
 }

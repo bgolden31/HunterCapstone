@@ -181,5 +181,66 @@ public class RecipeDatabase {
 		}		
 		return null;
 	}
+
+
+public String deleterecipe(JSONObject data) {
+	//List<String> name = new ArrayList<>(); 
+	//Recipe recipe = new Recipe();
+	//System.out.println(data);
+	try {	
+		String sql = "delete fron recipe where (label, description, image, url, servings, "
+				+ "calories, totalTime) value (?,?,?,?,?,?,?)";
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setString(1, data.getString("label"));
+		st.setString(2, data.getString("description"));
+		st.setString(3, data.getString("image"));
+		st.setString(4, data.getString("URL"));
+		st.setInt(5, data.getInt("servings"));
+		st.setDouble(6, data.getDouble("calories"));
+		st.setInt(7, data.getInt("totalTime"));
+		st.executeUpdate();
+		st.close();
+		return "Recipe delete success";
+	}catch(Exception e) {
+		System.out.println(e);
+	}
+	return "Recipe insert fail";
 }
+
+public String updaterecipe(JSONObject data) {
+	//List<String> name = new ArrayList<>(); 
+	//Recipe recipe = new Recipe();
+	//System.out.println(data);
+	try {	
+		String sql = "delete fron recipe where (label, description, image, url, servings, "
+				+ "calories, totalTime) value (?,?,?,?,?,?,?)";
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setString(1, data.getString("label"));
+		st.setString(2, data.getString("description"));
+		st.setString(3, data.getString("image"));
+		st.setString(4, data.getString("URL"));
+		st.setInt(5, data.getInt("servings"));
+		st.setDouble(6, data.getDouble("calories"));
+		st.setInt(7, data.getInt("totalTime"));
+		st.executeUpdate();
+		st.close();
+		return "Recipe delete success";
+	}catch(Exception e) {
+		System.out.println(e);
+	}
+	return "Recipe insert fail";
+}
+
+
+
+
+
+}
+
+
+
+
+
+
+
 
