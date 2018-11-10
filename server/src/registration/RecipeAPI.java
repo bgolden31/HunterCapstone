@@ -40,4 +40,14 @@ public class RecipeAPI {
 		return dataBase.getRecipe(recipe).toString();
 	}
 	
+	//11/7/2018
+	//for search API, when front end give the name, we need to return a list of recipe to them
+	@Path("search")
+	@POST
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String searchRecipe (String data) { 
+		return data;
+	}
+	
 }
