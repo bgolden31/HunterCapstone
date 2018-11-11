@@ -18,10 +18,7 @@ public class RecipeDatabase {
 	
 	// daven add start 10/20/18
 	
-	public String insertrecipe(JSONObject data) {
-		//List<String> name = new ArrayList<>(); 
-		//Recipe recipe = new Recipe();
-		//System.out.println(data);
+	public int insertrecipe(JSONObject data) {
 		try {	
 			String sql = "insert into recipe (label, description, image, url, servings, "
 					+ "calories, totalTime) value (?,?,?,?,?,?,?)";
@@ -39,15 +36,16 @@ public class RecipeDatabase {
 			sql = "select LAST_INSERT_ID()";
 			Statement st2 = con.createStatement();
 			ResultSet rs = st2.executeQuery(sql);
+			
 			if(rs.next()) {
 			insertNutrient(rs.getInt(1), data.getJSONObject("nutrients"));
 			insertIngredient(rs.getInt(1), data.getJSONArray("ingredients"));
-			return "Recipe insert success";
+			return rs.getInt(1);
 			}
 		}catch(Exception e) {
 			System.out.println(e);
 		}
-		return "Recipe insert fail";
+		return -1;
 	}
 	
 	//insert the nutrients
@@ -95,7 +93,7 @@ public class RecipeDatabase {
 			}
 		}
 
-	//login 
+	//get recipe 
 	public JSONObject getRecipe(int recipeId) {
 		System.out.println(recipeId);
 		String sql = "select * from recipe where recipeId = ?";
@@ -108,17 +106,15 @@ public class RecipeDatabase {
 				System.out.println(!rs.next());
 				return null;
 			}
-			System.out.println("lol"); 
 			JSONObject recipeInfo = new JSONObject();
 			recipeInfo.put("recipeId", recipeId);
-			recipeInfo.put("nutrientId", recipeId);
-			recipeInfo.put("label", rs.getString(3));
-			recipeInfo.put("description", rs.getString(4));
-			recipeInfo.put("image", rs.getString(5));
-			recipeInfo.put("URL",rs.getString(6));
-			recipeInfo.put("servings", rs.getInt(7));
-			recipeInfo.put("calories", rs.getDouble(8));
-			recipeInfo.put("totalTime", rs.getInt(9));
+			recipeInfo.put("label", rs.getString(2));
+			recipeInfo.put("description", rs.getString(3));
+			recipeInfo.put("image", rs.getString(4));
+			recipeInfo.put("URL",rs.getString(5));
+			recipeInfo.put("servings", rs.getInt(6));
+			recipeInfo.put("calories", rs.getDouble(7));
+			recipeInfo.put("totalTime", rs.getInt(8));
 			st.close();
 
 			recipeInfo.put("nutrient", getNutrientInfo(recipeId));
@@ -166,10 +162,6 @@ public class RecipeDatabase {
 			st.setInt(1, recipeId);
 			ResultSet rs = st.executeQuery();
 			System.out.println("Getting ingredient"); //xxxxx
-			//if(!rs.next()) {
-			//	System.out.println(!rs.next());
-			//	return null;
-			//}
 			JSONObject ingredientInfo = new JSONObject();
 			while (rs.next()) {
 				ingredientInfo.put( rs.getString(3), Integer.toString(rs.getInt(1) ));	
@@ -183,13 +175,23 @@ public class RecipeDatabase {
 	}
 
 
-public String deleterecipe(JSONObject data) {
-	//List<String> name = new ArrayList<>(); 
-	//Recipe recipe = new Recipe();
-	//System.out.println(data);
+public String deleteRecipe(int recipeid, JSONObject data) {
 	try {	
-		String sql = "delete fron recipe where (label, description, image, url, servings, "
-				+ "calories, totalTime) value (?,?,?,?,?,?,?)";
+		String sql = "delete from recipe where recipeId = ?";
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setInt(1, recipeid);
+		st.executeUpdate();
+		st.close();
+		return "Recipe delete success";
+	}catch(Exception e) {
+		System.out.println(e);
+	}
+	return "Recipe delete fail";
+}
+
+public String updateRecipe(int recipeid, JSONObject data) {
+	try {	
+		String sql = "UPDATE recipe SET label= ?, description =?, image = ?, URL = ?, servings = ?, calories = ?, totalTime = ? where recipeId = ?";
 		PreparedStatement st = con.prepareStatement(sql);
 		st.setString(1, data.getString("label"));
 		st.setString(2, data.getString("description"));
@@ -198,40 +200,50 @@ public String deleterecipe(JSONObject data) {
 		st.setInt(5, data.getInt("servings"));
 		st.setDouble(6, data.getDouble("calories"));
 		st.setInt(7, data.getInt("totalTime"));
+		st.setInt(8, recipeid);
 		st.executeUpdate();
 		st.close();
-		return "Recipe delete success";
+
+		updateNutrient(recipeid, data.getJSONObject("nutrients"));
+		updateIngredient(recipeid, data.getJSONArray("ingredients"));
+		
+		return "Recipe update success";
 	}catch(Exception e) {
 		System.out.println(e);
 	}
-	return "Recipe insert fail";
+	return "Recipe delete fail";
 }
 
-public String updaterecipe(JSONObject data) {
-	//List<String> name = new ArrayList<>(); 
-	//Recipe recipe = new Recipe();
-	//System.out.println(data);
+public String updateNutrient(int recipeid, JSONObject data) {
 	try {	
-		String sql = "delete fron recipe where (label, description, image, url, servings, "
-				+ "calories, totalTime) value (?,?,?,?,?,?,?)";
+		String sql = "delete from nutrient where nutrientsId = ?";
 		PreparedStatement st = con.prepareStatement(sql);
-		st.setString(1, data.getString("label"));
-		st.setString(2, data.getString("description"));
-		st.setString(3, data.getString("image"));
-		st.setString(4, data.getString("URL"));
-		st.setInt(5, data.getInt("servings"));
-		st.setDouble(6, data.getDouble("calories"));
-		st.setInt(7, data.getInt("totalTime"));
+		st.setInt(1, recipeid);
 		st.executeUpdate();
 		st.close();
-		return "Recipe delete success";
+		
+		insertNutrient(recipeid, data);
+		
 	}catch(Exception e) {
 		System.out.println(e);
 	}
-	return "Recipe insert fail";
+	return "Recipe delete fail";
 }
 
-
+public String updateIngredient(int recipeid, JSONArray data) {
+	try {	
+		String sql = "delete from ingredient where recipeId = ?";
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setInt(1, recipeid);
+		st.executeUpdate();
+		st.close();
+		insertIngredient(recipeid, data);
+		return "Recipe update success";
+	}catch(Exception e) {
+		System.out.println(e);
+	}
+	return "Recipe delete fail";
+}
 
 
 

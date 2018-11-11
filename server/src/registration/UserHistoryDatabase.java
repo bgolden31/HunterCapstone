@@ -3,7 +3,6 @@ package registration;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,12 +17,7 @@ public class UserHistoryDatabase {
 	
 	public String insertUserHistory(JSONObject data) {
 		try {	
-			String sql = "select * from userHistory";
-			Statement st = con.createStatement();
-			st.execute(sql);
-			//error check?
-			st.close();
-			sql = "insert into userHistory (username, recipe_name, author) value (?,?,?)";
+			String sql = "insert into userHistory (username, recipe_name, author) value (?,?,?)";
 			PreparedStatement st2 = con.prepareStatement(sql);
 			st2.setString(1, data.getString("username"));
 			st2.setString(2, data.getString("recipeName"));
@@ -44,8 +38,6 @@ public class UserHistoryDatabase {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, username);
 			ResultSet rs = st.executeQuery();
-			System.out.println("Getting recipe"); //xxxxx
-			System.out.println("lol"); 
 			JSONArray  userHistory = new JSONArray(); 
 			
 			while (rs.next()) {

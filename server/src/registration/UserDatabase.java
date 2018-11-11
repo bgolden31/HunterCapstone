@@ -84,4 +84,28 @@ public class UserDatabase {
 		return null;
 	}
 	
+	public String deleteUser(String username) {
+		try {	
+			String sql = "delete from user where username = ?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1, username);
+			st.executeUpdate();
+			st.close();
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+		return username;
+	}
+
+	public String updateUser(int username, JSONObject data) {
+		try {
+
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
+	
+	
+	
 }
