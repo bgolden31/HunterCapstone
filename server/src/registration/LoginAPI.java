@@ -7,6 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 @Path("login")
@@ -28,6 +29,17 @@ public class LoginAPI {
 		JSONObject temp = new JSONObject(data);
 		String username= temp.getString("username");
 		String password= temp.getString("password"); 
-		return clients.getUser(username, password).toString();
+		JSONObject temp1 = clients.getUser(username, password);
+		
+		UserRecipeDatabase userrecipes = new UserRecipeDatabase();
+		JSONArray temp2 =  userrecipes.getUserRecipes(username);
+		UserHistoryDatabase userHistory = new UserHistoryDatabase();
+		JSONObject temp3 = userHistory.getUserHistory(username);
+		
+		JSONObject combined = new JSONObject();
+		combined.put("User Info",temp1);
+		combined.put("Recipes", temp2);
+		combined.put("History", temp3);
+		return combined.toString();
 	}
 }
