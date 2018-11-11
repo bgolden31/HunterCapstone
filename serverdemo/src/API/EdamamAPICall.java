@@ -16,7 +16,7 @@ public class EdamamAPICall {
     final String APIURL ="https://api.edamam.com/search";
     
     public static JSONObject search(int size, String q, JSONObject newRecipeArray ) throws JSONException, IOException {
-    	HttpURLConnection con = connect(q);
+    	HttpURLConnection con = connect(size,q);
     	//read all string from con
     	BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
@@ -34,13 +34,13 @@ public class EdamamAPICall {
     }
     
     //connect to recipe search api to edamam
-    public static HttpURLConnection connect(String q) {
+    public static HttpURLConnection connect(int size, String q) {
     	try {
     		//todo : change url for search every things
     		final String APPKEY = "9f7f5f81a5d43726ab9b7ca292d7e583";
     		final String APPID = "ac3847c7";
     	    final String APIURL ="https://api.edamam.com/search";
-   	 		String url = APIURL + "?q=" + q + "&app_id=" + APPID + "&app_key=" + APPKEY;
+   	 		String url = APIURL + "?q=" + q + "&app_id=" + APPID + "&app_key=" + APPKEY + "&from=0&to=" + size;
    	 		URL obj = new URL(url);
    	 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
    	 		con.setRequestMethod("GET");
