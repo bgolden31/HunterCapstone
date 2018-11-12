@@ -3,6 +3,7 @@ package registration;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+//Connects to SQL server on AWS
 public class DataBaseConnector {
 	public static Connection connect (Connection con) {
 	String dbName = ("sys");

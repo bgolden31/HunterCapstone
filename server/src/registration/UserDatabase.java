@@ -16,8 +16,8 @@ public class UserDatabase {
 		con = DataBaseConnector.connect(con);
 	}
 	
-	//register,1. get add username from database table, 2.compare to user input, 3. register, or reject
-	public String register(JSONObject user) {
+	//Takes info from Json and adds it to user table, with error checking and password hashing
+	public String registerUser(JSONObject user) {
 		//List<String> name = new ArrayList<>(); 
 		// TODO Auto-generated method stub
         String Password = user.getString("password");
@@ -33,8 +33,9 @@ public class UserDatabase {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, user.getString("username"));
 			ResultSet rs = st.executeQuery();
+			//If user already exists early return
 			if(rs.next())
-				return "This account exists";
+				return "This account already exists";
 			sql = "insert into user (username, password, email, age, name, salt) value (?,?,?,?,?,?)";
 			st = con.prepareStatement(sql);
 			st.setString(1, user.getString("username"));
@@ -52,8 +53,9 @@ public class UserDatabase {
 		return "Register fail";
 	}
 
-	//login 
-	public JSONObject getUser(String username, String password) {
+	//Takes username and password and verify it matches on the user Table
+	//Returns that users info
+	public String loginUser(String username, String password) {
 		JSONObject response = new JSONObject();
 		System.out.println("Getting user");  
 		//System.out.println(verifyUserPassword(password, securedPassword, salt));
@@ -63,8 +65,7 @@ public class UserDatabase {
 			st.setString(1, username);
 			ResultSet rs = st.executeQuery();
 			if(!rs.next()) {
-				System.out.println(!rs.next());
-				return null;
+				return "Username does not exist";
 			}
 			String securedPassword = rs.getString(5);
 			String salt = rs.getString(6);
@@ -76,14 +77,17 @@ public class UserDatabase {
 				response.put("age",rs.getInt(3));
 				response.put("name", rs.getString(4));
 				st.close();
-				return response;
+				return response.toString();
+			}
+			else{
+				return "Incorrect password";
 			}
 		}catch(Exception e) {
 			System.out.println(e);
 		}		
 		return null;
 	}
-	
+	//Removes user based on username
 	public String deleteUser(String username) {
 		try {	
 			String sql = "delete from user where username = ?";
@@ -91,21 +95,38 @@ public class UserDatabase {
 			st.setString(1, username);
 			st.executeUpdate();
 			st.close();
+			return "User delete success";
 		}catch(Exception e) {
 			System.out.println(e);
 		}
-		return username;
+		return "User delete failed";
 	}
-
-	public String updateUser(int username, JSONObject data) {
+	//Update user based on username and json info
+	public String updateUser(String username, JSONObject user) {
 		try {
-
-		}catch(Exception e) {
-			System.out.println(e);
+			String Password = user.getString("password");
+	        
+	        // Generate Salt. The generated value can be stored in DB. 
+	        String salt = PasswordUtils.getSalt(50);
+	        
+	        // Protect user's password. The generated value can be stored in DB.
+	        String securePassword = PasswordUtils.generateSecurePassword(Password, salt);
+	        
+				String sql = "UPDATE user SET password = ?, email = ?, age = ?, name = ?, salt = ? where username = ?";
+				PreparedStatement st = con.prepareStatement(sql);
+				st = con.prepareStatement(sql);
+				st.setString(1, securePassword);
+				st.setString(2, user.getString("email"));
+				st.setInt(3, user.getInt("age"));
+				st.setString(4, user.getString("name"));
+				st.setString(5, salt);
+				st.setString(6, user.getString("username"));
+				st.executeUpdate();
+				st.close();
+				return "User update success";
+			}catch(Exception e) {
+				System.out.println(e);
+			}
+			return "User update fail";
 		}
-		return null;
-	}
-	
-	
-	
 }

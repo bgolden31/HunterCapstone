@@ -17,11 +17,12 @@ public class UserHistoryDatabase {
 	
 	public String insertUserHistory(JSONObject data) {
 		try {	
-			String sql = "insert into userHistory (username, recipe_name, author) value (?,?,?)";
+			String sql = "insert into userHistory (username, recipe_name, author, recipeId) value (?,?,?,?)";
 			PreparedStatement st2 = con.prepareStatement(sql);
 			st2.setString(1, data.getString("username"));
 			st2.setString(2, data.getString("recipeName"));
 			st2.setString(3, data.getString("author"));
+			st2.setInt(4, data.getInt("recipeId"));
 			st2.executeUpdate();
 			st2.close();
 			return "User History insert success";
@@ -41,12 +42,12 @@ public class UserHistoryDatabase {
 			JSONArray  userHistory = new JSONArray(); 
 			
 			while (rs.next()) {
-				userHistory.put( buildHistoryObject ( rs.getString(1),rs.getString(2),rs.getString(3) ));	
+				userHistory.put( buildHistoryObject ( rs.getString(1),rs.getString(2),rs.getString(3) , rs.getInt(4) ));	
 			}
 			
 			st.close();
 			JSONObject response= new JSONObject();
-			response.put("userhistory", userHistory);
+			response.put(username, userHistory);
 		    return response;
 
 		}catch(Exception e) {
@@ -54,12 +55,26 @@ public class UserHistoryDatabase {
 		}		
 		return null;
 	}
-	JSONObject buildHistoryObject(String username, String recipeName, String author){
+	JSONObject buildHistoryObject(String username, String recipeName, String author, int recipeId){
 		   JSONObject history = new JSONObject();
-		   history .put("username" , username);
 		   history .put("recipeName" ,recipeName);
 		   history .put("author" ,author );
+		   history .put("recipeId" ,recipeId );
 		   return history;
 	} 
 	
+	public String deleteUserHistory(String username, String recipename) {
+		try {	
+			String sql = "delete from userHistory username = ?, recipe_name = ?";
+			PreparedStatement st2 = con.prepareStatement(sql);
+			st2.setString(1, username);
+			st2.setString(2, recipename);
+			st2.executeUpdate();
+			st2.close();
+			return "User History delete success";
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+		return "User History delete fail";
+	}
 }

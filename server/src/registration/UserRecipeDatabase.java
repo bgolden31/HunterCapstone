@@ -2,10 +2,7 @@ package registration;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
-
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class UserRecipeDatabase {
 	private Connection con=null;
@@ -14,7 +11,9 @@ public class UserRecipeDatabase {
 	public UserRecipeDatabase(){
 		con = DataBaseConnector.connect(con);
 	}
-	
+	/* Returns all the recipes created by user, based on username
+	 * 
+	 */
 	public JSONArray getUserRecipes(String username){
 		String sql = "select * from userRecipes where username = ?";
 		try {
@@ -33,7 +32,8 @@ public class UserRecipeDatabase {
 		}		
 		return null;
 	}
-	
+	/* Inserts into userRecipe table, with recipeId and username
+	 */
 	public void insertUserRecipes(int  recipeID, String username){
 		String sql = "insert into userRecipes (username,  recipe_id) value (?,?)";
 		try {
@@ -46,9 +46,4 @@ public class UserRecipeDatabase {
 			System.out.println(e);
 		}		
 	}
-	
-	
-	
-	
-	
 }
