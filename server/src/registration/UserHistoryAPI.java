@@ -50,8 +50,8 @@ public class UserHistoryAPI {
 	public String getUserHistory (@PathParam("username") String username) {
 		return dataBase.getUserHistory(username).toString();
 	}
-	
-	@Path("delete/{username}//{id}")
+	//Deletes from userHistory based on username and id
+	@Path("delete/{username}/{id}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	public String deleteUserHistory (@PathParam("username")String username, @QueryParam("recipe")String recipe) {

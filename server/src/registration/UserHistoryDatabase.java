@@ -14,7 +14,7 @@ public class UserHistoryDatabase {
 	public UserHistoryDatabase(){
 		con = DataBaseConnector.connect(con);
 	}
-	
+	//Inserts into userHistory table
 	public String insertUserHistory(JSONObject data) {
 		try {	
 			String sql = "insert into userHistory (username, recipe_name, author, recipeId) value (?,?,?,?)";
@@ -31,7 +31,7 @@ public class UserHistoryDatabase {
 		}
 		return "User History insert fail";
 	}
-	
+	//Gets all the recipes view by user in userHistory table
 	public JSONObject getUserHistory(String username) {
 		System.out.println(username);
 		String sql = "select * from userHistory where username = ?";
@@ -42,7 +42,7 @@ public class UserHistoryDatabase {
 			JSONArray  userHistory = new JSONArray(); 
 			
 			while (rs.next()) {
-				userHistory.put( buildHistoryObject ( rs.getString(1),rs.getString(2),rs.getString(3) , rs.getInt(4) ));	
+				userHistory.put( buildHistoryObject ( rs.getString(2),rs.getString(3) , rs.getInt(4) ));	
 			}
 			
 			st.close();
@@ -55,14 +55,15 @@ public class UserHistoryDatabase {
 		}		
 		return null;
 	}
-	JSONObject buildHistoryObject(String username, String recipeName, String author, int recipeId){
+	//Helper to  build history object
+	JSONObject buildHistoryObject(String recipeName, String author, int recipeId){
 		   JSONObject history = new JSONObject();
 		   history .put("recipeName" ,recipeName);
 		   history .put("author" ,author );
 		   history .put("recipeId" ,recipeId );
 		   return history;
 	} 
-	
+	//Deletes recipe from userHistory based on username and recipename
 	public String deleteUserHistory(String username, String recipename) {
 		try {	
 			String sql = "delete from userHistory username = ?, recipe_name = ?";

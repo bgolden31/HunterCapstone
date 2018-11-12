@@ -79,14 +79,14 @@ public class UserAPI {
 		JSONObject temp = new JSONObject(data);
 		return clients.registerUser(temp);
 	}
-
+	//Delete based on username param
 	@Path("delete/{username}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public String deleteUser(@PathParam("username") String username) {
 		return clients.deleteUser(username);
 	}
-	
+	//Takes a json of user info and username param to update
 	@Path("update/{username}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
