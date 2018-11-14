@@ -1,0 +1,18 @@
+  {{ recipe.label }} <br>
+  This recipe produces {{ recipe.yield }} servings. <br>
+  This recipe can be found from {{ recipe.source }} at {{ recipe.url }}. <br>
+  This recipe accomodates the following dietary restrictions:
+  <div *ngFor="let diet of recipe?.healthLabels">
+    <ul>
+      <li>{{ diet }}</li>
+    </ul>
+  </div>
+
+  The recipe requires the following ingredients:
+  <div *ngFor="let ing of recipe?.ingredientLines">
+      <ul>
+        <li>{{ ing }}</li>
+      </ul>
+  </div>
+
+  There are {{ recipe.calories }}. <br>

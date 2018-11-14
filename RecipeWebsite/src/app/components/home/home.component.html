@@ -1,11 +1,25 @@
-<div style="text-align:center">
-  <h1>
-    <a routerLink="/test"><button class="btn btn-success pull-right" > Search Recipes</button></a>
-    <br>
-    <a routerLink="/register"><button class="btn btn-success pull-right" > Register</button></a>
-    <br>
-    <a routerLink="/login"><button class="btn btn-success pull-right" > Login</button></a>
+<body>
+  <div style="text-align: center">
+  <br><br><br><br>
 
-  </h1>
 
-</div>
+  <p>SEARCH</p>
+
+  <div class="form-group">
+      <label for="exampleInputPassword1">Ingredients</label>
+      <input type="text" class="form-control" id="ing" placeholder="Chicken with Rice" [(ngModel)]="ing">
+  </div>
+
+  <button type="button" (click)="loginUser()" class="btn btn-primary btn-lg">Search Recipes!</button>
+
+
+    <br><br><br>
+    <p>OR</p>
+    <br><br><br>
+
+    <p>REGISTER</p>
+
+    <button type="button" [routerLink]="['/register']" class="btn btn-primary btn-lg">Register an Account</button>
+
+  </div>
+</body>

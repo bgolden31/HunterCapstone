@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RecipeService } from '../../services/recipe.service';
-import { recipe } from '../../models/recipe.model';
+import { SaveRecipeService } from '../../services/saverecipe.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-newpage',
@@ -11,11 +12,12 @@ export class NewpageComponent implements OnInit {
   stuff: Object;
   ing: string;
 
-  constructor(private recipeService: RecipeService) {
+  constructor(private recipeService: RecipeService, 
+              private saveRecipe: SaveRecipeService,
+              private router: Router) {
   }
 
   ngOnInit() {
-    //this.getRecipes(ingredients);
   }
 
   getRecipes(ing) {
@@ -23,5 +25,10 @@ export class NewpageComponent implements OnInit {
       .subscribe((data: Object) => {
           this.stuff = data;
       });
+  }
+
+  goToPage(stuff) {
+    this.saveRecipe.recipe = stuff;
+    this.router.navigate(['/recipedetails']);
   }
 }

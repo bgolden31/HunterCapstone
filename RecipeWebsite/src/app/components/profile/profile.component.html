@@ -1,0 +1,14 @@
+  Welcome to {{ userInfo.userName }}'s profile <br>
+
+  User Info: <br>
+  Name: {{ userInfo.name }} <br>
+  Age: {{ userInfo.age }} <br>
+  Email: {{ userInfo.email }} <br>
+
+  USER RECIPES: <br>
+
+  <div *ngFor="let recipe of userRecipes">
+
+    {{ recipe.label }} from {{ userInfo.userName }}
+    
+  </div>

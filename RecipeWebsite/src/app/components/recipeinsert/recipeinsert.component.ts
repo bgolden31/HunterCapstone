@@ -13,6 +13,7 @@ export class RecipeinsertComponent implements OnInit {
   recipe: recipe = <recipe>{};
   nutrients: nutrients = <nutrients>{};
   ing: ingredients = <ingredients>{};
+  username: string;
   name: string;
   desc: string;
   time: number;
@@ -39,13 +40,14 @@ export class RecipeinsertComponent implements OnInit {
 
   
   createRecipe() {
+    this.recipe.username = this.username
     this.recipe.label = this.name;
     this.recipe.description = this.desc;
-    this.recipe.totalTime = this.time;
-    this.recipe.servings = this.servings;
-    this.recipe.calories = this.calories;
     this.recipe.image = this.link;
     this.recipe.URL = this.url;
+    this.recipe.servings = this.servings;
+    this.recipe.calories = this.calories;
+    this.recipe.totalTime = this.time;
     this.nutrients.fat = this.fat;
     this.nutrients.sugar = this.sugar;
     this.nutrients.protein = this.protein;

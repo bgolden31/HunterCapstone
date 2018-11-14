@@ -2,6 +2,7 @@ import { nutrients } from "./nutrients.model";
 import { ingredients } from "./ingredients.model";
 
 export class recipe {
+    username: string;
     label: string;
     description: string;
     image: string;
