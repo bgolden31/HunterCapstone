@@ -1,6 +1,15 @@
-Input ingredients:<br>
-<input type="text" id="ing" [(ngModel)]="ing"/> <br>
+Input ingredients: <br><br>
+
+<div class="form-group">
+    <input type="text" class="form-control" id="ing" [(ngModel)]="ing" placeholder="Potato Salad">
+</div>
+
 <button (click)="getRecipes(ing)">Click me </button> <br>
+
 <div *ngFor="let user of stuff?.hits">
-  {{ user.recipe.label }}: {{ user.recipe.source }}
+
+  {{ user.recipe.label }} from {{ user.recipe.source }}
+
+  <button type="button" (click)="goToPage(user.recipe)" class="btn btn-primary">See Details</button>
+
 </div>
