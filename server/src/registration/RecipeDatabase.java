@@ -223,7 +223,11 @@ public class RecipeDatabase {
 	Rather than updating it, it just deletes and reinserts the new info */
 	public void updateNutrient(int recipeid, JSONObject data) {
 		try {	
+<<<<<<< HEAD
 			String sql = "delete from nutrients where nutrientsId = ?";
+=======
+			String sql = "delete from nutrient where nutrientsId = ?";
+>>>>>>> f70c3dc1fc5e9259f3b0880adba4060af979472b
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, recipeid);
 			st.executeUpdate();
@@ -238,7 +242,11 @@ public class RecipeDatabase {
 	Rather than updating it, it just deletes and reinserts the new info*/
 	public void updateIngredient(int recipeid, JSONArray data) {
 		try {	
+<<<<<<< HEAD
 			String sql = "delete from ingredients where recipeId = ?";
+=======
+			String sql = "delete from ingredient where recipeId = ?";
+>>>>>>> f70c3dc1fc5e9259f3b0880adba4060af979472b
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, recipeid);
 			st.executeUpdate();
