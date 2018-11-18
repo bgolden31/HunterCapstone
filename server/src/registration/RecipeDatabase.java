@@ -1,11 +1,15 @@
 package registration;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import API.EdamamAPICall;
 
 public class RecipeDatabase {
 	
@@ -16,8 +20,8 @@ public class RecipeDatabase {
 		con = DataBaseConnector.connect(con);
 	}
 	
-	// daven add start 10/20/18
-	
+	//Takes Json containing recipe info to insert to recipe table
+	//Returns the recipeId to be used in UserRecipe Table
 	public int insertrecipe(JSONObject data) {
 		try {	
 			String sql = "insert into recipe (label, description, image, url, servings, "
@@ -37,6 +41,7 @@ public class RecipeDatabase {
 			Statement st2 = con.createStatement();
 			ResultSet rs = st2.executeQuery(sql);
 			
+			//Insert "nutrients" object and "ingredients" array into nutrients and ingredients table
 			if(rs.next()) {
 			insertNutrient(rs.getInt(1), data.getJSONObject("nutrients"));
 			insertIngredient(rs.getInt(1), data.getJSONArray("ingredients"));
@@ -45,7 +50,7 @@ public class RecipeDatabase {
 		}catch(Exception e) {
 			System.out.println(e);
 		}
-		return -1;
+		return -1; //Return -1 if it fails
 	}
 	
 	//insert the nutrients
@@ -54,7 +59,7 @@ public class RecipeDatabase {
 				if(data.length() == 0)
 					return ;
 				//System.out.println(data.getDouble("fat") + " || " +data.getDouble("sugar"));
-				String sql = "insert into nutrient (nutrientsId, fat, sugar, protein, fiber, "
+				String sql = "insert into nutrients (nutrientsId, fat, sugar, protein, fiber, "
 						+ "sodium, cholesterol, carbs) value (?,?,?,?,?,?,?,?)";
 				PreparedStatement st = con.prepareStatement(sql);
 				st.setInt(1, id);
@@ -78,7 +83,7 @@ public class RecipeDatabase {
 			try {
 				if(data.length() == 0)
 					return ;
-				String sql = "insert into ingredient (recipeId, weight, ingredients) value (?,?,?)";
+				String sql = "insert into ingredients (recipeId, weight, ingredients) value (?,?,?)";
 				PreparedStatement st = con.prepareStatement(sql);
 				for(int i = 0; i< data.length(); i++) {
 					JSONObject temp = data.getJSONObject(i);
@@ -93,7 +98,7 @@ public class RecipeDatabase {
 			}
 		}
 
-	//get recipe 
+	//Returns a recipe json based on recipeId
 	public JSONObject getRecipe(int recipeId) {
 		System.out.println(recipeId);
 		String sql = "select * from recipe where recipeId = ?";
@@ -117,6 +122,7 @@ public class RecipeDatabase {
 			recipeInfo.put("totalTime", rs.getInt(8));
 			st.close();
 
+			//Puts the nutrients objects and ingredients array
 			recipeInfo.put("nutrient", getNutrientInfo(recipeId));
 			recipeInfo.put("ingredient", getIngredientInfo(recipeId));
 		    return recipeInfo;
@@ -127,10 +133,10 @@ public class RecipeDatabase {
 		return null;
 	}
 
-
+	//Returns a nutrient json based recipeId
 	public JSONObject getNutrientInfo(int recipeId) {
 		JSONObject nutrientInfo = new JSONObject();
-		String sql = "select * from nutrient where NutrientsId = ?";
+		String sql = "select * from nutrients where NutrientsId = ?";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, recipeId);
@@ -154,9 +160,9 @@ public class RecipeDatabase {
 		}
 		return nutrientInfo;
 	}
-
+	//Returns a ingredient array based recipeId
 	public JSONObject getIngredientInfo(int recipeId) {
-		String sql = "select * from ingredient where recipeId = ?";
+		String sql = "select * from ingredients where recipeId = ?";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, recipeId);
@@ -174,85 +180,98 @@ public class RecipeDatabase {
 		return null;
 	}
 
-
-public String deleteRecipe(int recipeid, JSONObject data) {
-	try {	
-		String sql = "delete from recipe where recipeId = ?";
-		PreparedStatement st = con.prepareStatement(sql);
-		st.setInt(1, recipeid);
-		st.executeUpdate();
-		st.close();
-		return "Recipe delete success";
-	}catch(Exception e) {
-		System.out.println(e);
+	//Deletes the recipe from recipe table based on recipeId
+	public String deleteRecipe(int recipeid) {
+		try {	
+			String sql = "delete from recipe where recipeId = ?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setInt(1, recipeid);
+			st.executeUpdate();
+			st.close();
+			return "Recipe delete success";
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+		return "Recipe delete fail";
 	}
-	return "Recipe delete fail";
-}
-
-public String updateRecipe(int recipeid, JSONObject data) {
-	try {	
-		String sql = "UPDATE recipe SET label= ?, description =?, image = ?, URL = ?, servings = ?, calories = ?, totalTime = ? where recipeId = ?";
-		PreparedStatement st = con.prepareStatement(sql);
-		st.setString(1, data.getString("label"));
-		st.setString(2, data.getString("description"));
-		st.setString(3, data.getString("image"));
-		st.setString(4, data.getString("URL"));
-		st.setInt(5, data.getInt("servings"));
-		st.setDouble(6, data.getDouble("calories"));
-		st.setInt(7, data.getInt("totalTime"));
-		st.setInt(8, recipeid);
-		st.executeUpdate();
-		st.close();
-
-		updateNutrient(recipeid, data.getJSONObject("nutrients"));
-		updateIngredient(recipeid, data.getJSONArray("ingredients"));
-		
-		return "Recipe update success";
-	}catch(Exception e) {
-		System.out.println(e);
+	//Updates the recipe from recipe table based on recipeId
+	public String updateRecipe(int recipeid, JSONObject data) {
+		try {	
+			String sql = "UPDATE recipe SET label= ?, description =?, image = ?, URL = ?, servings = ?, calories = ?, totalTime = ? where recipeId = ?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1, data.getString("label"));
+			st.setString(2, data.getString("description"));
+			st.setString(3, data.getString("image"));
+			st.setString(4, data.getString("URL"));
+			st.setInt(5, data.getInt("servings"));
+			st.setDouble(6, data.getDouble("calories"));
+			st.setInt(7, data.getInt("totalTime"));
+			st.setInt(8, recipeid);
+			st.executeUpdate();
+			st.close();
+	
+			updateNutrient(recipeid, data.getJSONObject("nutrients"));
+			updateIngredient(recipeid, data.getJSONArray("ingredients"));
+			
+			return "Recipe update success";
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+		return "Recipe delete fail";
 	}
-	return "Recipe delete fail";
-}
-
-public String updateNutrient(int recipeid, JSONObject data) {
-	try {	
-		String sql = "delete from nutrient where nutrientsId = ?";
-		PreparedStatement st = con.prepareStatement(sql);
-		st.setInt(1, recipeid);
-		st.executeUpdate();
-		st.close();
-		
-		insertNutrient(recipeid, data);
-		
-	}catch(Exception e) {
-		System.out.println(e);
+	/*Updates the nutritional info from nutrient table based on recipeId
+	Rather than updating it, it just deletes and reinserts the new info */
+	public void updateNutrient(int recipeid, JSONObject data) {
+		try {	
+			String sql = "delete from nutrients where nutrientsId = ?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setInt(1, recipeid);
+			st.executeUpdate();
+			st.close();
+			
+			insertNutrient(recipeid, data);
+		}catch(Exception e) {
+			System.out.println(e);
+		}
 	}
-	return "Recipe delete fail";
-}
-
-public String updateIngredient(int recipeid, JSONArray data) {
-	try {	
-		String sql = "delete from ingredient where recipeId = ?";
-		PreparedStatement st = con.prepareStatement(sql);
-		st.setInt(1, recipeid);
-		st.executeUpdate();
-		st.close();
-		insertIngredient(recipeid, data);
-		return "Recipe update success";
-	}catch(Exception e) {
-		System.out.println(e);
+	/*Updates the ingredient info from ingredient table based on recipeId
+	Rather than updating it, it just deletes and reinserts the new info*/
+	public void updateIngredient(int recipeid, JSONArray data) {
+		try {	
+			String sql = "delete from ingredients where recipeId = ?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setInt(1, recipeid);
+			st.executeUpdate();
+			st.close();
+			insertIngredient(recipeid, data);
+		}catch(Exception e) {
+			System.out.println(e);
+		}
 	}
-	return "Recipe delete fail";
+	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
+	 */
+	public JSONObject apiSearch(int size, String q) throws JSONException, IOException {
+		//todo : for better searching
+		String sql = "Select r.recipeID from recipe r "
+				+ "join nutrient n on r.recipeid = n.nutrientsid "
+				+ "join ingredient i on r.recipeId = i.recipeid"
+				+ " where ingredients = \"" + q 
+				+"\" limit "
+				+ size;
+				//+"\" desc limit " + size/2;
+		JSONObject recipe = new JSONObject();
+		try {
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			while(rs.next()) {
+				recipe.append("recipes", getRecipe(rs.getInt(1)));
+			}
+			st.close();
+			size -= recipe.getJSONArray("recipes").length();
+			System.out.println(recipe.getJSONArray("recipes").length());
+		}catch(Exception e) {
+			System.out.println(e);
+		}	
+		return EdamamAPICall.search(size, q, recipe);
+	}
 }
-
-
-
-}
-
-
-
-
-
-
-
-
