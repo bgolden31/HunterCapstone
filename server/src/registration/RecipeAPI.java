@@ -12,6 +12,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +20,9 @@ import org.json.JSONObject;
 public class RecipeAPI {
 	RecipeDatabase dataBase = new RecipeDatabase();
 	UserRecipeDatabase UserRecipeDatabase = new UserRecipeDatabase();
+	
+	RecipeInfoDatabase RecipeInfoDatabase = new RecipeInfoDatabase();
+	
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String x() {
@@ -75,8 +79,6 @@ public class RecipeAPI {
 			"recipeId" : 29
 		}
 	 */
-	
-	
 	@Path("get")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -124,5 +126,66 @@ public class RecipeAPI {
 		String q = temp.getString("search");
 		return dataBase.apiSearch(size, q).toString();
 	}
-
+	// Gets all the recipes based on username
+	@Path("userRecipe/{username}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getUserRecipe (@PathParam("username") String username)  { 
+		UserRecipeDatabase userrecipes = new UserRecipeDatabase();
+		JSONArray temp =  userrecipes.getUserRecipes(username);
+		return temp.toString();
+	}
+	/* Gives a recipe a rating for that user and returns overall rating
+	 * Input form:
+	 * {
+		    "username": "cal",
+		    "recipeName": "a",
+		    "author" : "a",
+		    "recipeId": 49,
+		    "rating" : 5
+		}
+	 */
+	@Path("update/rating")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getRecipeRating (String data)  { 
+		JSONObject temp = new JSONObject(data);
+		return RecipeInfoDatabase.updateRecipeInfo(temp) + RecipeInfoDatabase.updateRating(temp);
+	}
+	/* Deletes recipe rating for that user and returns overall rating
+	 * Input form:
+	 * {
+		    "username": "cal",
+		    "recipeName": "a",
+		    "author" : "a",
+		    "recipeId": 49,
+		    "rating" : 5
+		}
+	 */
+	@Path("delete/rating")
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	public String deleteRecipeRating (String data)  { 
+		JSONObject temp = new JSONObject(data);
+		String temp1= RecipeInfoDatabase.deleteRecipeInfo(temp);
+		if (temp1== "RecipeRating was removed completely") {
+			return "RecipeRating was removed completely";
+		}
+		return  temp1 + RecipeInfoDatabase.updateRating(temp);
+	}
+	/* Returns json with overall recipe rating, 
+	 * Input form:
+	 * {
+		    "recipeName": "a",
+		    "author" : "a",
+		    "recipeId": 49,
+		}
+	 */
+	@Path("get/rating")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getRating (String data)  { 
+		JSONObject temp = new JSONObject(data);
+		return RecipeInfoDatabase.getRecipeInfo(temp);
+	}
 }

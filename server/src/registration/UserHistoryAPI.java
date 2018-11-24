@@ -32,7 +32,7 @@ public class UserHistoryAPI {
 			"recipeId" : 1
 		}
 		
-		 //Put recipeid is -1 it is from api
+		 //Put recipeid -1 if its is from api
 	 */
 	@Path("insert")
 	@POST
@@ -50,8 +50,9 @@ public class UserHistoryAPI {
 	public String getUserHistory (@PathParam("username") String username) {
 		return dataBase.getUserHistory(username).toString();
 	}
-	//Deletes from userHistory based on username and id
-	@Path("delete/{username}/{id}")
+	//Deletes from userHistory based on username and recipename 
+	//Use /delete/{username}?recipe=a
+	@Path("delete/{username}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	public String deleteUserHistory (@PathParam("username")String username, @QueryParam("recipe")String recipe) {

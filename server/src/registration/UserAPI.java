@@ -1,8 +1,10 @@
 package registration;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -81,14 +83,14 @@ public class UserAPI {
 	}
 	//Delete based on username param
 	@Path("delete/{username}")
-	@POST
+	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	public String deleteUser(@PathParam("username") String username) {
 		return clients.deleteUser(username);
 	}
 	//Takes a json of user info and username param to update
 	@Path("update/{username}")
-	@POST
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	public String updateUser(@PathParam("username") String username, String data) {
 		JSONObject temp = new JSONObject(data);

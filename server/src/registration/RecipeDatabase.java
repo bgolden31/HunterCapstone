@@ -161,16 +161,16 @@ public class RecipeDatabase {
 		return nutrientInfo;
 	}
 	//Returns a ingredient array based recipeId
-	public JSONObject getIngredientInfo(int recipeId) {
+	public JSONArray getIngredientInfo(int recipeId) {
 		String sql = "select * from ingredients where recipeId = ?";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, recipeId);
 			ResultSet rs = st.executeQuery();
 			System.out.println("Getting ingredient"); //xxxxx
-			JSONObject ingredientInfo = new JSONObject();
+			JSONArray ingredientInfo = new JSONArray();
 			while (rs.next()) {
-				ingredientInfo.put( rs.getString(3), Integer.toString(rs.getInt(1) ));	
+				ingredientInfo.put( ingredientBuilder( rs.getString(3),rs.getInt(1) ) );	
 			}
 			st.close();
 			return ingredientInfo;
@@ -178,6 +178,13 @@ public class RecipeDatabase {
 			System.out.println(e);
 		}		
 		return null;
+	}
+	
+	public JSONObject ingredientBuilder(String ingredient, int amount) {
+		JSONObject ingredientO = new JSONObject();
+		ingredientO.put("name" ,ingredient);
+		ingredientO.put("amount" ,amount);
+		   return ingredientO;
 	}
 
 	//Deletes the recipe from recipe table based on recipeId

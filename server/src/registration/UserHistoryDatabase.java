@@ -66,7 +66,7 @@ public class UserHistoryDatabase {
 	//Deletes recipe from userHistory based on username and recipename
 	public String deleteUserHistory(String username, String recipename) {
 		try {	
-			String sql = "delete from userHistory username = ?, recipe_name = ?";
+			String sql = "delete from userHistory where username=? and recipe_name = ?";
 			PreparedStatement st2 = con.prepareStatement(sql);
 			st2.setString(1, username);
 			st2.setString(2, recipename);
