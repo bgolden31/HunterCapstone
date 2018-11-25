@@ -6,20 +6,23 @@
   
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
+        <li class="nav-item active" *ngIf="!loggedIn">
           <a class="nav-link" href="javascript:void(0)" (click)="goToLogin()">Login</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/register">Register</a>
+        <li class="nav-item" *ngIf="!loggedIn">
+          <a class="nav-link" href="javascript:void(0)" (click)="goToRegister()">Register</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/test">Search Recipes</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="loggedIn">
           <a class="nav-link" href="/createrecipe">Create Recipes</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="loggedIn">
           <a class="nav-link" href="/profile">Profile</a>
+        </li>
+        <li class="nav-item" *ngIf="loggedIn">
+          <a class="nav-link" href="javascript:void(0)" (click)="logout()">Logout</a>
         </li>
       </ul>
     </div>

@@ -3,6 +3,7 @@ import { LoginService } from '../../services/login.service';
 import { user } from '../../models/user.model';
 import { loginUser } from '../../models/loginUser.model';
 import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,7 +20,8 @@ export class LoginComponent implements OnInit {
   recipeHistory: string;
   userRecipes: string;
 
-  constructor(private loginService: LoginService,
+  constructor(private router: Router,
+              private loginService: LoginService,
               private cookieService: CookieService
               ) { 
   }
@@ -42,5 +44,6 @@ export class LoginComponent implements OnInit {
         localStorage.setItem("userInfo", this.userInfo);
         localStorage.setItem("userRecipes", this.userRecipes);
       });
+    this.router.navigate(['/home']);
   }
 }

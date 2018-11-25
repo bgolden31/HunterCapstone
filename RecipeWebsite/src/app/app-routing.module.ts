@@ -7,6 +7,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { RecipeinsertComponent } from './components/recipeinsert/recipeinsert.component';
 import { RecipeDetailsComponent } from './components/recipe-details/recipe-details.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { UpdateRecipeComponent } from './components/update-recipe/update-recipe.component';
 
 
 
@@ -44,6 +45,11 @@ const routes: Routes = [
     {
         path: 'profile',
         component: ProfileComponent,
+    },
+
+    {
+        path: 'update',
+        component: UpdateRecipeComponent,
     },
 
 

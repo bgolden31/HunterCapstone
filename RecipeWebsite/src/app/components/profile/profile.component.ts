@@ -5,9 +5,8 @@ import { SaveUserRecipes } from '../../services/saveuserrecipes.service';
 import { recipe } from '../../models/recipe.model';
 import { userInfo } from '../../models/userInfo.model';
 import { history } from '../../models/history.model';
-import { CookieService } from 'ngx-cookie-service';
-
-
+import { RecipeService } from '../../services/recipe.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -20,8 +19,10 @@ export class ProfileComponent implements OnInit {
   recipeHistory: Array<history>;
   userRecipes: Array<recipe>;
   tmp: string;
+  recipeId: number;
 
-  constructor() { }
+  constructor(private recipeService: RecipeService,
+              private router: Router) { }
 
   ngOnInit() {
     this.tmp = localStorage.getItem("userInfo");
@@ -30,6 +31,19 @@ export class ProfileComponent implements OnInit {
     this.recipeHistory = JSON.parse(this.tmp);
     this.tmp = localStorage.getItem("userRecipes");
     this.userRecipes = JSON.parse(this.tmp);
+  }
+
+  deleteRecipe(recipeId) {
+    this.recipeService.deleteRecipe(recipeId)
+    .subscribe((data: Object) => {
+      alert(data)
+    });
+  }
+
+  updateRecipe(recipe) {
+    this.tmp = JSON.stringify(recipe);
+    localStorage.setItem("recipe", this.tmp);
+    this.router.navigate(['/update']);
   }
 
 }
