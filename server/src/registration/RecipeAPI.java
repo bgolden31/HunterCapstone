@@ -116,7 +116,7 @@ public class RecipeAPI {
 				"search" : "chicken"
 			}
 	*/
-	@Path("search")
+	@Path("search/api")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -126,6 +126,83 @@ public class RecipeAPI {
 		String q = temp.getString("search");
 		return dataBase.apiSearch(size, q).toString();
 	}
+	// Gets all the recipes in database based on search params, recipes do not have extra ingredients  
+	/* Input form:
+		 * {
+				"size" : 29,
+				"search" : "chicken"
+			}
+			FOR 1+ WORD SEARCH USE %20 ie "chicken%20rice"
+	*/
+	@Path("search/strict/database")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String databaseSearch (String data) throws JSONException, IOException { 
+		JSONObject temp = new JSONObject(data);
+		return dataBase.databaseStrictSearch(temp).toString();
+	}
+	// Gets all the recipes that username can make based on their Fridge, recipes do not have extra ingredients  
+	@Path("recommended/strict/{username}")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public String recommendedStrictSearch (@PathParam("username") String username) throws JSONException, IOException { 
+		UserFridgeDatabase IngredientdataBase= new UserFridgeDatabase();
+		JSONObject Fridge = IngredientdataBase.getUserIngredient(username);
+		JSONArray Ingredient= Fridge.getJSONArray("fridge");
+		String ingredients ="";
+		for(int n = 0; n < Ingredient.length(); n++)
+		{
+		    JSONObject object = Ingredient.getJSONObject(n);
+		    ingredients += object.get("ingredient") + "%20";
+		    // do some stuff....
+		}
+		
+		
+		String data = "{ size:30, search: \"" + ingredients + "\" }";
+		System.out.println(data);
+		JSONObject temp = new JSONObject(data);
+		return dataBase.databaseStrictSearch(temp).toString();
+	}
+	// Gets all the recipes based on search params, recipes will have can extra ingredients  
+	/* Input form:
+	 * {
+			"size" : 29,
+			"search" : "chicken"
+		}
+		FOR 1+ WORD SEARCH USE %20 ie "chicken%20rice"
+	 */
+	@Path("search/extra/database")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String databaseSearchEx (String data) throws JSONException, IOException { 
+		JSONObject temp = new JSONObject(data);
+		return dataBase.databaseSearchEx(temp).toString();
+	}
+	// Gets all the recipes that username can make based on their Fridge, recipes will have can extra ingredients  
+	@Path("recommended/extra/{username}")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public String recommendedSearchEx (@PathParam("username") String username) throws JSONException, IOException { 
+		UserFridgeDatabase IngredientdataBase= new UserFridgeDatabase();
+		JSONObject Fridge = IngredientdataBase.getUserIngredient(username);
+		JSONArray Ingredient= Fridge.getJSONArray("fridge");
+		String ingredients ="";
+		for(int n = 0; n < Ingredient.length(); n++)
+		{
+		    JSONObject object = Ingredient.getJSONObject(n);
+		    ingredients += object.get("ingredient") + "%20";
+		    // do some stuff....
+		}
+		
+		
+		String data = "{ size:30, search: \"" + ingredients + "\" }";
+		System.out.println(data);
+		JSONObject temp = new JSONObject(data);
+		return dataBase.databaseSearchEx(temp).toString();
+	}
+	
 	// Gets all the recipes based on username
 	@Path("userRecipe/{username}")
 	@GET

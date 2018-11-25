@@ -46,7 +46,7 @@ public class UserShoppingAPI {
 	public String getUserHistory (@PathParam("username") String username) {
 		return dataBase.getUserShopping(username).toString();
 	}
-	//Deletes from UserShopping based on username and id
+	//Deletes from UserShopping based on username and ingredient
 	//Use /delete/{username}?ingredient=c
 	@Path("delete/{username}")
 	@DELETE

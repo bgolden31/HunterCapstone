@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -123,7 +124,7 @@ public class RecipeDatabase {
 			st.close();
 
 			//Puts the nutrients objects and ingredients array
-			recipeInfo.put("nutrient", getNutrientInfo(recipeId));
+			recipeInfo.put("nutrients", getNutrientInfo(recipeId));
 			recipeInfo.put("ingredient", getIngredientInfo(recipeId));
 		    return recipeInfo;
 
@@ -184,7 +185,7 @@ public class RecipeDatabase {
 		JSONObject ingredientO = new JSONObject();
 		ingredientO.put("name" ,ingredient);
 		ingredientO.put("amount" ,amount);
-		   return ingredientO;
+		return ingredientO;
 	}
 
 	//Deletes the recipe from recipe table based on recipeId
@@ -280,5 +281,85 @@ public class RecipeDatabase {
 			System.out.println(e);
 		}	
 		return EdamamAPICall.search(size, q, recipe);
+	}
+	
+	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
+	 */
+	public JSONObject databaseStrictSearch(JSONObject data) throws JSONException, IOException {
+		//todo : for better searching
+		int size = data.getInt("size");
+		String q = data.getString("search");
+
+		return getRecipesFromDatabaseStrict(size, q);
+	}
+	
+	public JSONObject getRecipesFromDatabaseStrict(int size, String search) throws JSONException, IOException {
+	//todo : for better searching
+	 String [] words = search.split("%20");
+	 String sql="SELECT distinct recipeId FROM ingredients WHERE ingredients in (";
+	 int length = words.length;
+	 for(int i =0; i< length ; i++) {
+		sql += "'"+ words[i] + "'," ;
+	 }
+	 sql =  sql.substring(0, sql.length() - 1);
+	 
+	 sql += ") and recipeId not in (SELECT recipeId FROM ingredients WHERE ingredients not in (";
+	 for(int i =0; i< length ; i++) {
+			sql += "'"+ words[i] + "'," ;
+		 }
+	 sql =  sql.substring(0, sql.length() - 1);
+	 sql += ")) LIMIT " + size;
+	 
+	 JSONArray temp = new JSONArray();
+	try {
+		PreparedStatement st = con.prepareStatement(sql);
+		ResultSet rs = st.executeQuery();
+		while(rs.next()) {
+			temp.put( getRecipe( rs.getInt(1) ) );
+		}
+		 System.out.println(sql);
+		 JSONObject temp1 = new JSONObject();
+		 temp1.put("recipe", temp);
+		return temp1;
+	}catch(Exception e) {
+		System.out.println(e);
+	}
+	return null;
+	}	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
+	 */
+	public JSONObject databaseSearchEx(JSONObject data) throws JSONException, IOException {
+		//todo : for better searching
+		int size = data.getInt("size");
+		String q = data.getString("search");
+
+		return getRecipesFromDatabaseEx(size, q);
+	}
+	
+	public JSONObject getRecipesFromDatabaseEx(int size, String search) throws JSONException, IOException {
+	//todo : for better searching
+	 String [] words = search.split("%20");
+	 String sql="SELECT distinct recipeId FROM ingredients WHERE ingredients in (";
+	 int length = words.length;
+	 for(int i =0; i< length ; i++) {
+		sql += "'"+ words[i] + "'," ;
+	 }
+	 sql =  sql.substring(0, sql.length() - 1);
+	 sql += ") LIMIT " + size;
+	 
+	 JSONArray temp = new JSONArray();
+	try {
+		PreparedStatement st = con.prepareStatement(sql);
+		ResultSet rs = st.executeQuery();
+		while(rs.next()) {
+			temp.put( getRecipe( rs.getInt(1) ) );
+		}
+		 System.out.println(sql);
+		 JSONObject temp1 = new JSONObject();
+		 temp1.put("recipe", temp);
+		return temp1;
+	}catch(Exception e) {
+		System.out.println(e);
+	}
+	return null;
 	}
 }

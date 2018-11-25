@@ -60,12 +60,12 @@ public class UserFridgeDatabase {
 	}
 	
 	//Deletes recipe from userHistory based on username and recipename
-	public String deleteUserIngredient(JSONObject data) {
+	public String deleteUserIngredient(String username, String ingredient) {
 		String sql = "delete from userFridge WHERE username=? AND ingredient=?";
 		try {	
 			PreparedStatement st = con.prepareStatement(sql);
-			st.setString(1, data.getString("username"));
-			st.setString(2, data.getString("ingredient"));
+			st.setString(1, username);
+			st.setString(2, ingredient);
 			int i = st.executeUpdate();
 			if( i == 0 ) {
 				return "Nothing to delete";

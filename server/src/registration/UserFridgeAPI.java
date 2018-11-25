@@ -46,12 +46,12 @@ public class UserFridgeAPI {
 	public String getUserHistory (@PathParam("username") String username) {
 		return dataBase.getUserIngredient(username).toString();
 	}
-	//Deletes from UserIngredient based on username and id
-	@Path("delete")
+	//Deletes from UserIngredient based on username and ingredient
+	//Use /delete/{username}?ingredient=c
+	@Path("delete/{username}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteUserHistory (String data) {
-		JSONObject temp = new JSONObject(data);
-		return dataBase.deleteUserIngredient(temp).toString();
+	public String deleteUserHistory (@PathParam("username")String username, @QueryParam("ingredient")String ingredient ) {
+		return dataBase.deleteUserIngredient(username, ingredient).toString();
 	}
 }
