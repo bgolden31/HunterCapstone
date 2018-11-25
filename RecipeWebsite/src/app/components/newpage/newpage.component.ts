@@ -25,12 +25,35 @@ export class NewpageComponent implements OnInit {
   ngOnInit() {
   }
 
+/**
+ * This function is called when the user enters
+ * ingredients in the search bar (such as "chicken")
+ * and want to retrieve recipes relevant to their search
+ * terms. An array of recipes are returned, and are stored
+ * in the 'stuff' variable.
+ * 
+ * @param ing A string of ingredients the user wants to search for in recipes.
+ */
+
   getRecipes(ing) {
     this.recipeService.getRecipes(ing)
       .subscribe((data: APIRecipe) => {
           this.stuff = data;
       });
   }
+
+/**
+ * This function is called when the user clicks on the
+ * "see details" button for a particular recipe. First,
+ * the function checks if the user is logged in. If they are,
+ * then the relevant information is parsed into a JSON object,
+ * and the insertRecipeHistory() function is called to store the
+ * recipe in the user's search history. After, the recipe is stored
+ * in a temporary function, and the user is routed to a new page
+ * where they see the specific details about the recipe in question.
+ * 
+ * @param stuff A particular recipe the user wants to know more details about.
+ */
 
   goToPage(stuff) {
     if (this.cookieService.get('username') != null) {

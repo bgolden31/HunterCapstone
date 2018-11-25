@@ -7,6 +7,18 @@ import 'rxjs/add/operator/map';
 export class LoginService {
      constructor (private http: HttpClient) { }
 
+/**
+ * Returns a User object that contains information used throughout
+ * the program, including their user info, recipes, and viewed recipe
+ * history. This is a pretty rudimentary login function. It calls the login 
+ * function on the server, verifies that the user's credentials
+ * are correct, and returns the user's information if the login is
+ * successful.
+ *
+ * @param  user a JSON object containing the username and password of the user.
+ * @return      an object containing the user's user info, their created recipes, and their viewing history.
+ */
+
      loginUser(User: JSON) {
         return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/user/login', User);
     }
