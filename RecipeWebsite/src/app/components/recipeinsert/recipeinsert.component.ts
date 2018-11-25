@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CreateRecipeService } from '../../services/createrecipe.service';
+import { RecipeService } from '../../services/recipe.service';
 import { recipe } from '../../models/recipe.model';
 import { nutrients } from '../../models/nutrients.model';
 import { ingredients } from '../../models/ingredients.model';
@@ -32,13 +32,22 @@ export class RecipeinsertComponent implements OnInit {
   amount: number;
 
 
-  constructor(private createRecipeService: CreateRecipeService) { }
+  constructor(private RecipeService: RecipeService) { }
 
   ngOnInit() {
     this.recipe.ingredients = [{name:"x", amount:3}, {name:"y", amount:2}];
   }
 
-  
+
+/**
+ * This function is called when the user wants
+ * to create a custom-made recipe that is to be
+ * stored in the database. The values are stored
+ * in the recipe object, which is then parsed into
+ * a JSON object and passed as a parameter to the
+ * service.
+ */
+
   createRecipe() {
     this.recipe.username = this.username
     this.recipe.label = this.name;
@@ -62,7 +71,7 @@ export class RecipeinsertComponent implements OnInit {
     //this.recipe.ingredients.push(this.ing);
     var tmp = JSON.stringify(this.recipe);
     var recipe = JSON.parse(tmp);
-    this.createRecipeService.createRecipe(recipe)
+    this.RecipeService.createRecipe(recipe)
       .subscribe((data: Object) => {
         alert(data)
       });

@@ -29,6 +29,15 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+/**
+ * This function is called when the user enters their
+ * login credentials and hits the "login" button.
+ * Upon a successful login, their username is stored
+ * in cookies, and their recipes, user info, and recipe
+ * history is stored in local storage to be used throughout
+ * the program.
+ */
+
   loginUser() {
     this.User.username = this.username;
     this.User.password = this.password;

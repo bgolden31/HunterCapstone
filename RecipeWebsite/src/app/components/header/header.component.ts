@@ -21,11 +21,21 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  /*
   logout() {
     this.cookieService.deleteAll();
     localStorage.clear();
     this.router.navigate(['/home']);
   }
+  */
+
+/**
+ * This function does a quick check to see if the user
+ * is logged in or not. This is done by checking cookies
+ * for a value for the 'username' key. If there is a
+ * value, then the user is logged in and is unable to log in
+ * while already logged in.
+ */
 
   goToLogin() {
     if (this.cookieService.check('username') == true) {
@@ -35,6 +45,15 @@ export class HeaderComponent implements OnInit {
       this.router.navigate(['/login']);
     }
   }
+
+/**
+ * Similarily to the above function, this function does 
+ * a quick check to see if the user is logged in or not. 
+ * This is done by checking cookies for a value for 
+ * the 'username' key. If there is a value, then 
+ * the user is logged in and is unable to register
+ * while already logged in.
+ */
 
   goToRegister() {
     if (this.cookieService.check('username') == true) {

@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SaveHistoryService } from '../../services/saverecipehistory.service';
-import { SaveUserInfoService } from '../../services/saveuserinfo.service';
-import { SaveUserRecipes } from '../../services/saveuserrecipes.service';
 import { recipe } from '../../models/recipe.model';
 import { userInfo } from '../../models/userInfo.model';
 import { history } from '../../models/history.model';
@@ -33,12 +30,33 @@ export class ProfileComponent implements OnInit {
     this.userRecipes = JSON.parse(this.tmp);
   }
 
+/**
+ * This function is called when the user clicks
+ * the "delete recipe" function next to a recipe
+ * on their profile. The recipe's ID is passed to the
+ * service, which then calls the deletion function
+ * on the server. The recipe is then deleted from the
+ * database.
+ * 
+ * @param recipeId the ID of the recipe to be deleted.
+ */
+
   deleteRecipe(recipeId) {
     this.recipeService.deleteRecipe(recipeId)
     .subscribe((data: Object) => {
       alert(data)
     });
   }
+
+/**
+ * This function is called when the user clicks
+ * the "edit recipe" function next to a recipe
+ * on their profile. The recipe itself is stored
+ * in local storage, and then the user is routed
+ * to the update recipe page.
+ * 
+ * @param recipe the recipe in question to be updated.
+ */
 
   updateRecipe(recipe) {
     this.tmp = JSON.stringify(recipe);

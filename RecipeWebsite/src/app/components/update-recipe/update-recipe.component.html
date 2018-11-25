@@ -14,24 +14,21 @@ Do you have a picture link?: <input type="text" id="link" [(ngModel)]="recipe.im
 <br>
 Do you have a URL to locate this recipe?: <input type="text" id="url" [(ngModel)]="recipe.URL"/> <br>
 <br>
-How much fat?: <input type="text" id="fat" [(ngModel)]="recipe.nutrient.fat"/> <br>
+How much fat?: <input type="text" id="fat" [(ngModel)]="recipe.nutrients.fat"/> <br>
 <br>
-How much sugar?: <input type="text" id="sugar" [(ngModel)]="recipe.nutrient.sugar"/> <br>
+How much sugar?: <input type="text" id="sugar" [(ngModel)]="recipe.nutrients.sugar"/> <br>
 <br>
-How much protein?: <input type="text" id="protein" [(ngModel)]="recipe.nutrient.protein"/> <br>
+How much protein?: <input type="text" id="protein" [(ngModel)]="recipe.nutrients.protein"/> <br>
 <br>
-How much fiber?: <input type="text" id="fiber" [(ngModel)]="recipe.nutrient.fiber"/> <br>
+How much fiber?: <input type="text" id="fiber" [(ngModel)]="recipe.nutrients.fiber"/> <br>
 <br>
-How much sodium?: <input type="text" id="sodium" [(ngModel)]="recipe.nutrient.sodium"/> <br>
+How much sodium?: <input type="text" id="sodium" [(ngModel)]="recipe.nutrients.sodium"/> <br>
 <br>
-How much cholesterol?: <input type="text" id="chol" [(ngModel)]="recipe.nutrient.cholesterol"/> <br>
+How much cholesterol?: <input type="text" id="chol" [(ngModel)]="recipe.nutrients.cholesterol"/> <br>
 <br>
-How many carbs?: <input type="text" id="carbs" [(ngModel)]="recipe.nutrient.carbs"/> <br>
-<br>
-Ingredient: <input type="text" id="ingredient" [(ngModel)]="ingredient"/> <br>
-<br>
-Amount: <input type="text" id="amount" [(ngModel)]="amount"/> <br>
+How many carbs?: <input type="text" id="carbs" [(ngModel)]="recipe.nutrients.carbs"/> <br>
 <br>
 
 
-<button (click)="updateRecipe()">Update your recipe!</button> <br>
+
+<button (click)="updateRecipe(recipe.recipeId)">Update your recipe!</button> <br>

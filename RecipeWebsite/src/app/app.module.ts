@@ -9,17 +9,12 @@ import { NewpageComponent } from './components/newpage/newpage.component';
 
 import { RecipeService } from './services/recipe.service';
 import { SaveRecipeService } from './services/saverecipe.service';
-import { SaveUserInfoService } from './services/saveuserinfo.service';
-import { SaveHistoryService } from './services/saverecipehistory.service';
-import { SaveUserRecipes } from './services/saveuserrecipes.service';
 import { LoginService } from './services/login.service';
 import { RegisterService } from './services/register.service';
-import { CreateRecipeService } from './services/createrecipe.service';
 import { CookieService } from 'ngx-cookie-service';      // INSTALL FROM https://www.npmjs.com/package/ngx-cookie-service
 
 
 import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -33,7 +28,6 @@ import { UpdateRecipeComponent } from './components/update-recipe/update-recipe.
     AppComponent,
     NewpageComponent,
     HeaderComponent,
-    FooterComponent,
     HomeComponent,
     LoginComponent,
     RegisterComponent,
@@ -52,12 +46,8 @@ import { UpdateRecipeComponent } from './components/update-recipe/update-recipe.
     RecipeService,
     LoginService,
     RegisterService,
-    CreateRecipeService,
     SaveRecipeService,
     CookieService,
-    SaveUserInfoService,
-    SaveHistoryService,
-    SaveUserRecipes
   ],
   bootstrap: [AppComponent]
 })

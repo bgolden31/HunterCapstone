@@ -22,6 +22,16 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
+
+/**
+ * This function is called when the user wants
+ * to register an account. The values for their
+ * name, age, email, username, and password are
+ * stored in the User object, which is then parsed
+ * into a JSON object and passed as a parameter
+ * to the service.
+ */
+
   registerUser() {
     this.User.username = this.username;
     this.User.password = this.password;

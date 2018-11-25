@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
     this.User.password = this.password;
   }
 
+  /*
   loginUser() {
     var tmp = JSON.stringify(this.User);
     var userInfo = JSON.parse(tmp);
@@ -27,5 +28,6 @@ export class HomeComponent implements OnInit {
         alert("all good");
       });
   }
+  */
 
 }
