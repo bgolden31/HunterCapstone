@@ -174,7 +174,8 @@ public class RecipeAPI {
 		return dataBase.DBAPISearchEx(temp).toString();
 	}
 	// Gets all the recipes that username can make based on their Fridge, recipes will have can extra ingredients  
-	//Use path recommended/extra/?size=10
+	//Use path recommended/{username}?size=10
+	@Path("recommended/{username}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public String recommendedSearchEx (@PathParam("username") String username, @QueryParam("size")int size) throws JSONException, IOException { 
