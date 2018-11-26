@@ -66,7 +66,7 @@ public class EdamamAPICall {
 	   	 	recipe.put("ingredients", temp.getJSONArray("ingredients"));
 	   	 	recipe.accumulate("nutrients", getNutrients(temp));
 	   	 	APIDatabase.insertEdamamRecipe(recipe, q);
-	   	 	newRecipeArray.append("recipes", recipe);
+	   	 	newRecipeArray.append("API Recipes", recipe);
 	    }
 	    //System.out.print(newRecipeArray)
 	    return newRecipeArray;

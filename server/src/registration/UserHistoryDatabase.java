@@ -27,7 +27,7 @@ public class UserHistoryDatabase {
 		return "User History insert fail";
 	}
 	//Gets all the recipes view by user in userHistory table
-	public JSONObject getUserHistory(String username) {
+	public JSONArray getUserHistory(String username) {
 		System.out.println(username);
 		String sql = "select * from userHistory where username = ?";
 		try {
@@ -41,9 +41,7 @@ public class UserHistoryDatabase {
 			}
 			
 			st.close();
-			JSONObject response= new JSONObject();
-			response.put(username, userHistory);
-		    return response;
+		    return userHistory;
 
 		}catch(Exception e) {
 			System.out.println(e);

@@ -303,6 +303,7 @@ public class RecipeDatabase {
 		return size==0?recipe:EdamamAPICall.search(size, q, recipe);
 	}
 	
+	
 	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
 	 */
 	public JSONObject databaseStrictSearch(JSONObject data) throws JSONException, IOException {
@@ -347,16 +348,17 @@ public class RecipeDatabase {
 	return null;
 	}	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
 	 */
-	public JSONObject databaseSearchEx(JSONObject data) throws JSONException, IOException {
+	public JSONObject DBAPISearchEx(JSONObject data) throws JSONException, IOException {
 		//todo : for better searching
 		int size = data.getInt("size");
 		String q = data.getString("search");
 
-		return getRecipesFromDatabaseEx(size, q);
+		return DBAPISearchExHelper(size, q);
 	}
 	
-	public JSONObject getRecipesFromDatabaseEx(int size, String search) throws JSONException, IOException {
+	public JSONObject DBAPISearchExHelper(int size, String search) throws JSONException, IOException {
 	//todo : for better searching
+	 int tempSize = size/2;
 	 String [] words = search.split("%20");
 	 String sql="SELECT distinct recipeId FROM ingredients WHERE ingredients in (";
 	 int length = words.length;
@@ -364,7 +366,7 @@ public class RecipeDatabase {
 		sql += "'"+ words[i] + "'," ;
 	 }
 	 sql =  sql.substring(0, sql.length() - 1);
-	 sql += ") LIMIT " + size;
+	 sql += ") LIMIT " + tempSize;
 	 
 	 JSONArray temp = new JSONArray();
 	try {
@@ -373,13 +375,13 @@ public class RecipeDatabase {
 		while(rs.next()) {
 			temp.put( getRecipe( rs.getInt(1) ) );
 		}
-		 System.out.println(sql);
-		 JSONObject temp1 = new JSONObject();
-		 temp1.put("recipe", temp);
-		return temp1;
 	}catch(Exception e) {
 		System.out.println(e);
 	}
-	return null;
+		JSONObject temp1 = new JSONObject();
+		temp1.put("Database Recipes", temp);
+		size -= temp1.getJSONArray("Database Recipes").length();
+		System.out.println(temp1.getJSONArray("Database Recipes").length());
+		return EdamamAPICall.search(size, search, temp1);
 	}
 }

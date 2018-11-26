@@ -55,7 +55,7 @@ public class UserAPI {
 		UserRecipeDatabase userrecipes = new UserRecipeDatabase();
 		JSONArray temp3 =  userrecipes.getUserRecipes(username);
 		UserHistoryDatabase userHistory = new UserHistoryDatabase();
-		JSONObject temp4 = userHistory.getUserHistory(username);
+		JSONArray temp4 = userHistory.getUserHistory(username);
 		
 		JSONObject combined = new JSONObject();
 		combined.put("UserInfo",temp2);
