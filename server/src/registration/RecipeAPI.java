@@ -165,6 +165,14 @@ public class RecipeAPI {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.databaseStrictSearch(temp).toString();
 	}
+	// Gets all the recipes in DATABASE AND API based on search params, recipes have extra ingredients  
+	/* Input form:
+		 * {
+				"size" : 29,
+				"search" : "chicken"
+			}
+			FOR 1+ WORD SEARCH USE %20 ie "chicken%20rice"
+	*/
 	@Path("search")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
