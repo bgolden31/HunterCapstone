@@ -5,12 +5,7 @@ import java.sql.ResultSet;
 import org.json.JSONArray;
 
 public class UserRecipeDatabase {
-	private Connection con=null;
-
-	//connect to database
-	public UserRecipeDatabase(){
-		con = DataBaseConnector.connect(con);
-	}
+	private Connection con= DataBaseConnector.connect();
 	/* Returns all the recipes created by user, based on username
 	 * 
 	 */

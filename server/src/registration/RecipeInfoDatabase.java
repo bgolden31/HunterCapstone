@@ -8,12 +8,8 @@ import org.json.JSONObject;
 
 public class RecipeInfoDatabase {
 
-	private Connection con=null;
+	private Connection con= DataBaseConnector.connect();
 	
-	//connect to database
-	public RecipeInfoDatabase(){
-		con = DataBaseConnector.connect(con);
-	}	
 	public String updateRecipeInfo(JSONObject data) {
 		String sql = "select * from recipeRating where username =? AND recipe_name = ? AND  author = ? AND recipeId = ?";
 		try {

@@ -8,12 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class UserHistoryDatabase {
-	private Connection con=null;
-	
-	//connect to database
-	public UserHistoryDatabase(){
-		con = DataBaseConnector.connect(con);
-	}
+	private Connection con= DataBaseConnector.connect();
 	//Inserts into userHistory table
 	public String insertUserHistory(JSONObject data) {
 		try {	

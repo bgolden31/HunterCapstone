@@ -10,16 +10,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import API.APIDatabase;
 import API.EdamamAPICall;
 
 public class RecipeDatabase {
 	
-	private Connection con=null;
+	private Connection con= DataBaseConnector.connect();
 	
-	//connect to database
+	/*connect to database
 	public RecipeDatabase(){
 		con = DataBaseConnector.connect(con);
-	}
+	}*/
 	
 	//Takes Json containing recipe info to insert to recipe table
 	//Returns the recipeId to be used in UserRecipe Table
@@ -117,7 +118,7 @@ public class RecipeDatabase {
 			recipeInfo.put("label", rs.getString(2));
 			recipeInfo.put("description", rs.getString(3));
 			recipeInfo.put("image", rs.getString(4));
-			recipeInfo.put("URL",rs.getString(5));
+			recipeInfo.put("url",rs.getString(5));
 			recipeInfo.put("servings", rs.getInt(6));
 			recipeInfo.put("calories", rs.getDouble(7));
 			recipeInfo.put("totalTime", rs.getInt(8));
@@ -258,15 +259,16 @@ public class RecipeDatabase {
 	}
 	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
 	 */
+	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
+	 */
 	public JSONObject apiSearch(int size, String q) throws JSONException, IOException {
 		//todo : for better searching
 		String sql = "Select r.recipeID from recipe r "
-				+ "join nutrient n on r.recipeid = n.nutrientsid "
-				+ "join ingredient i on r.recipeId = i.recipeid"
+				+ "join nutrients n on r.recipeid = n.nutrientsid "
+				+ "join ingredients i on r.recipeId = i.recipeid"
 				+ " where ingredients = \"" + q 
 				+"\" limit "
-				+ size;
-				//+"\" desc limit " + size/2;
+				+ size/2;
 		JSONObject recipe = new JSONObject();
 		try {
 			Statement st = con.createStatement();
@@ -275,12 +277,30 @@ public class RecipeDatabase {
 				recipe.append("recipes", getRecipe(rs.getInt(1)));
 			}
 			st.close();
-			size -= recipe.getJSONArray("recipes").length();
-			System.out.println(recipe.getJSONArray("recipes").length());
+			if(recipe.has("recipes")) {
+				size -= recipe.getJSONArray("recipes").length();
+			}
 		}catch(Exception e) {
 			System.out.println(e);
 		}	
-		return EdamamAPICall.search(size, q, recipe);
+		try {
+			sql = "Select r.recipeID from APIrecipe r join APIdata A on r.recipeId = A.recipeId "
+					+ "where A.searchString = \"" + q 
+					+"\" limit "
+					+ size;
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			while(rs.next()) {
+				recipe.append("recipes", APIDatabase.getEdamamRecipe(rs.getInt(1)));
+			}
+			st.close();
+			if(recipe.has("recipes")) {
+				size -= recipe.getJSONArray("recipes").length();
+			}
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+		return size==0?recipe:EdamamAPICall.search(size, q, recipe);
 	}
 	
 	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API

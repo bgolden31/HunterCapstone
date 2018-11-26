@@ -9,11 +9,7 @@ import org.json.JSONObject;
 
 public class UserFridgeDatabase {
 
-	private Connection con=null;
-	//connect to database
-	public UserFridgeDatabase(){
-		con = DataBaseConnector.connect(con);
-	}	
+	private Connection con= DataBaseConnector.connect();
 	
 	//Inserts into UserShopping table
 	public String insertUserIngredient(JSONObject data) {

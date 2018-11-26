@@ -19,18 +19,17 @@ public class EdamamAPICall {
     	HttpURLConnection con = connect(size,q);
     	//read all string from con
     	BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
+    			new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
         while ((inputLine = in.readLine()) != null) {
         	response.append(inputLine);
         }
         in.close(); //end the read
-    	
         JSONObject myResponse = new JSONObject(response.toString());
         JSONArray recipeArray = new JSONArray();
         recipeArray = myResponse.getJSONArray("hits");
-        return getRecipes(size, recipeArray, newRecipeArray);
+        return getRecipes(size, recipeArray, newRecipeArray, q);
     }
     
     //connect to recipe search api to edamam
@@ -53,7 +52,7 @@ public class EdamamAPICall {
     	return null;
     }
     
-    public static JSONObject getRecipes(int size, JSONArray recipeArray, JSONObject newRecipeArray ) throws JSONException {
+    public static JSONObject getRecipes(int size, JSONArray recipeArray, JSONObject newRecipeArray, String q) throws JSONException {
 	    for(int i =0; i < size && i < recipeArray.length(); i++) {
 	   	 	JSONObject temp = new JSONObject(recipeArray.getJSONObject(i).getJSONObject("recipe").toString());
 	   	 	JSONObject recipe = new JSONObject();
@@ -62,22 +61,23 @@ public class EdamamAPICall {
 	   	 	recipe.accumulate("url", temp.getString("url"));
 	   	 	recipe.accumulate("servings", temp.getInt("yield"));
 	   	 	recipe.accumulate("image", temp.getString("image"));
-	   	 	recipe.accumulate("colories", temp.getDouble("calories"));
-	   	 	recipe.accumulate("totaltime", temp.getDouble("totalTime"));
+	   	 	recipe.accumulate("calories", temp.getDouble("calories"));
+	   	 	recipe.accumulate("totalTime", temp.getDouble("totalTime"));
 	   	 	recipe.put("ingredients", temp.getJSONArray("ingredients"));
-	   	 	recipe.accumulate("nutrinets", getNutrients(temp));
+	   	 	recipe.accumulate("nutrients", getNutrients(temp));
+	   	 	APIDatabase.insertEdamamRecipe(recipe, q);
 	   	 	newRecipeArray.append("recipes", recipe);
 	    }
-	    //System.out.print(newRecipeArray);
+	    //System.out.print(newRecipeArray)
 	    return newRecipeArray;
 	}
     
-    //setup all nutrients from edamam
+	//setup all nutrients from edamam
     public static JSONObject getNutrients(JSONObject recipe) throws JSONException {
 		JSONObject temp = new JSONObject(recipe.getJSONObject("totalNutrients").toString());
 		JSONObject nutrients = new JSONObject();
 		nutrients.accumulate("fat", getNutrient(temp, "FAT"));
-		nutrients.accumulate("crabs", getNutrient(temp, "CHOCDF"));
+		nutrients.accumulate("carbs", getNutrient(temp, "CHOCDF"));
 		nutrients.accumulate("fiber", getNutrient(temp, "FIBTG"));
 		nutrients.accumulate("sugar",  getNutrient(temp, "SUGAR"));
 		nutrients.accumulate("protein",  getNutrient(temp, "PROCNT"));

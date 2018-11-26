@@ -9,12 +9,7 @@ import org.json.JSONObject;
 
 public class UserDatabase {
 	
-	private Connection con=null;
-	
-	//connect to database
-	public UserDatabase(){
-		con = DataBaseConnector.connect(con);
-	}
+	private Connection con= DataBaseConnector.connect();
 	
 	//Takes info from Json and adds it to user table, with error checking and password hashing
 	public String registerUser(JSONObject user) {

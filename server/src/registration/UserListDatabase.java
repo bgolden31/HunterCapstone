@@ -8,12 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class UserListDatabase {
-private Connection con=null;
-	
-	//connect to database
-	public UserListDatabase(){
-		con = DataBaseConnector.connect(con);
-	}
+	private Connection con= DataBaseConnector.connect();
 	//Inserts into userHistory table
 	public String createList(JSONObject data) {
 		try {	
