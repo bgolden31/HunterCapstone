@@ -11,35 +11,6 @@ public class UserDatabase {
 	
 	private Connection con= DataBaseConnector.connect();
 	
-	
-	//Takes info from Json and adds it to user table, with error checking and password hashing
-	public String verifyUser(JSONObject user) {
-		String sql = "select * from user where username = ?";
-		try {
-			PreparedStatement st = con.prepareStatement(sql);
-			st.setString(1, user.getString("username"));
-			ResultSet rs = st.executeQuery();
-			//If user already exists early return
-			if(rs.next())
-				return "This account already exists";
-			sql = "insert into userTemp (username, password, email, age, name) value (?,?,?,?,?)";
-			st = con.prepareStatement(sql);
-			st.setString(1, user.getString("username"));
-			st.setString(2, user.getString("password"));
-			st.setString(3, user.getString("email"));
-			st.setInt(4, user.getInt("age"));
-			st.setString(5, user.getString("name"));
-			st.executeUpdate();
-			st.close();
-			
-			Email.verify(user);
-			return "Register successful, but user has to verify";
-		}catch(Exception e) {
-			System.out.println(e);
-			return e.toString(); //Returns the error related
-		}
-	}
-
 	//Takes info from Json and adds it to user table, with error checking and password hashing
 	public String registerUser(JSONObject user) {
 		//List<String> name = new ArrayList<>(); 
@@ -110,63 +81,6 @@ public class UserDatabase {
 			System.out.println(e);
 			return e.toString(); //Returns the error related
 		}	
-	}
-	
-	
-	public String forgotPass(String username) {
-		String error="";
-		try {	
-			String sql = "select * from user where username=?";
-			PreparedStatement st = con.prepareStatement(sql);
-			st.setString(1, username);
-			ResultSet rs = st.executeQuery();
-			if(!rs.next()) {
-				return "User does not exist";
-			}
-
-			String password= rs.getString(3);
-			String salt= rs.getString(7);
-			
-			JSONObject user= new JSONObject();
-			user.put("username", rs.getString(2));
-			user.put("password", rs.getString(3));
-			user.put("email", rs.getString(4));
-			Email.forgotPassword(user);
-			st.close();
-		}catch(Exception e) {
-			System.out.println(e);
-			return e.toString(); //Returns the error related
-		}
-		return error;
-	}
-	
-	
-	
-	
-	public String verify(String username) {
-		String error="";
-		try {	
-			String sql = "select * from userTemp where username=?";
-			PreparedStatement st = con.prepareStatement(sql);
-			st.setString(1, username);
-			ResultSet rs = st.executeQuery();
-			if(!rs.next()) {
-				return "No such user was registered";
-			}
-
-			JSONObject user= new JSONObject();
-			user.put("username", rs.getString(1));
-			user.put("password", rs.getString(2));
-			user.put("email", rs.getString(3));
-			user.put("age", rs.getInt(4));
-			user.put("name", rs.getString(5));
-			error= registerUser(user);
-			st.close();
-		}catch(Exception e) {
-			System.out.println(e);
-			return e.toString(); //Returns the error related
-		}
-		return error;
 	}
 	
 	//Removes user based on username

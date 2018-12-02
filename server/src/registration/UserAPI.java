@@ -79,9 +79,7 @@ public class UserAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String register(String data) {
 		JSONObject temp = new JSONObject(data);
-		
-		
-		return clients.verifyUser(temp);
+		return clients.registerUser(temp);
 	}
 	//Delete based on username param
 	@Path("delete/{username}")
@@ -97,18 +95,6 @@ public class UserAPI {
 	public String updateUser(@PathParam("username") String username, String data) {
 		JSONObject temp = new JSONObject(data);
 		return clients.updateUser(username, temp);
-	}
-	@Path("verify/{username}")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public String updateUsera(@PathParam("username") String username) {
-		return clients.verify(username);
-	}
-	@Path("forgot/{username}")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public String forgot(@PathParam("username") String username) {
-		return clients.forgotPass(username);
 	}
 	
 }
