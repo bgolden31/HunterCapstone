@@ -1,3 +1,15 @@
 body {
     text-align: center;
 }
+    .jumbotron {
+      background: url('http://i2.wp.com/www.foodrepublic.com/wp-content/uploads/2018/08/Teresa-Plates.jpeg?resize=1280%2C%20560') no-repeat center center;
+      background-size: cover;
+      padding-top: 16%;
+      padding-bottom: 16%;
+      font-weight: bold;
+      color: #FFFFFF;
+      font-size: 20pt;
+      text-shadow: 3px 2px black;
+    }
+    
+

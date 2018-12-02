@@ -1,15 +1,22 @@
-Input ingredients: <br><br>
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">       
+            <div class="col-md-6 offset-md-3">
+                <h3>Input ingredients:</h3>
 
-<div class="form-group">
-    <input type="text" class="form-control" id="ing" [(ngModel)]="ing" placeholder="Potato Salad">
-</div>
+					<div class="form-group">
+					    <input type="text" class="form-control" id="ing" [(ngModel)]="ing" placeholder="Potato Salad">
+					</div>
+					
+					<button (click)="getRecipes(ing)" class="btn btn-primary" >Click me </button> 
+					
+					<div *ngFor="let user of stuff?.hits">
+					
+					  {{ user.recipe.label }} from {{ user.recipe.source }}
+					
+					  <button type="button" (click)="goToPage(user.recipe)" class="btn btn-primary">See Details</button>
 
-<button (click)="getRecipes(ing)">Click me </button> <br>
-
-<div *ngFor="let user of stuff?.hits">
-
-  {{ user.recipe.label }} from {{ user.recipe.source }}
-
-  <button type="button" (click)="goToPage(user.recipe)" class="btn btn-primary">See Details</button>
-
+            </div>
+        </div>
+    </div>
 </div>
