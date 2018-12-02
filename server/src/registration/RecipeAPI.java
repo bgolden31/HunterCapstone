@@ -259,10 +259,10 @@ public class RecipeAPI {
 		}
 	 */
 	@Path("get/rating")
-		@POST
-		@Produces(MediaType.APPLICATION_JSON)
-		public String getRating (String data)  { 
-			JSONObject temp = new JSONObject(data);
-			return RecipeInfoDatabase.getRecipeInfo(temp);
-		}
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getRating (String data)  { 
+		JSONObject temp = new JSONObject(data);
+		return RecipeInfoDatabase.getRecipeInfo(temp);
+	}
 }

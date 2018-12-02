@@ -46,8 +46,8 @@ public class RecipeInfoDatabase {
 			return "RecipeRating insert success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "Recipe rating insert fail";
 	}
 	public String updateRating(JSONObject data) {
 		try {	
@@ -96,8 +96,8 @@ public class RecipeInfoDatabase {
 			return "RecipeRating insert success" + Double.toString(average) ;
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "Recipe rating insert fail";
 	}
 	public String deleteRecipeInfo(JSONObject data) {
 		String sql = "delete from recipeRating where username = ? AND recipe_name = ? AND  author = ? AND recipeId = ?";
@@ -126,13 +126,14 @@ public class RecipeInfoDatabase {
 			return "RecipeRating delete success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "RecipeRating delete fail";
 	}
 	
 	public String getRecipeInfo(JSONObject data) {
-		String sql = "SELECT * FROM recipeInfo WHERE recipe_name = ? AND author = ? AND recipeId = ?";
+		
 		try {
+			String sql = "SELECT * FROM recipeInfo WHERE recipe_name = ? AND author = ? AND recipeId = ?";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, data.getString("recipeName"));
 			st.setString(2, data.getString("author"));
@@ -147,9 +148,10 @@ public class RecipeInfoDatabase {
 				st.close();
 				return recipeInfo.toString();
 			}
+			return "No ratings found";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "RecipeRating delete fail";
 	}
 }

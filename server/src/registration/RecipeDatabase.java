@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -131,8 +130,9 @@ public class RecipeDatabase {
 
 		}catch(Exception e) {
 			System.out.println(e);
-		}		
-		return null;
+			JSONObject error = new JSONObject(e);
+			return error;
+		}
 	}
 
 	//Returns a nutrient json based recipeId
@@ -225,8 +225,8 @@ public class RecipeDatabase {
 			return "Recipe update success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "Recipe delete fail";
 	}
 	/*Updates the nutritional info from nutrient table based on recipeId
 	Rather than updating it, it just deletes and reinserts the new info */
@@ -281,7 +281,8 @@ public class RecipeDatabase {
 				size -= recipe.getJSONArray("recipes").length();
 			}
 		}catch(Exception e) {
-			System.out.println(e);
+			JSONObject error = new JSONObject(e);
+			return error;
 		}	
 		try {
 			sql = "Select r.recipeID from APIrecipe r join APIdata A on r.recipeId = A.recipeId "
@@ -298,7 +299,8 @@ public class RecipeDatabase {
 				size -= recipe.getJSONArray("recipes").length();
 			}
 		}catch(Exception e) {
-			System.out.println(e);
+			JSONObject error = new JSONObject(e);
+			return error;
 		}
 		return size==0?recipe:EdamamAPICall.search(size, q, recipe);
 	}
@@ -343,9 +345,9 @@ public class RecipeDatabase {
 		 temp1.put("recipe", temp);
 		return temp1;
 	}catch(Exception e) {
-		System.out.println(e);
+		JSONObject error = new JSONObject(e);
+		return error;
 	}
-	return null;
 	}	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
 	 */
 	public JSONObject DBAPISearchEx(JSONObject data) throws JSONException, IOException {
@@ -376,7 +378,8 @@ public class RecipeDatabase {
 			temp.put( getRecipe( rs.getInt(1) ) );
 		}
 	}catch(Exception e) {
-		System.out.println(e);
+		JSONObject error = new JSONObject(e);
+		return error;
 	}
 		JSONObject temp1 = new JSONObject();
 		temp1.put("Database Recipes", temp);

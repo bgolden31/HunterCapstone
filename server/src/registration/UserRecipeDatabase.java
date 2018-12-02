@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class UserRecipeDatabase {
 	private Connection con= DataBaseConnector.connect();
@@ -24,8 +25,9 @@ public class UserRecipeDatabase {
 			return userRecipes;
 		}catch(Exception e) {
 			System.out.println(e);
+			JSONArray error = new JSONArray(e);
+			return error;
 		}		
-		return null;
 	}
 	/* Inserts into userRecipe table, with recipeId and username
 	 */

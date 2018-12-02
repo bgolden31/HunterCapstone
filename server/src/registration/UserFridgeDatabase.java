@@ -23,8 +23,8 @@ public class UserFridgeDatabase {
 			return "User Ingredient insert success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "User Ingredient insert fail";
 	}
 	//Returns a ingredient array based recipeId
 	public JSONObject getUserIngredient(String username) {
@@ -45,8 +45,9 @@ public class UserFridgeDatabase {
 			return info;
 		}catch(Exception e) {
 			System.out.println(e);
-		}		
-		return null;
+			JSONObject error = new JSONObject(e);
+			return error;
+		}
 	}
 	
 	public JSONObject ingredientListBuilder(String ingredient) {
@@ -70,7 +71,7 @@ public class UserFridgeDatabase {
 			return "User Ingredient delete success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "User Ingredient delete fail";
 	}
 }

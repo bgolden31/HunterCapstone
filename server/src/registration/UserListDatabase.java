@@ -25,8 +25,8 @@ public class UserListDatabase {
 			return "User List insert success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "User List insert fail";
 	}
 	//Deletes recipe from userHistory based on username and recipename
 	public String deleteList(JSONObject data) {
@@ -41,8 +41,8 @@ public class UserListDatabase {
 			return "User History delete success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "User History delete fail";
 	}
 	public String insertToList(JSONObject data) {
 		try {	
@@ -62,8 +62,8 @@ public class UserListDatabase {
 			return "Recipe to List insert success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "Recipe to List insert fail";
 	}
 	//Deletes recipe from userHistory based on username and recipename
 	public String deletefromList(JSONObject data) {
@@ -80,8 +80,8 @@ public class UserListDatabase {
 			return "User History delete success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "User History delete fail";
 	}
 	//Gets all the recipes view by user in userHistory table
 	public JSONObject getUserList(String username) {
@@ -104,8 +104,9 @@ public class UserListDatabase {
 
 		}catch(Exception e) {
 			System.out.println(e);
-		}		
-		return null;
+			JSONObject error = new JSONObject(e);
+			return error;
+		}
 	}
 	//Helper to  build history object
 	JSONObject buildListObject(String listName, int listId){
@@ -136,8 +137,9 @@ public class UserListDatabase {
 
 		}catch(Exception e) {
 			System.out.println(e);
-		}		
-		return null;
+			JSONObject error = new JSONObject(e);
+			return error;
+		}
 	}
 	public JSONObject getAllUserListInfoHelper(String username, String listName, int listId) {
 		String sql = "select * from userRecipeList where username = ? and listId = ?";
@@ -161,8 +163,9 @@ public class UserListDatabase {
 
 		}catch(Exception e) {
 			System.out.println(e);
-		}		
-		return null;
+			JSONObject error = new JSONObject(e);
+			return error;
+		}
 	}
 	//Helper to  build history object
 	JSONObject buildListInfoObject(String recipeName, String author, int recipeId){
@@ -208,8 +211,9 @@ public class UserListDatabase {
 
 		}catch(Exception e) {
 			System.out.println(e);
-		}		
-		return null;
+			JSONObject error = new JSONObject(e);
+			return error;
+		}
 	}
 	public String favoriteInsert(JSONObject data) {
 		try {	
@@ -228,8 +232,8 @@ public class UserListDatabase {
 			return "User List insert success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "User List insert fail";
 	}
 	//Deletes recipe from userHistory based on username and recipename
 	public String favoriteDelete(JSONObject data) {
@@ -245,8 +249,8 @@ public class UserListDatabase {
 			return "User History delete success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "User History delete fail";
 	}
 	//Get favorites 
 	public JSONObject getUserFavorites(String username) {
@@ -271,7 +275,8 @@ public class UserListDatabase {
 
 		}catch(Exception e) {
 			System.out.println(e);
-		}		
-		return null;
+			JSONObject error = new JSONObject(e);
+			return error;
+		}
 	}
 }

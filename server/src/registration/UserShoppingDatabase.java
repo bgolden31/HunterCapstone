@@ -23,8 +23,8 @@ public class UserShoppingDatabase {
 			return "User Shopping insert success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "User Shopping insert fail";
 	}
 	
 	//Returns a ingredient array based recipeId
@@ -43,8 +43,9 @@ public class UserShoppingDatabase {
 				return ingredientInfo;
 			}catch(Exception e) {
 				System.out.println(e);
-			}		
-			return null;
+				JSONArray error = new JSONArray(e);
+				return error;
+			}
 		}
 
 	public JSONObject shoppingListBuilder(String ingredient) {
@@ -64,14 +65,14 @@ public class UserShoppingDatabase {
 			st2.setString(2, ingredient);
 			int deleted = st2.executeUpdate();
 			if (deleted == 0) {
-				return "wtf is happening";
+				return "Nothing was deleted";
 			}
 			st2.close();
 			return "User Shopping delete success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "User Shopping delete fail";
 	}
 	
 	

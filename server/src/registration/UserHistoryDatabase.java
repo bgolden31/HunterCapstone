@@ -23,8 +23,8 @@ public class UserHistoryDatabase {
 			return "User History insert success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "User History insert fail";
 	}
 	//Gets all the recipes view by user in userHistory table
 	public JSONArray getUserHistory(String username) {
@@ -39,10 +39,8 @@ public class UserHistoryDatabase {
 			while (rs.next()) {
 				userHistory.put( buildHistoryObject ( rs.getString(2),rs.getString(3) , rs.getInt(4) ));	
 			}
-			
 			st.close();
 		    return userHistory;
-
 		}catch(Exception e) {
 			System.out.println(e);
 		}		
@@ -68,7 +66,7 @@ public class UserHistoryDatabase {
 			return "User History delete success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString(); //Returns the error related
 		}
-		return "User History delete fail";
 	}
 }
