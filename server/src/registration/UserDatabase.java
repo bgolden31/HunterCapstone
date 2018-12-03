@@ -5,6 +5,8 @@ import security.PasswordUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class UserDatabase {
@@ -85,17 +87,50 @@ public class UserDatabase {
 	
 	//Removes user based on username
 	public String deleteUser(String username) {
-		try {	
-			String sql = "delete from user where username = ?";
-			PreparedStatement st = con.prepareStatement(sql);
-			st.setString(1, username);
-			st.executeUpdate();
-			st.close();
+		try {
+			String sql = "select * from userRecipes where username = ?";
+			PreparedStatement st2 = con.prepareStatement(sql);
+			st2.setString(1, username);
+			RecipeDatabase dataBase = new RecipeDatabase();
+
+			ResultSet rs1 = st2.executeQuery();
+			while (rs1.next()) {
+				dataBase.deleteRecipe(rs1.getInt(2));	
+			}
+			st2.close();
+			
+			sql = "delete from user where username = ?";
+			PreparedStatement st3 = con.prepareStatement(sql);
+			st3.setString(1, username);
+			int i = st3.executeUpdate();
+			if(i==0) {
+				 return "Nothing was deleted because user doesnt exists ";
+			}
+			else {
+				sql = "delete from userFavorites where username = ?";
+				PreparedStatement st = con.prepareStatement(sql);
+				st.setString(1, username);
+				 i = st.executeUpdate();
+				st.close();
+				
+				sql = "delete from userRecipeList where username = ?";
+				st = con.prepareStatement(sql);
+				st.setString(1, username);
+				i = st.executeUpdate();
+				st.close();
+				
+				sql = "delete from likedTable where username = ?";
+				st = con.prepareStatement(sql);
+				st.setString(1, username);
+				i = st.executeUpdate();
+				st.close();
+			}
+			st3.close();
 			return "User delete success";
 		}catch(Exception e) {
 			System.out.println(e);
+			return e.toString();
 		}
-		return "User delete failed";
 	}
 	
 	//Update user based on username and json info
@@ -118,12 +153,31 @@ public class UserDatabase {
 				st.setString(4, user.getString("name"));
 				st.setString(5, salt);
 				st.setString(6, user.getString("username"));
-				st.executeUpdate();
+				int i = st.executeUpdate();
+				if( i==0) {
+					return "User doesn't exist, can't update";
+				}
 				st.close();
 				return "User update success";
 			}catch(Exception e) {
 				System.out.println(e);
 				return e.toString(); //Returns the error related
 			}
+		}
+	
+	public boolean checkUser(String username) {
+		try {
+			String sql = "select * from user where username = ?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1, username);
+			ResultSet rs = st.executeQuery();
+			if(!rs.next()) {
+				return false;
+			}
+			return true;
+			}catch(Exception e) {
+				System.out.println(e);
+			}
+		return false;
 		}
 }

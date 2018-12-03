@@ -83,14 +83,14 @@ public class UserListAPI {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.deletefromList(temp);
 	}
-	//Gets all the list name and ids based on username
+	//Gets all the list name and ids based on username, returns only listnames and listId
 	@Path("getList/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserList (@PathParam("username")String username) {
 		return dataBase.getUserList(username).toString();
 	}
-	//Gets a a list based on id, returns only listnames and listId
+	//Based on id, gets only one list, returns only listnames and listId
 	@Path("getListInfo/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -140,5 +140,46 @@ public class UserListAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String favoritesGet (@PathParam("username")String username) {
 		return dataBase.getUserFavorites(username).toString();
+	}
+	
+	//Inserts a recipe into favorites
+	/*
+		 * {"username": "cal",
+			"recipeName" : "a", 
+			"author" : "a",
+			"recipeId" : -1
+		}
+	 */
+	@Path("like")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public String listLike (String data) {
+		JSONObject temp = new JSONObject(data);
+		return dataBase.likeList(temp).toString();
+	}
+	
+	//Inserts a recipe into favorites
+	/*
+		 * {"username": "cal",
+			"recipeName" : "a", 
+			"author" : "a",
+			"recipeId" : -1
+		}
+	 */
+	@Path("unlike")
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	public String listUnlike (String data) {
+		JSONObject temp = new JSONObject(data);
+		return dataBase.unlikeList(temp).toString();
+	}
+	
+/*
+*/
+	@Path("liked/{username}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String likedGet (@PathParam("username")String username) {
+		return dataBase.getlikeList(username).toString();
 	}
 }

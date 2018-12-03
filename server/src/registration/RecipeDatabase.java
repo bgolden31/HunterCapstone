@@ -16,15 +16,10 @@ public class RecipeDatabase {
 	
 	private Connection con= DataBaseConnector.connect();
 	
-	/*connect to database
-	public RecipeDatabase(){
-		con = DataBaseConnector.connect(con);
-	}*/
-	
 	//Takes Json containing recipe info to insert to recipe table
 	//Returns the recipeId to be used in UserRecipe Table
 	public int insertrecipe(JSONObject data) {
-		try {	
+		try {
 			String sql = "insert into recipe (label, description, image, url, servings, "
 					+ "calories, totalTime) value (?,?,?,?,?,?,?)";
 			PreparedStatement st = con.prepareStatement(sql);
@@ -101,13 +96,11 @@ public class RecipeDatabase {
 
 	//Returns a recipe json based on recipeId
 	public JSONObject getRecipe(int recipeId) {
-		System.out.println(recipeId);
 		String sql = "select * from recipe where recipeId = ?";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, recipeId);
 			ResultSet rs = st.executeQuery();
-			System.out.println("Getting recipe"); //xxxxx
 			if(!rs.next()) {
 				System.out.println(!rs.next());
 				return null;
@@ -122,10 +115,34 @@ public class RecipeDatabase {
 			recipeInfo.put("calories", rs.getDouble(7));
 			recipeInfo.put("totalTime", rs.getInt(8));
 			st.close();
+			
+			sql = "select * from userRecipes where recipe_Id = ?";
+			st = con.prepareStatement(sql);
+			st.setInt(1, recipeId);
+			rs = st.executeQuery();
+			if(!rs.next()) {
+				recipeInfo.put("author", "n/a");
+			}else {
+				recipeInfo.put("author", rs.getString(1));
+			}
+			st.close();
+
+			sql = "select * from recipeInfo where recipeId = ?";
+			st = con.prepareStatement(sql);
+			st.setInt(1, recipeId);
+			rs = st.executeQuery();
+			if(!rs.next()) {
+				recipeInfo.put("rating", -1);
+			}
+			else{
+				recipeInfo.put("rating", rs.getDouble(4));
+			}
+			
+			st.close();
 
 			//Puts the nutrients objects and ingredients array
 			recipeInfo.put("nutrients", getNutrientInfo(recipeId));
-			recipeInfo.put("ingredient", getIngredientInfo(recipeId));
+			recipeInfo.put("ingredients", getIngredientInfo(recipeId));
 		    return recipeInfo;
 
 		}catch(Exception e) {
@@ -143,7 +160,6 @@ public class RecipeDatabase {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, recipeId);
 			ResultSet rs = st.executeQuery();
-			System.out.println("Getting nutrient"); //xxxxx
 			if(!rs.next()) {
 				System.out.println(!rs.next());
 				return null;
@@ -169,7 +185,6 @@ public class RecipeDatabase {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, recipeId);
 			ResultSet rs = st.executeQuery();
-			System.out.println("Getting ingredient"); //xxxxx
 			JSONArray ingredientInfo = new JSONArray();
 			while (rs.next()) {
 				ingredientInfo.put( ingredientBuilder( rs.getString(3),rs.getInt(1) ) );	
@@ -184,18 +199,48 @@ public class RecipeDatabase {
 	
 	public JSONObject ingredientBuilder(String ingredient, int amount) {
 		JSONObject ingredientO = new JSONObject();
-		ingredientO.put("name" ,ingredient);
-		ingredientO.put("amount" ,amount);
+		ingredientO.put("text" ,ingredient);
+		ingredientO.put("weight" ,amount);
 		return ingredientO;
 	}
 
 	//Deletes the recipe from recipe table based on recipeId
 	public String deleteRecipe(int recipeid) {
-		try {	
+		System.out.println(recipeid);
+		try {
 			String sql = "delete from recipe where recipeId = ?";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setInt(1, recipeid);
-			st.executeUpdate();
+			int i = st.executeUpdate();
+			if( i==0) {
+				return "Nothing was deleted";
+			}
+			else {
+				sql = "delete from userRecipeList where recipeId = ?";
+				st = con.prepareStatement(sql);
+				st.setInt(1, recipeid);
+				st.executeUpdate();
+				
+				sql = "delete from userFavorites where recipeId = ?";
+				st = con.prepareStatement(sql);
+				st.setInt(1, recipeid);
+				st.executeUpdate();
+				
+				sql = "delete from recipeInfo where recipeId = ?";
+				st = con.prepareStatement(sql);
+				st.setInt(1, recipeid);
+				st.executeUpdate(); 
+				
+				sql = "delete from recipeRating where recipeId = ?";
+				st = con.prepareStatement(sql);
+				st.setInt(1, recipeid);
+				st.executeUpdate(); 
+				
+				sql = "delete from userHistory where recipeId = ?";
+				st = con.prepareStatement(sql);
+				st.setInt(1, recipeid);
+				st.executeUpdate(); 
+			}
 			st.close();
 			return "Recipe delete success";
 		}catch(Exception e) {
@@ -216,12 +261,15 @@ public class RecipeDatabase {
 			st.setDouble(6, data.getDouble("calories"));
 			st.setInt(7, data.getInt("totalTime"));
 			st.setInt(8, recipeid);
-			st.executeUpdate();
+			int i = st.executeUpdate();
+			if( i==0) {
+				return "Nothing can be updated, this recipe doesn't exist";
+			}
+			else {
+				updateNutrient(recipeid, data.getJSONObject("nutrients"));
+				updateIngredient(recipeid, data.getJSONArray("ingredients"));
+			}
 			st.close();
-	
-			updateNutrient(recipeid, data.getJSONObject("nutrients"));
-			updateIngredient(recipeid, data.getJSONArray("ingredients"));
-			
 			return "Recipe update success";
 		}catch(Exception e) {
 			System.out.println(e);
@@ -259,97 +307,6 @@ public class RecipeDatabase {
 	}
 	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
 	 */
-	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
-	 */
-	public JSONObject apiSearch(int size, String q) throws JSONException, IOException {
-		//todo : for better searching
-		String sql = "Select r.recipeID from recipe r "
-				+ "join nutrients n on r.recipeid = n.nutrientsid "
-				+ "join ingredients i on r.recipeId = i.recipeid"
-				+ " where ingredients = \"" + q 
-				+"\" limit "
-				+ size/2;
-		JSONObject recipe = new JSONObject();
-		try {
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(sql);
-			while(rs.next()) {
-				recipe.append("recipes", getRecipe(rs.getInt(1)));
-			}
-			st.close();
-			if(recipe.has("recipes")) {
-				size -= recipe.getJSONArray("recipes").length();
-			}
-		}catch(Exception e) {
-			JSONObject error = new JSONObject(e);
-			return error;
-		}	
-		try {
-			sql = "Select r.recipeID from APIrecipe r join APIdata A on r.recipeId = A.recipeId "
-					+ "where A.searchString = \"" + q 
-					+"\" limit "
-					+ size;
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(sql);
-			while(rs.next()) {
-				recipe.append("recipes", APIDatabase.getEdamamRecipe(rs.getInt(1)));
-			}
-			st.close();
-			if(recipe.has("recipes")) {
-				size -= recipe.getJSONArray("recipes").length();
-			}
-		}catch(Exception e) {
-			JSONObject error = new JSONObject(e);
-			return error;
-		}
-		return size==0?recipe:EdamamAPICall.search(size, q, recipe);
-	}
-	
-	
-	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
-	 */
-	public JSONObject databaseStrictSearch(JSONObject data) throws JSONException, IOException {
-		//todo : for better searching
-		int size = data.getInt("size");
-		String q = data.getString("search");
-
-		return getRecipesFromDatabaseStrict(size, q);
-	}
-	
-	public JSONObject getRecipesFromDatabaseStrict(int size, String search) throws JSONException, IOException {
-	//todo : for better searching
-	 String [] words = search.split("%20");
-	 String sql="SELECT distinct recipeId FROM ingredients WHERE ingredients in (";
-	 int length = words.length;
-	 for(int i =0; i< length ; i++) {
-		sql += "'"+ words[i] + "'," ;
-	 }
-	 sql =  sql.substring(0, sql.length() - 1);
-	 
-	 sql += ") and recipeId not in (SELECT recipeId FROM ingredients WHERE ingredients not in (";
-	 for(int i =0; i< length ; i++) {
-			sql += "'"+ words[i] + "'," ;
-		 }
-	 sql =  sql.substring(0, sql.length() - 1);
-	 sql += ")) LIMIT " + size;
-	 
-	 JSONArray temp = new JSONArray();
-	try {
-		PreparedStatement st = con.prepareStatement(sql);
-		ResultSet rs = st.executeQuery();
-		while(rs.next()) {
-			temp.put( getRecipe( rs.getInt(1) ) );
-		}
-		 System.out.println(sql);
-		 JSONObject temp1 = new JSONObject();
-		 temp1.put("recipe", temp);
-		return temp1;
-	}catch(Exception e) {
-		JSONObject error = new JSONObject(e);
-		return error;
-	}
-	}	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
-	 */
 	public JSONObject DBAPISearchEx(JSONObject data) throws JSONException, IOException {
 		//todo : for better searching
 		int size = data.getInt("size");
@@ -369,7 +326,6 @@ public class RecipeDatabase {
 	 }
 	 sql =  sql.substring(0, sql.length() - 1);
 	 sql += ") LIMIT " + tempSize;
-	 
 	 JSONArray temp = new JSONArray();
 	try {
 		PreparedStatement st = con.prepareStatement(sql);
@@ -382,9 +338,99 @@ public class RecipeDatabase {
 		return error;
 	}
 		JSONObject temp1 = new JSONObject();
-		temp1.put("Database Recipes", temp);
-		size -= temp1.getJSONArray("Database Recipes").length();
-		System.out.println(temp1.getJSONArray("Database Recipes").length());
+		temp1.put("DatabaseRecipes", temp);
+		size -= temp1.getJSONArray("DatabaseRecipes").length();
 		return EdamamAPICall.search(size, search, temp1);
+	}
+	
+	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
+	 */
+	public JSONObject apiSearch(int size, String q) throws JSONException, IOException {
+		//todo : for better searching
+		String sql = "Select r.recipeID from recipe r "
+				+ "join nutrients n on r.recipeid = n.nutrientsid "
+				+ "join ingredients i on r.recipeId = i.recipeid"
+				+ " where ingredients = \"" + q 
+				+"\" limit "
+				+ size/2;
+		JSONObject recipe = new JSONObject();
+		try {
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			while(rs.next()) {
+				recipe.append("DatabaseRecipes", getRecipe(rs.getInt(1)));
+			}
+			st.close();
+			if(recipe.has("DatabaseRecipes")) {
+				size -= recipe.getJSONArray("DatabaseRecipes").length();
+			}
+		}catch(Exception e) {
+			System.out.println(e);
+			JSONObject error = new JSONObject(e);
+			return error;
+		}	
+		try {
+			sql = "Select r.recipeID from APIrecipe r join APIdata A on r.recipeId = A.recipeId "
+					+ "where A.searchString = \"" + q 
+					+"\" limit "
+					+ size;
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			while(rs.next()) {
+				recipe.append("APIRecipes", APIDatabase.getEdamamRecipe(rs.getInt(1)));
+			}
+			st.close();
+			if(recipe.has("APIRecipes")) {
+				size -= recipe.getJSONArray("APIRecipes").length();
+			}
+		}catch(Exception e) {
+			System.out.println(e);
+			JSONObject error = new JSONObject(e);
+			return error;
+		}
+		return size==0?recipe:EdamamAPICall.search(size, q, recipe);
+	}
+	
+	/*Takes search parameters from JSON and passes it to EdamamAPICall.search to search on the third party API
+	 */
+	public JSONObject databaseStrictSearch(JSONObject data) throws JSONException, IOException {
+		//todo : for better searching
+		int size = data.getInt("size");
+		String q = data.getString("search");
+
+		return getRecipesFromDatabaseStrict(size, q);
+	}
+	
+	public JSONObject getRecipesFromDatabaseStrict(int size, String search) throws JSONException, IOException {
+		//todo : for better searching
+		 String [] words = search.split("%20");
+		 String sql="SELECT distinct recipeId FROM ingredients WHERE ingredients in (";
+		 int length = words.length;
+		 for(int i =0; i< length ; i++) {
+			sql += "'"+ words[i] + "'," ;
+		 }
+		 sql =  sql.substring(0, sql.length() - 1);
+		 
+		 sql += ") and recipeId not in (SELECT recipeId FROM ingredients WHERE ingredients not in (";
+		 for(int i =0; i< length ; i++) {
+				sql += "'"+ words[i] + "'," ;
+			 }
+		 sql =  sql.substring(0, sql.length() - 1);
+		 sql += ")) LIMIT " + size;
+		 
+		 JSONArray temp = new JSONArray();
+		try {
+			PreparedStatement st = con.prepareStatement(sql);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()) {
+				temp.put( getRecipe( rs.getInt(1) ) );
+			}
+			 JSONObject temp1 = new JSONObject();
+			 temp1.put("DatabaseRecipes", temp);
+			return temp1;
+		}catch(Exception e) {
+			JSONObject error = new JSONObject(e);
+			return error;
+		}
 	}
 }

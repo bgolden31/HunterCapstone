@@ -56,7 +56,7 @@ public class UserListDatabase {
 			int i= st2.executeUpdate();
 			if(i==0) {
 				st2.close();
-				return "Recipe already exists in this list";
+				return "Recipe already exists in this list or the list doesnt exist";
 			}
 			st2.close();
 			return "Recipe to List insert success";
@@ -178,7 +178,6 @@ public class UserListDatabase {
 	
 	//Gets all the recipes view by user in userHistory table
 	public JSONObject getUserListInfo(int id) {
-		
 		try {
 			String sql = "select * from userList where listId = ?";
 			PreparedStatement  st = con.prepareStatement(sql);
@@ -254,7 +253,6 @@ public class UserListDatabase {
 	}
 	//Get favorites 
 	public JSONObject getUserFavorites(String username) {
-		
 		try {
 			String sql = "select * from userFavorites where username = ?";
 			PreparedStatement  st = con.prepareStatement(sql);
@@ -278,5 +276,73 @@ public class UserListDatabase {
 			JSONObject error = new JSONObject(e);
 			return error;
 		}
+	}
+	
+	public String likeList(JSONObject data) {
+		try {	
+			String sql = "insert ignore into likedTable (username, listName, listId) value (?,?,?)";
+			PreparedStatement st2 = con.prepareStatement(sql);
+			st2.setString(1, data.getString("username"));
+			st2.setString(2, data.getString("listName"));
+			st2.setInt(3, data.getInt("listId"));
+			int i= st2.executeUpdate();
+			if(i==0) {
+				st2.close();
+				return "List is already liked by this user or the user,listName, listId doesnt exist";
+			}
+			st2.close();
+			return "List like success";
+		}catch(Exception e) {
+			System.out.println(e);
+			return e.toString(); //Returns the error related
+		}
+	}
+	
+	public String unlikeList(JSONObject data) {
+		try {	
+			String sql = "delete from likedTable where username = ? AND  listName = ?  AND listId = ?";
+			PreparedStatement st2 = con.prepareStatement(sql);
+			st2.setString(1, data.getString("username"));
+			st2.setString(2, data.getString("listName"));
+			st2.setString(3, data.getString("listId"));
+			int i= st2.executeUpdate();
+			if(i==0) {
+				st2.close();
+				return "List was never liked";
+			}
+			st2.close();
+			return "List unlike success";
+		}catch(Exception e) {
+			System.out.println(e);
+			return e.toString(); //Returns the error related
+		}
+	}
+	
+	public JSONArray getlikeList(String username) {
+		try {	
+			String sql = "select * from likedTable where username = ?";
+			PreparedStatement st2 = con.prepareStatement(sql);
+			st2.setString(1, username);
+			ResultSet rs= st2.executeQuery();
+			
+			JSONArray temp = new JSONArray();
+			while (rs.next()) {
+				temp.put(getUserListInfo(rs.getInt(3)));
+			}
+			st2.close();
+			return temp;
+		}catch(Exception e) {
+			System.out.println(e);
+			JSONArray error = new JSONArray(e);
+			return error;
+		}
+	}
+	
+	//Helper to  build history object
+	JSONObject buildListInfoObjecta(String listName, int listId){
+		   JSONObject history = new JSONObject();
+		   history .put("listName" ,listName);
+		   history .put("listId" ,listId );
+		   return history;
 	}
 }

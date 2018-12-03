@@ -21,7 +21,7 @@ import org.json.JSONObject;
 public class RecipeAPI {
 	RecipeDatabase dataBase = new RecipeDatabase();
 	UserRecipeDatabase UserRecipeDatabase = new UserRecipeDatabase();
-	
+	UserDatabase UserDatabase = new UserDatabase();
 	RecipeInfoDatabase RecipeInfoDatabase = new RecipeInfoDatabase();
 	
 	@GET
@@ -65,12 +65,15 @@ public class RecipeAPI {
 	public String insertRecipe (String data){
 		JSONObject temp = new JSONObject(data);
 		String username= temp.getString("username");
-		int recipeID= dataBase.insertrecipe(temp);
-		if (recipeID == -1) {
-			return "Recipe insert fail";
+		if(UserDatabase.checkUser(username)) {
+			int recipeID= dataBase.insertrecipe(temp);
+			if (recipeID == -1) {
+				return "Recipe insert fail";
+			}
+			UserRecipeDatabase.insertUserRecipes(recipeID, username);
+			return "recipe Insert success";
 		}
-		UserRecipeDatabase.insertUserRecipes(recipeID, username);
-		return "recipe Insert success";
+		return "User does not exist";
 	}
 	//end
 	
@@ -197,7 +200,6 @@ public class RecipeAPI {
 		    ingredients += object.get("ingredient") + "%20";
 		}
 		String data = "{ size:"+ size + ", search: \"" + ingredients + "\" }";
-		System.out.println(data);
 		JSONObject temp = new JSONObject(data);
 		return dataBase.DBAPISearchEx(temp).toString();
 	}
@@ -246,7 +248,7 @@ public class RecipeAPI {
 		JSONObject temp = new JSONObject(data);
 		String temp1= RecipeInfoDatabase.deleteRecipeInfo(temp);
 		if (temp1== "RecipeRating was removed completely") {
-			return "RecipeRating was removed completely";
+			return "RecipeRating was removed completely, because it only had one or no ratings";
 		}
 		return  temp1 + RecipeInfoDatabase.updateRating(temp);
 	}
@@ -258,11 +260,17 @@ public class RecipeAPI {
 		    "recipeId": 49,
 		}
 	 */
-	@Path("get/rating")
-	@POST
+	@Path("get/rating/{id}")
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getRating (String data)  { 
-		JSONObject temp = new JSONObject(data);
-		return RecipeInfoDatabase.getRecipeInfo(temp);
+	public String getRating (@PathParam("id") int recipeId)  { 
+		return RecipeInfoDatabase.getRecipeInfo(recipeId);
 	}
+	@Path("get/rating/{recipe}/{author}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getRating (@PathParam("recipe")String recipeName, @PathParam("author")String author)  { 
+		return RecipeInfoDatabase.getRecipeInfo(recipeName, author);
+	}
+
 }

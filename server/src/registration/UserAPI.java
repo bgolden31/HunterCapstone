@@ -56,14 +56,22 @@ public class UserAPI {
 		JSONArray temp3 =  userrecipes.getUserRecipes(username);
 		UserHistoryDatabase userHistory = new UserHistoryDatabase();
 		JSONArray temp4 = userHistory.getUserHistory(username);
+		UserListDatabase userList = new UserListDatabase();
 		
+		JSONObject temp5 = userList.getAllUserListInfo(username);
+		JSONObject temp6 = userList.getUserFavorites(username);
+
+		JSONArray temp7 = userList.getlikeList(username);
 		JSONObject combined = new JSONObject();
 		combined.put("UserInfo",temp2);
 		combined.put("Recipes", temp3);
 		combined.put("History", temp4);
+		combined.put("List", temp5);
+		combined.put("Favorites", temp6);
+		combined.put("LikedList", temp7);
 		return combined.toString();
 	}
-	
+
 	/* Registers user and adds info into SQL user table
 	 * Use form 
 	 * {
@@ -97,4 +105,26 @@ public class UserAPI {
 		return clients.updateUser(username, temp);
 	}
 	
+	@Path("refresh/{username}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String refreshUser(@PathParam("username") String username) {
+		UserRecipeDatabase userrecipes = new UserRecipeDatabase();
+		JSONArray temp3 =  userrecipes.getUserRecipes(username);
+		UserHistoryDatabase userHistory = new UserHistoryDatabase();
+		JSONArray temp4 = userHistory.getUserHistory(username);
+		UserListDatabase userList = new UserListDatabase();
+		
+		JSONObject temp5 = userList.getAllUserListInfo(username);
+		JSONObject temp6 = userList.getUserFavorites(username);
+		
+		JSONArray temp7 = userList.getlikeList(username);
+		JSONObject combined = new JSONObject();
+		combined.put("Recipes", temp3);
+		combined.put("History", temp4);
+		combined.put("List", temp5);
+		combined.put("Favorites", temp6);
+		combined.put("LikedList", temp7);
+		return combined.toString();
+	}
 }

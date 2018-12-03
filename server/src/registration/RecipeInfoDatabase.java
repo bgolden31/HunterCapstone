@@ -130,14 +130,34 @@ public class RecipeInfoDatabase {
 		}
 	}
 	
-	public String getRecipeInfo(JSONObject data) {
-		
+	public String deleteRecipeInfoAll(JSONObject data) {
 		try {
-			String sql = "SELECT * FROM recipeInfo WHERE recipe_name = ? AND author = ? AND recipeId = ?";
+			String sql = "delete from recipeInfo WHERE recipe_name = ? AND  author = ? AND recipeId = ?";
+	    	PreparedStatement  st3 = con.prepareStatement(sql);
+			st3.setString(1, data.getString("recipeName"));
+			st3.setString(2, data.getString("author"));
+			st3.setInt(3, data.getInt("recipeId"));
+			st3.executeUpdate();
+			
+			sql = "delete from recipeRating where AND recipe_name = ? AND  author = ? AND recipeId = ?";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, data.getString("recipeName"));
 			st.setString(2, data.getString("author"));
 			st.setInt(3, data.getInt("recipeId"));
+			st.executeUpdate();
+			return "RecipeRatings Info was removed completely";
+		}catch(Exception e) {
+			System.out.println(e);
+			return e.toString(); //Returns the error related
+		}
+	}
+	
+	public String getRecipeInfo(int recipeId) {
+		
+		try {
+			String sql = "SELECT * FROM recipeInfo WHERE recipeId = ?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setInt(1, recipeId);
 			ResultSet rs = st.executeQuery();
 			if(rs.next()) {
 				JSONObject recipeInfo = new JSONObject();
@@ -154,4 +174,28 @@ public class RecipeInfoDatabase {
 			return e.toString(); //Returns the error related
 		}
 	}
+	
+	public String getRecipeInfo(String recipename, String author) {
+		try {
+			String sql = "SELECT * FROM recipeInfo WHERE recipe_name = ? AND author = ?";
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1, recipename);
+			st.setString(2, author);
+			ResultSet rs = st.executeQuery();
+			if(rs.next()) {
+				JSONObject recipeInfo = new JSONObject();
+				recipeInfo.put("recipeName", rs.getString(1));
+				recipeInfo.put("author", rs.getString(2));
+				recipeInfo.put("recipeId", rs.getInt(3));
+				recipeInfo.put("rating",rs.getDouble(4));
+				st.close();
+				return recipeInfo.toString();
+			}
+			return "No ratings found";
+		}catch(Exception e) {
+			System.out.println(e);
+			return e.toString(); //Returns the error related
+		}
+	}
+	
 }

@@ -5,16 +5,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import registration.DataBaseConnector;
+
 public class EdamamAPICall {
 	final String APPKEY = "9f7f5f81a5d43726ab9b7ca292d7e583";
 	final String APPID = "ac3847c7";
     final String APIURL ="https://api.edamam.com/search";
-    
+    private static Connection con= DataBaseConnector.connect();
     public static JSONObject search(int size, String q, JSONObject newRecipeArray ) throws JSONException, IOException {
     	HttpURLConnection con = connect(size,q);
     	//read all string from con
@@ -63,10 +68,29 @@ public class EdamamAPICall {
 	   	 	recipe.accumulate("image", temp.getString("image"));
 	   	 	recipe.accumulate("calories", temp.getDouble("calories"));
 	   	 	recipe.accumulate("totalTime", temp.getDouble("totalTime"));
+	   	 	recipe.accumulate("author", temp.getString("source"));
+	   	 	recipe.accumulate("recipeId", -1);
+	   	 	try {
+	   	 	String sql = "select * from recipeInfo where recipe_name = ? AND author = ?";
+	   	 	PreparedStatement st  = con.prepareStatement(sql);
+			st.setString(1,  temp.getString("label"));
+			st.setString(2, temp.getString("source"));
+			ResultSet rs = st.executeQuery();
+			if(!rs.next()) {
+				recipe.accumulate("rating", -1);
+			}
+			else{
+				recipe.accumulate("rating", rs.getDouble(4));
+			}
 	   	 	recipe.put("ingredients", temp.getJSONArray("ingredients"));
 	   	 	recipe.accumulate("nutrients", getNutrients(temp));
+	   	 	
+	   	 	st.close();
+			}catch(Exception e) {
+			System.out.println(e);
+		}
 	   	 	APIDatabase.insertEdamamRecipe(recipe, q);
-	   	 	newRecipeArray.append("API Recipes", recipe);
+	   	 	newRecipeArray.append("APIRecipes", recipe);
 	    }
 	    //System.out.print(newRecipeArray)
 	    return newRecipeArray;

@@ -33,7 +33,6 @@ public class UserFridgeDatabase {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, username);
 			ResultSet rs = st.executeQuery();
-			System.out.println("Getting ingredient"); //xxxxx
 			JSONArray ingredientInfo = new JSONArray();
 			while (rs.next()) {
 				ingredientInfo.put( ingredientListBuilder (rs.getString(2)) );	

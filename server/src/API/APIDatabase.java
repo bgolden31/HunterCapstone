@@ -27,7 +27,7 @@ public class APIDatabase {
 			for(int i = 0; i < recipesArray.length(); i++) {
 				JSONObject temp = recipesArray.getJSONObject(i);
 				System.out.println(temp.toString());*/
-				String sql = "insert into APIrecipe (label, description, image, url, servings, "
+				String sql = "insert ignore into APIrecipe (label, description, image, url, servings, "
 					+ "calories, totalTime) value (?,?,?,?,?,?,?)";
 				PreparedStatement st = con.prepareStatement(sql);
 				st.setString(1, data.getString("label"));
@@ -63,7 +63,7 @@ public class APIDatabase {
 				if(data.length() == 0)
 					return ;
 				
-				String sql = "insert into APInutrients (nutrientsId, fat, sugar, protein, fiber, "
+				String sql = "insert ignore into APInutrients (nutrientsId, fat, sugar, protein, fiber, "
 						+ "sodium, cholesterol, carbs) value (?,?,?,?,?,?,?,?)";
 				PreparedStatement st = con.prepareStatement(sql);
 				st.setInt(1, id);
@@ -85,7 +85,7 @@ public class APIDatabase {
 			try {
 				if(data.length() == 0)
 					return ;
-				String sql = "insert into APIingredients (recipeId, weight, text) value (?,?,?)";
+				String sql = "insert ignore into APIingredients (recipeId, weight, text) value (?,?,?)";
 				PreparedStatement st = con.prepareStatement(sql);
 				for(int i = 0; i< data.length(); i++) {
 					JSONObject temp = data.getJSONObject(i);
@@ -183,7 +183,7 @@ public class APIDatabase {
 		
 		
 		public static void insertSearchString(String q, int id) {
-			String sql = "insert into APIdata (searchString, recipeid) value (?,?)";
+			String sql = "insert ignore into APIdata (searchString, recipeid) value (?,?)";
 			try {
 				PreparedStatement st = con.prepareStatement(sql);
 				st.setString(1, q);

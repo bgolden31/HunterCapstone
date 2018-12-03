@@ -16,7 +16,7 @@ public class DataBaseConnector {
   		   String jdbcUrl = "JDBC:mysql://" + hostname + ":" + port + "/" + dbName + "?autoReconnect=true&useSSL=false";
   		   Connection con = DriverManager.getConnection(jdbcUrl, userName, password);
 		if(con != null) {
-			System.out.println("Connection to database success");
+			//System.out.println("Connection to database success"); not needed 
 			return con;
 		}
   	   }catch(Exception e){
