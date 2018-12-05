@@ -29,7 +29,7 @@ public class UserHistoryDatabase {
 	//Gets all the recipes view by user in userHistory table
 	public JSONArray getUserHistory(String username) {
 		System.out.println(username);
-		String sql = "select * from userHistory where username = ?";
+		String sql = "select * from userHistory where username = ? ORDER BY lastUpdated ASC";
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, username);

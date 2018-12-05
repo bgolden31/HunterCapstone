@@ -74,6 +74,4 @@ public class UserShoppingDatabase {
 			return e.toString(); //Returns the error related
 		}
 	}
-	
-	
 }

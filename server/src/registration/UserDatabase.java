@@ -13,10 +13,12 @@ public class UserDatabase {
 	
 	private Connection con= DataBaseConnector.connect();
 	
-	//Takes info from Json and adds it to user table, with error checking and password hashing
+	/* Registers a users based on JSON info and adds their info into user table 
+	 * Calls password hashing functions to encrypt password
+	 * @param  user JSON containing user info
+	 * @returns Success/Failure/error
+	 */	
 	public String registerUser(JSONObject user) {
-		//List<String> name = new ArrayList<>(); 
-		// TODO Auto-generated method stub
         String Password = user.getString("password");
         
         // Generate Salt. The generated value can be stored in DB. 
@@ -49,9 +51,12 @@ public class UserDatabase {
 			return e.toString(); //Returns the error related
 		}
 	}
-
-	//Takes username and password and verify it matches on the user Table
-	//Returns that users info
+	/* Takes username and password and verify it matches on the user Table
+	 * Calls password hashing functions to encrypt password
+	 * @param  username user
+	 * @param  password password
+	 * @returns JSON with users info
+	 */	
 	public String loginUser(String username, String password) {
 		JSONObject response = new JSONObject();
 		System.out.println("Getting user");  
@@ -85,7 +90,13 @@ public class UserDatabase {
 		}	
 	}
 	
-	//Removes user based on username
+	/* Takes username deletes all trace of that user from all tables
+	 * Deletes all trace of user and their recipes from 
+	 * userRecipe, userFavorite, recipeInfo, recipeRating, userHistory, user, recipe
+	 * Their likedList, list, and favorites
+	 * @param  username user
+	 * @returns Delete success/failure or error
+	 */	
 	public String deleteUser(String username) {
 		try {
 			String sql = "select * from userRecipes where username = ?";
@@ -132,8 +143,11 @@ public class UserDatabase {
 			return e.toString();
 		}
 	}
-	
-	//Update user based on username and json info
+	/* Based on JSON info, Updates a user info in user table 
+	 * Calls password hashing functions to encrypt password
+	 * @param  user JSON containing user info
+	 * @returns Success/Failure/error
+	 */	
 	public String updateUser(String username, JSONObject user) {
 		try {
 			String Password = user.getString("password");
@@ -164,7 +178,10 @@ public class UserDatabase {
 				return e.toString(); //Returns the error related
 			}
 		}
-	
+	/* Check if a user exists in user table
+	 * @param  username user
+	 * @returns boolean of whether or not user exists
+	 */	
 	public boolean checkUser(String username) {
 		try {
 			String sql = "select * from user where username = ?";

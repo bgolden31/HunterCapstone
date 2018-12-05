@@ -6,10 +6,16 @@ import java.sql.ResultSet;
 
 import org.json.JSONObject;
 
-public class RecipeInfoDatabase {
+public class RatingDatabase {
 
 	private Connection con= DataBaseConnector.connect();
 	
+	/* Updates the Recipes rating given A USER based on JSONObject info and adds it into recipeRating table
+	 * If rating does not exist for that recipe by that user, it creates one
+	 * If rating FOR THAT user exists it updates
+	 * @param  data the JSON containing user, recipe name, author, rating and recipeId
+	 * @returns Success/Failure/error and updated rating
+	 */
 	public String updateRecipeInfo(JSONObject data) {
 		String sql = "select * from recipeRating where username =? AND recipe_name = ? AND  author = ? AND recipeId = ?";
 		try {
@@ -49,6 +55,12 @@ public class RecipeInfoDatabase {
 			return e.toString(); //Returns the error related
 		}
 	}
+	/* Updates the overall Recipes rating based on JSONObject info and updates it in recipeInfo table
+	 * If rating does not exist, it creates one and calculates accordingly
+	 * If rating exists it updates
+	 * @param  data the JSON containing recipe name, author, and recipeId
+	 * @returns Success/Failure/error and updated rating
+	 */
 	public String updateRating(JSONObject data) {
 		try {	
 			String sql = "select * from recipeRating where recipe_name = ? AND  author = ? AND recipeId = ?";
@@ -93,12 +105,19 @@ public class RecipeInfoDatabase {
 				st2.executeUpdate();
 				st2.close();
 			}
-			return "RecipeRating insert success" + Double.toString(average) ;
+			return "RecipeRating insert success with rating " + Double.toString(average) ;
 		}catch(Exception e) {
 			System.out.println(e);
 			return e.toString(); //Returns the error related
 		}
 	}
+
+	/* Deletes the recipes rating FOR A USER based on JSONObject info from recipeRating table
+	 * If rating deleted, would cause no ratings left it is removed from recipeInfo table
+	 * @param  data the JSON containing recipe name, author, and recipeId
+	 * @returns Success/Failure/error and updated rating
+	 */
+	
 	public String deleteRecipeInfo(JSONObject data) {
 		String sql = "delete from recipeRating where username = ? AND recipe_name = ? AND  author = ? AND recipeId = ?";
 		try {
@@ -129,7 +148,11 @@ public class RecipeInfoDatabase {
 			return e.toString(); //Returns the error related
 		}
 	}
-	
+	//UNUSED?
+	/* Deletes all the recipes info and rating from recipeRating table and recipeInfo table based on recipe info 
+	 * @param  data the JSON containing recipe name, author, and recipeId
+	 * @returns Success/Failure/error
+	 */
 	public String deleteRecipeInfoAll(JSONObject data) {
 		try {
 			String sql = "delete from recipeInfo WHERE recipe_name = ? AND  author = ? AND recipeId = ?";
@@ -152,6 +175,11 @@ public class RecipeInfoDatabase {
 		}
 	}
 	
+	/* Gets the recipes rating from recipeInfo table based on recipe info based on recipeId, 
+	 * only works with database Recipes
+	 * @param  recipeId the recipeId
+	 * @returns Success/Failure/error
+	 */	
 	public String getRecipeInfo(int recipeId) {
 		
 		try {
@@ -174,7 +202,12 @@ public class RecipeInfoDatabase {
 			return e.toString(); //Returns the error related
 		}
 	}
-	
+	/* Gets the recipes rating from recipeInfo table based on username and author, 
+	 * Works with database Recipes and API assuming their isnt two recipes from either with the same name and author
+	 * @param  recipename the recipe name
+	 * @param  author the authors name
+	 * @returns Success/Failure/error
+	 */	
 	public String getRecipeInfo(String recipename, String author) {
 		try {
 			String sql = "SELECT * FROM recipeInfo WHERE recipe_name = ? AND author = ?";

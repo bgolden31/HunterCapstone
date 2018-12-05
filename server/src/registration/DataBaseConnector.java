@@ -3,9 +3,11 @@ package registration;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-//Connects to SQL server on AWS
+/* Connects to the mySQL server on AWS
+ * Used in every dataBase file
+ */
 public class DataBaseConnector {
-	public static Connection connect () {
+	public static Connection connect() {
 	   String dbName = ("sys");
   	   String userName = ("RIP");
   	   String password = ("Food1516");

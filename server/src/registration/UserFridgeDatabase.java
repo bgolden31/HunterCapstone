@@ -10,8 +10,11 @@ import org.json.JSONObject;
 public class UserFridgeDatabase {
 
 	private Connection con= DataBaseConnector.connect();
-	
-	//Inserts into UserShopping table
+
+	/* Based on JSON info, inserts ingredients for a user into UserFridge table
+	 * @param  data JSON containing username and ingredient
+	 * @returns Success/Failure/error
+	 */	
 	public String insertUserIngredient(JSONObject data) {
 		try {	
 			String sql = "insert ignore into userFridge (username, ingredient) value (?,?)";
@@ -26,7 +29,12 @@ public class UserFridgeDatabase {
 			return e.toString(); //Returns the error related
 		}
 	}
-	//Returns a ingredient array based recipeId
+	
+	/* Based on JSON info, gets all ingredients in specfic users Fridge from UserFridge table
+	 * @param  data JSON containing username and ingredient
+	 * Calls ingredientListBuilder()
+	 * @returns JSONArray with ingredients and username
+	 */	
 	public JSONObject getUserIngredient(String username) {
 		String sql = "select * from userFridge where username = ?";
 		try {
@@ -48,7 +56,10 @@ public class UserFridgeDatabase {
 			return error;
 		}
 	}
-	
+	/* Helper function for getUserIngredients() to build JSONObject to fill JSONArray
+	 * @param  ingredient ingredient name
+	 * @returns JSONObject ingredient info 
+	 */
 	public JSONObject ingredientListBuilder(String ingredient) {
 		JSONObject ingredientO = new JSONObject();
 		ingredientO.put("ingredient" , ingredient);
