@@ -1,7 +1,10 @@
+p {
+    font-family: monospace;
+    font-variant: small-caps;
+    font-stretch: ultra-expanded;
+    font-size: 40px;
+}
 
-
-    .jumbotron {
-      background-size: cover;
-      padding-top: 10%;
-      padding-bottom: 20%;
-    }
+.test {
+    width: 500px;
+}

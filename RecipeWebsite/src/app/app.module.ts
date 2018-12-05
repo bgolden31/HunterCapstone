@@ -15,7 +15,6 @@ import { CookieService } from 'ngx-cookie-service';      // INSTALL FROM https:/
 
 
 import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -29,7 +28,6 @@ import { UpdateRecipeComponent } from './components/update-recipe/update-recipe.
     AppComponent,
     NewpageComponent,
     HeaderComponent,
-    FooterComponent,
     HomeComponent,
     LoginComponent,
     RegisterComponent,
@@ -53,4 +51,4 @@ import { UpdateRecipeComponent } from './components/update-recipe/update-recipe.
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

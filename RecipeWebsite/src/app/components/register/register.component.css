@@ -2,15 +2,3 @@
 .test {
     width: 200px;
 }
-    .jumbotron {
-      background: url('https://i.kinja-img.com/gawker-media/image/upload/s--gf7NfpMG--/c_scale,f_auto,fl_progressive,q_80,w_800/ox6m5b5fev1yoifdlnda.jpg') no-repeat center center;
-      background-size: cover;
-      padding-top: 7%;
-      padding-bottom: 7%;
-      font-weight: bold;
-      color: #FFFFFF;
-    }
-    
-        h3 {
-    text-shadow: 3px 2px black;
-}
