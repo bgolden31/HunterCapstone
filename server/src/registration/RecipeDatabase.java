@@ -28,7 +28,7 @@ public class RecipeDatabase {
 			st.setString(1, data.getString("label"));
 			st.setString(2, data.getString("description"));
 			st.setString(3, data.getString("image"));
-			st.setString(4, data.getString("URL"));
+			st.setString(4, data.getString("url"));
 			st.setInt(5, data.getInt("servings"));
 			st.setDouble(6, data.getDouble("calories"));
 			st.setInt(7, data.getInt("totalTime"));
@@ -276,12 +276,12 @@ public class RecipeDatabase {
 	 */
 	public String updateRecipe(int recipeid, JSONObject data) {
 		try {	
-			String sql = "UPDATE recipe SET label= ?, description =?, image = ?, URL = ?, servings = ?, calories = ?, totalTime = ? where recipeId = ?";
+			String sql = "UPDATE recipe SET label= ?, description =?, image = ?, url = ?, servings = ?, calories = ?, totalTime = ? where recipeId = ?";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, data.getString("label"));
 			st.setString(2, data.getString("description"));
 			st.setString(3, data.getString("image"));
-			st.setString(4, data.getString("URL"));
+			st.setString(4, data.getString("url"));
 			st.setInt(5, data.getInt("servings"));
 			st.setDouble(6, data.getDouble("calories"));
 			st.setInt(7, data.getInt("totalTime"));
