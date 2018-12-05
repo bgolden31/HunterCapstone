@@ -19,8 +19,8 @@ export class RecipeService {
  * @return             recipes most relevant to the user's search parameters.
  */
 
-     getRecipes(ingredients) {
-        //return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/search', );
+     getRecipes(ingredients: JSON) {
+        return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/search', ingredients);
     }
 
 /**

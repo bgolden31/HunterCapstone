@@ -11,13 +11,21 @@
         
         <button (click)="getRecipes(ing, size)" class="btn btn-primary" >Click me </button> 
         
-        <div *ngFor="let user of stuff?.hits">
+        <div *ngFor="let API of stuff?.APIRecipes">
         
-          {{ user.recipe.label }} from {{ user.recipe.source }}
+          {{ API.label }} from {{ API.author }}
         
           <button type="button" (click)="goToPage(user.recipe)" class="btn btn-primary">See Details</button>
 
-          </div>
+        </div>
+
+          <div *ngFor="let Database of stuff?.DatabaseRecipes">
+        
+            {{ Database.label }} from {{ Database.author }}
+          
+            <button type="button" (click)="goToPage(user.recipe)" class="btn btn-primary">See Details</button>
+  
+        </div>
       </div>
   </div>
 </div>

@@ -18,16 +18,4 @@ export class HomeComponent implements OnInit {
     this.User.username = this.username;
     this.User.password = this.password;
   }
-
-  /*
-  loginUser() {
-    var tmp = JSON.stringify(this.User);
-    var userInfo = JSON.parse(tmp);
-    this.loginService.loginUser(userInfo)
-      .subscribe((data: Object) => {
-        alert("all good");
-      });
-  }
-  */
-
 }
