@@ -63,7 +63,7 @@ export class RecipeinsertComponent implements OnInit {
     this.recipe.label = this.name;
     this.recipe.description = this.desc;
     this.recipe.image = this.link;
-    this.recipe.URL = this.url;
+    this.recipe.url = this.url;
     this.recipe.servings = this.servings;
     this.recipe.calories = this.calories;
     this.recipe.totalTime = this.time;

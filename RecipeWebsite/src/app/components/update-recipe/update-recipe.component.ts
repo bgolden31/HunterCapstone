@@ -10,14 +10,13 @@ import { recipe } from '../../models/recipe.model';
 export class UpdateRecipeComponent implements OnInit {
   recipe: recipe;
   tmp: string;
-  test: string;
+  url: string;
 
   constructor(private recipeService: RecipeService) { }
 
   ngOnInit() {
     this.tmp = localStorage.getItem("recipe");
     this.recipe = JSON.parse(this.tmp);
-    this.test = this.recipe.URL;
   }
 
 /**

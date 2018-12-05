@@ -15,5 +15,4 @@ export class recipe {
     servings: number;
     totalTime: number;
     url: string;
-
 }
