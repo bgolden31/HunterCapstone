@@ -4,9 +4,10 @@
 
 
   The recipe requires the following ingredients:
-  <div *ngFor="let ing of recipe?.ingredientLines">
+  <div *ngFor="let ing of recipe?.ingredients">
       <ul>
-        <li>{{ ing }}</li>
+        <li>{{ ing.text }}</li> <br>
+        <button type="button" (click)="addIngredientToCart(ing.text)" class="btn btn-primary btn-sm">Add ingredient to shopping cart.</button>
       </ul>
   </div>
 

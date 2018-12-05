@@ -97,7 +97,21 @@ export class RecipeService {
  * @return        a string indicating whether or not the recipe creation was successful.
  */
 
-rateRecipe(recipe: JSON) {
-    return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/update/rating', recipe, {responseType: 'text'});
-}
+    rateRecipe(recipe: JSON) {
+        return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/update/rating', recipe, {responseType: 'text'});
+    }
+
+/**
+ * Returns a string to present to the user to indicate whether or not the
+ * ingredient was added to their shopping cart or not. The user has the chance,
+ * once logged in, to be able to add ingredients from a recipe's details page to
+ * their shopping cart. 
+ *
+ * @param  ingredient a JSON object containing the ingredient and the user's username.
+ * @return            a string indicating whether or not the ingredient was added.
+ */
+
+    addToShoppingCart(ingredient: JSON) {
+        return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserShopping/insert', ingredient, {responseType: 'text'});
+    }
 }

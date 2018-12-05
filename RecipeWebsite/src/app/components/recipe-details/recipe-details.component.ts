@@ -22,6 +22,31 @@ export class RecipeDetailsComponent implements OnInit {
     this.recipe.calories = Math.round(this.recipe.calories);
   }
 
+  addIngredientToCart(ing) {
+    var ingredient = {
+      username: this.cookieService.get("username"),
+      ingredient: ing
+    }
+    var tmp = JSON.stringify(ingredient);
+    var addToCart = JSON.parse(tmp);
+    this.recipeService.addToShoppingCart(addToCart)
+      .subscribe((data: string) => {
+        alert(data);
+      });
+  }
+
+  /**
+ * Allows the user to rate a recipe from 1 to 5.
+ * A JSON object is created with the numerical rating,
+ * the recipe's ID, author, name, and the user's ID.
+ * A call is made to the backend server, which takes the rating
+ * and factors it into the recipe's current average rating, which
+ * is then updated and displayed.
+ *
+ * @param  rating      an integer (from 1 to 5) representing the rating a user wants to give a recipe.
+ * @return             a string letting the user know whether the recipe rating was successful or not.
+ */
+
   rateRecipe(rating) {
     if (!this.cookieService.check("username")) {
       alert("You need to be logged in to be able to rate a recipe.");
