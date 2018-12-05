@@ -32,7 +32,6 @@ export class UpdateRecipeComponent implements OnInit {
  */
 
   updateRecipe(recipeId) {
-    this.recipe.ingredients = [{name:"x", amount:3}, {name:"y", amount:2}];
     this.tmp = JSON.stringify(this.recipe);
     var newRecipe = JSON.parse(this.tmp);
     this.recipeService.updateRecipe(recipeId, newRecipe)

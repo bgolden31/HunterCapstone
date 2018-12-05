@@ -1,25 +1,18 @@
-<body>
-  <div style="text-align: center">
-  <br><br><br><br>
-
-
-  <p>SEARCH</p>
-
-  <div class="form-group">
-      <label for="exampleInputPassword1">Ingredients</label>
-      <input type="text" class="form-control" id="ing" placeholder="Chicken with Rice" [(ngModel)]="ing">
+<div class="jumbotron">
+  <div class="container">
+      <div class="row">       
+          <div class="col-md-6 offset-md-3">
+      <h3>SEARCH</h3>
+      <div class="form-group"><div class="form-group row">
+          <input type="text" class="form-control" id="ing" placeholder=" ie Chicken with Rice" [(ngModel)]="ing">
+      </div>
+    </div>
+      <button type="button" (click)="loginUser()" class="btn btn-primary btn-lg">Search Recipes!</button>
+      <h3>Register</h3>
+     <button type="button" [routerLink]="['/register']" class="btn btn-primary btn-lg">Register an Account</button>
+          </div>
+      </div>
   </div>
+</div>
 
-  <button type="button" (click)="loginUser()" class="btn btn-primary btn-lg">Search Recipes!</button>
 
-
-    <br><br><br>
-    <p>OR</p>
-    <br><br><br>
-
-    <p>REGISTER</p>
-
-    <button type="button" [routerLink]="['/register']" class="btn btn-primary btn-lg">Register an Account</button>
-
-  </div>
-</body>
