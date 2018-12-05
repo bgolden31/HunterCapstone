@@ -15,7 +15,7 @@ export class RecipeService {
  * but the recipes returned are the most relevant in terms of the
  * user's search parameters.
  *
- * @param  ingredients a string containing ingredients the user wants to search for.
+ * @param  ingredients a JSON object containing the ingredients and how many recipes the user wants to search for.
  * @return             recipes most relevant to the user's search parameters.
  */
 
@@ -84,4 +84,20 @@ export class RecipeService {
     createRecipe(recipe: JSON) {
         return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/insert', recipe, {responseType: 'text'});
     }
+
+/**
+ * Returns a string to present to the user to indicate whether or not the
+ * recipe rating update was successful. The user has the chance, once logged in,
+ * to rate a recipe. The rating is then factored into the average, which is then
+ * displayed on the recipe details page. The user can only rate only if they're
+ * logged in, and while their rating can change, it will only be factored into
+ * the average of the recipe's rating once.
+ *
+ * @param  recipe a JSON object containing the recipe, recipeId, and rating.
+ * @return        a string indicating whether or not the recipe creation was successful.
+ */
+
+rateRecipe(recipe: JSON) {
+    return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/update/rating', recipe, {responseType: 'text'});
+}
 }

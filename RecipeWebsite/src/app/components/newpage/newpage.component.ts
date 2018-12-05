@@ -5,8 +5,6 @@ import { history } from '../../models/history.model';
 import { APIRecipe } from '../../models/apiRecipe.model';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { recipe } from '../../models/recipe.model';
-
 
 @Component({
   selector: 'app-newpage',
@@ -71,7 +69,7 @@ export class NewpageComponent implements OnInit {
 
   goToPage(stuff) {
     if (this.cookieService.get('username') != null) {
-      this.recipe.author = stuff.source;
+      this.recipe.author = stuff.author;
       this.recipe.recipeId = -1;
       this.recipe.recipeName = stuff.label;
       this.recipe.username = this.cookieService.get('username');

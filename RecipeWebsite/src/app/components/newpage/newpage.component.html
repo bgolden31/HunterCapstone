@@ -10,20 +10,20 @@
         </div>
         
         <button (click)="getRecipes(ing, size)" class="btn btn-primary" >Click me </button> 
-        
+        <br><br>
         <div *ngFor="let API of stuff?.APIRecipes">
-        
-          {{ API.label }} from {{ API.author }}
-        
-          <button type="button" (click)="goToPage(user.recipe)" class="btn btn-primary">See Details</button>
+
+            {{ API.label }} from {{ API.author }}
+            <br>
+            <button type="button" (click)="goToPage(API)" class="btn btn-primary">See Details</button>
 
         </div>
 
           <div *ngFor="let Database of stuff?.DatabaseRecipes">
         
             {{ Database.label }} from {{ Database.author }}
-          
-            <button type="button" (click)="goToPage(user.recipe)" class="btn btn-primary">See Details</button>
+            <br>
+            <button type="button" (click)="goToPage(Database)" class="btn btn-primary">See Details</button>
   
         </div>
       </div>
