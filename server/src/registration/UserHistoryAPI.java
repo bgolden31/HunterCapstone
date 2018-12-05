@@ -22,9 +22,10 @@ public class UserHistoryAPI {
 		System.out.print("start");
 		return "GET success";
 	}
-
-	//Gets a json containing user and recipe info and inserts it into UserHistory table
-	/*Input form 
+	/*Takes JSON containing user and recipe info and insert it into userHistory table
+	 * @param  data the data inserted
+	 * @return Insert success/failure/error   
+	 *Input form 
 	 * {
 	 * 		"username": "cal",
 			"recipeName" : "a", 
@@ -43,14 +44,19 @@ public class UserHistoryAPI {
 		return dataBase.insertUserHistory(temp);
 	}
 	
-	//Gets a username and returns their entired viewed history from UserHistory table
+	/* Gets a username and returns their entired viewed history from UserHistory table
+	 * @param  username user
+	 * @return JSONArray of all the recipes viewed by user   */
 	@Path("get/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserHistory (@PathParam("username") String username) {
 		return dataBase.getUserHistory(username).toString();
 	}
-	//Deletes from userHistory based on username and recipename 
+	/* Deletes recipe from userHistory based on username and recipename
+	 * @param  username user
+	 * @param  recipename recipename
+	 */
 	//Use /delete/{username}?recipe=a
 	@Path("delete/{username}")
 	@DELETE

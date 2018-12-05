@@ -19,7 +19,7 @@ public class RecipeDatabase {
 	/* Take a JSON with all the recipe info and inserts it into recipe table
 	 * Also uses insertNutrient() and insertIngredient() to insert into nutrient and ingredient table
 	 * @param  data  JSONObject with all the recipe info
-	 * @return the recipeId to be used in UserRecipe Table   */
+	 * @return the recipeId to be used in UserRecipe Table  */
 	public int insertrecipe(JSONObject data) {
 		try {
 			String sql = "insert into recipe (label, description, image, url, servings, "

@@ -22,8 +22,9 @@ public class UserShoppingAPI {
 		System.out.print("start");
 		return "GET success";
 	}
-
-	//Gets a json containing user and recipe info and inserts it into UserShopping table
+	/* Gets a json containing user and an ingredient and inserts it into  UserShopping table
+	 * @param  JSON with search size and search terms
+	 * @return Insert sucess/fail/ error
 	/*Input form 
 	 * {
 	 * 		"username": "cal",
@@ -38,15 +39,21 @@ public class UserShoppingAPI {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.insertUserShopping(temp);
 	}
-	
-	//Gets a username and returns their entired Shopping list from UserShopping table
+	/* Gets a username and returns their entired Shopping list from UserShopping table
+	 * @param username user
+	 * @return JSON with their entired fridge from UserIngredient table 
+	 */
 	@Path("get/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserHistory (@PathParam("username") String username) {
 		return dataBase.getUserShopping(username).toString();
 	}
-	//Deletes from UserShopping based on username and ingredient
+	/* Gets a username and deletes an ingredient from UserShopping table
+	 * @param username user
+	 * @param ingredient ingredient to delete
+	 * @return Delete sucess/fail/ error
+	 */
 	//Use /delete/{username}?ingredient=c
 	@Path("delete/{username}")
 	@DELETE

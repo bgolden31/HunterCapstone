@@ -7,9 +7,11 @@ import org.json.JSONObject;
 
 public class UserRecipeDatabase {
 	private Connection con= DataBaseConnector.connect();
-	/* Returns all the recipes created by user, based on username
-	 * 
-	 */
+	
+	/* Searches userRecipe table returns all the recipes created by a user based on username
+	 * Uses getRecipe() to search recipe table
+	 * @param  username user
+	 * @return JSONARay with all the recipes created by that user   */
 	public JSONArray getUserRecipes(String username){
 		String sql = "select * from userRecipes where username = ?";
 		try {
@@ -29,29 +31,10 @@ public class UserRecipeDatabase {
 			return error;
 		}		
 	}
-	
-	public JSONArray getRecipesCreator(int RecipeID){
-		String sql = "select * from userRecipes where recipeId = ?";
-		try {
-			PreparedStatement st = con.prepareStatement(sql);
-			st.setInt(1, RecipeID);
-			ResultSet rs = st.executeQuery();
-			JSONArray  userRecipes = new JSONArray(); 
-			RecipeDatabase dataBase = new RecipeDatabase();
-			while (rs.next()) {
-				userRecipes.put( dataBase.getRecipe (rs.getInt(2)));	
-			}
-			st.close();
-			return userRecipes;
-		}catch(Exception e) {
-			System.out.println(e);
-			JSONArray error = new JSONArray(e);
-			return error;
-		}		
-	}
-	
-	/* Inserts into userRecipe table, with recipeId and username
-	 */
+
+	/* Upon recipe creation and insertion,this records the recipeID in userRecipe table
+	 * @param  username user
+	 * @param  recipeId recipeId*/
 	public void insertUserRecipes(int  recipeID, String username){
 		String sql = "insert into userRecipes (username,  recipe_id) value (?,?)";
 		try {

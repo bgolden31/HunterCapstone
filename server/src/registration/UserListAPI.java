@@ -21,11 +21,14 @@ public class UserListAPI {
 		System.out.print("start");
 		return "GET success";
 	}
-	//Creates a list
-	/*
-	 * {"username": "cal",
+	/*Takes JSON containing list info and insert it into userList table for that user
+	 * @param  data the data inserted
+	 * @return List creation success/failure/error
+		JSON Form
+	 * {
+	 * "username": "cal",
 		"listName" : "a"
-	}
+		}
 	 */
 	@Path("create")
 	@POST
@@ -35,12 +38,15 @@ public class UserListAPI {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.createList(temp);
 	}
-	//Deletes a list
-	/*
-	 * {"username": "cal",
+	/*Takes JSON containing list info and deletes it from userList table
+	 * @param  data the data inserted
+	 * @return List creation success/failure/error
+		JSON Form
+	 * {
+	 * "username": "cal",
 		"listName" : "a",
 		"listId": 1
-	}
+		}
 	*/
 	@Path("delete")
 	@DELETE
@@ -49,8 +55,9 @@ public class UserListAPI {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.deleteList(temp);
 	}
-	//Inserts a recipe into a list based on listId
-	/*
+	/*Takes JSON containing user and recipe info and insert it into userRecipeList table
+	 * @param  data the data inserted
+	 * @return Insert success/failure/error
 		 * {"username": "cal",
 			"recipeName" : "a", 
 			"author" : "a",
@@ -66,7 +73,9 @@ public class UserListAPI {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.insertToList(temp);
 	}
-	
+	/*Takes JSON containing user and recipe info and removes it from userRecipeList table
+	 * @param  data the data inserted
+	 * @return Recipe removal success/failure/error
 	//Removes from a list based on listId
 	/*
 		 * {"username": "cal",
@@ -83,29 +92,41 @@ public class UserListAPI {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.deletefromList(temp);
 	}
-	//Gets all the list name and ids based on username, returns only listnames and listId
+	/* Returns all listname and listid created by user based on username, returns ONLY listnames and listId 
+	 * NO RECIPE INFO 
+	 * @param  data the data inserted
+	 * @return JSON with listnames and listId NO RECIPES
+	 */
 	@Path("getList/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserList (@PathParam("username")String username) {
 		return dataBase.getUserList(username).toString();
 	}
-	//Based on id, gets only one list, returns only listnames and listId
+	/* Based on listId, returns info for ONE list with it's listnames and listId and recipe info
+	 * @param  data the data inserted
+	 * @return JSON for one list, with it's listnames and listId and recipe info
+	 */
 	@Path("getListInfo/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserListInfo (@PathParam("id") int id) {
 		return dataBase.getUserListInfo(id).toString();
 	}
-	//Get all the list and the recipes in the list based on username
+	/* Returns all listname and listid created by user based on username, returns listnames and listId and recipe info
+	 * HAS RECIPE INFO
+	 * @param  data the data inserted
+	 * @return JSON with listnames and listId HAS RECIPE INFO
+	 */
 	@Path("getListInfoAll/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAllUserList (@PathParam("username")String username) {
 		return dataBase.getAllUserListInfo(username).toString();
 	}
-	//Inserts a recipe into favorites
-	/*
+	/*Takes JSON containing user and recipe info and insert it into userFavorite table for that user
+	 * @param  data the data inserted
+	 * @return Favorite success/failure/error
 		 * {"username": "cal",
 			"recipeName" : "a", 
 			"author" : "a",
@@ -119,8 +140,9 @@ public class UserListAPI {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.favoriteInsert(temp).toString();
 	}
-	//Deletes a recipe from favorites
-	/*
+	/*Takes JSON containing user and recipe info and removes it into userFavorite table for that user
+	 * @param  data the data inserted
+	 * @return Favorite success/failure/error
 		 * {"username": "cal",
 			"recipeName" : "a", 
 			"author" : "a",
@@ -134,7 +156,11 @@ public class UserListAPI {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.favoriteDelete(temp).toString();	
 	}
-	//Gets all the favor
+	/* Returns all favorites for a user
+	 * HAS RECIPE INFO
+	 * @param  username user
+	 * @return JSON with all of the users favorites
+	 */
 	@Path("favorites/get/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -142,8 +168,9 @@ public class UserListAPI {
 		return dataBase.getUserFavorites(username).toString();
 	}
 	
-	//Inserts a recipe into favorites
-	/*
+	/*Takes JSON containing user and recipe info and inserts it into likedTable for that user
+	 * @param  data the data inserted
+	 * @return Like success/failure/error
 		 * {"username": "cal",
 			"recipeName" : "a", 
 			"author" : "a",
@@ -157,13 +184,12 @@ public class UserListAPI {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.likeList(temp).toString();
 	}
-	
-	//Inserts a recipe into favorites
-	/*
-		 * {"username": "cal",
-			"recipeName" : "a", 
-			"author" : "a",
-			"recipeId" : -1
+	/*Takes JSON containing user and list info and inserts it into likedTable for that user
+	 * @param  data the data inserted
+	 * @return Like success/failure/error
+		{	"username": "cal1",
+			"listId": 22,
+			"listName": "aaaaaaa"
 		}
 	 */
 	@Path("unlike")
@@ -173,13 +199,15 @@ public class UserListAPI {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.unlikeList(temp).toString();
 	}
-	
-/*
-*/
+	/* Returns all liked list for a user
+	 * HAS RECIPE INFO
+	 * @param  username user
+	 * @return JSON with all of the users liked list
+	 */
 	@Path("liked/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String likedGet (@PathParam("username")String username) {
+	public String likedGetUser(@PathParam("username")String username) {
 		return dataBase.getlikeList(username).toString();
 	}
 }

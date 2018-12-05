@@ -11,7 +11,10 @@ public class UserShoppingDatabase {
 
 	private Connection con= DataBaseConnector.connect();
 	
-	//Inserts into UserShopping table
+	/* Based on JSON info, inserts ingredients for a user into userShoppingList table
+	 * @param  data JSON containing username and ingredient
+	 * @returns Success/Failure/error
+	 */	
 	public String insertUserShopping(JSONObject data) {
 		try {	
 			String sql = "insert into userShoppingList (username, ingredient) value (?,?)";
@@ -26,8 +29,11 @@ public class UserShoppingDatabase {
 			return e.toString(); //Returns the error related
 		}
 	}
-	
-	//Returns a ingredient array based recipeId
+	/* Based on JSON info, gets all ingredients in specfic users Shopping List from userShoppingList table
+	 * @param  username user
+	 * Calls shoppingListBuilder()
+	 * @returns JSONArray with ingredients and username
+	 */
 	public JSONArray getUserShopping(String username) {
 			String sql = "select * from userShoppingList where username = ?";
 			try {
@@ -47,15 +53,21 @@ public class UserShoppingDatabase {
 				return error;
 			}
 		}
-
+	/* Helper function for getUserShopping() to build JSONObject to fill JSONArray
+	 * @param  ingredient ingredient name
+	 * @returns JSONObject ingredient info 
+	 */
 	public JSONObject shoppingListBuilder(String ingredient) {
 		JSONObject ingredientO = new JSONObject();
 		ingredientO.put("ingredient" , ingredient);
 		return ingredientO; 
 	}
 	
-	//Deletes recipe from userHistory based on username and recipename
-	//Use delete/cal?ingredient=c
+	/* Based on JSON info, deletes ingredients for a user from userShoppingList table
+	 * @param  username user
+	 * @param ingredient ingredient name
+	 * @returns Delete Success /Failure/error
+	 */
 	public String deleteUserShopping(String username, String ingredient) {
 		String sql = "delete from userShoppingList where username=? and ingredient=?";
 		try {	

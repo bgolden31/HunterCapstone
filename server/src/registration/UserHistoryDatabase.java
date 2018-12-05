@@ -9,7 +9,10 @@ import org.json.JSONObject;
 
 public class UserHistoryDatabase {
 	private Connection con= DataBaseConnector.connect();
-	//Inserts into userHistory table
+	
+	/*Takes JSON info and insert it into userHistory table
+	 * @param  JSON the data inserted
+	 * @return Insert success/failure/error   */
 	public String insertUserHistory(JSONObject data) {
 		try {	
 			String sql = "insert into userHistory (username, recipe_name, author, recipeId) value (?,?,?,?)";
@@ -25,8 +28,11 @@ public class UserHistoryDatabase {
 			System.out.println(e);
 			return e.toString(); //Returns the error related
 		}
-	}
-	//Gets all the recipes view by user in userHistory table
+	}	
+	/* Gets all the recipe viewed by user in userHistory table
+	 * Calls helper function buildHistoryObject ()
+	 * @param  username user
+	 * @return JSONArray of all the recipes viewed by user   */
 	public JSONArray getUserHistory(String username) {
 		System.out.println(username);
 		String sql = "select * from userHistory where username = ? ORDER BY lastUpdated ASC";
@@ -45,16 +51,23 @@ public class UserHistoryDatabase {
 			System.out.println(e);
 		}		
 		return null;
-	}
-	//Helper to  build history object
+	}	
+	/* Helper function for getUserHistory, to build an object to fill history array
+	 * @param  username user
+	 * @param  author author
+	 * @param  recipeID recipeId
+	 * @return JSONArray of all the recipes viewed by user   */
 	JSONObject buildHistoryObject(String recipeName, String author, int recipeId){
 		   JSONObject history = new JSONObject();
 		   history .put("recipeName" ,recipeName);
 		   history .put("author" ,author );
 		   history .put("recipeId" ,recipeId );
 		   return history;
-	} 
-	//Deletes recipe from userHistory based on username and recipename
+	}
+	/* Deletes recipe from userHistory based on username and recipename
+	 * @param  username user
+	 * @param  recipename recipename
+	 * @return Delete sucess/failure/error */
 	public String deleteUserHistory(String username, String recipename) {
 		try {	
 			String sql = "delete from userHistory where username=? and recipe_name = ?";

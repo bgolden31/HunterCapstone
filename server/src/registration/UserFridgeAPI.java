@@ -22,9 +22,10 @@ public class UserFridgeAPI {
 		System.out.print("start");
 		return "GET success";
 	}
-
-	//Gets a json containing user and recipe info and inserts it into UserIngredient table
-	/*Input form 
+	/* Gets a json containing user and their ingredient and inserts it into UserIngredient table
+	 * @param  JSON with search size and search terms
+	 * @return Insert sucess/fail/ error
+	 *Input form 
 	 * {
 	 * 		"username": "cal",
 			"ingredient" : "a", 
@@ -39,14 +40,21 @@ public class UserFridgeAPI {
 		return dataBase.insertUserIngredient(temp);
 	}
 	
-	//Gets a username and returns their entired fridge from UserIngredient table
+	/* Gets a username and returns their entired fridge from UserIngredient table
+	 * @param username user
+	 * @return JSON with their entired fridge from UserIngredient table 
+	 */
 	@Path("get/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserHistory (@PathParam("username") String username) {
 		return dataBase.getUserIngredient(username).toString();
 	}
-	//Deletes from UserIngredient based on username and ingredient
+	/* Gets a username and deletes an ingredient from their fridge from UserIngredient table
+	 * @param username user
+	 * @param ingredient ingredient to delete
+	 * @return Delete sucess/fail/ error
+	 */
 	//Use /delete/{username}?ingredient=c
 	@Path("delete/{username}")
 	@DELETE

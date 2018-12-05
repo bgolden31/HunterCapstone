@@ -31,7 +31,7 @@ public class UserFridgeDatabase {
 	}
 	
 	/* Based on JSON info, gets all ingredients in specfic users Fridge from UserFridge table
-	 * @param  data JSON containing username and ingredient
+	 * @param  username user
 	 * Calls ingredientListBuilder()
 	 * @returns JSONArray with ingredients and username
 	 */	
@@ -66,7 +66,11 @@ public class UserFridgeDatabase {
 		   return ingredientO; 
 	}
 	
-	//Deletes recipe from userHistory based on username and recipename
+	/* Based on JSON info, deletes ingredients for a user from UserFridge table
+	 * @param  username user
+	 * @param ingredient ingredient name
+	 * @returns Delete Success /Failure/error
+	 */	
 	public String deleteUserIngredient(String username, String ingredient) {
 		String sql = "delete from userFridge WHERE username=? AND ingredient=?";
 		try {	

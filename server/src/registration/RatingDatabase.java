@@ -117,7 +117,6 @@ public class RatingDatabase {
 	 * @param  data the JSON containing recipe name, author, and recipeId
 	 * @returns Success/Failure/error and updated rating
 	 */
-	
 	public String deleteRecipeInfo(JSONObject data) {
 		String sql = "delete from recipeRating where username = ? AND recipe_name = ? AND  author = ? AND recipeId = ?";
 		try {
