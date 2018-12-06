@@ -1,0 +1,18 @@
+.left {
+  float: left;
+  width: 33%;
+}
+.right {
+  float: left;
+  width: 33%;
+}
+
+.middle {
+  float: left;
+  width: 33%;
+}
+
+
+.center {
+  text-align: center;
+}

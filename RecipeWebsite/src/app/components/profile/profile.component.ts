@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { recipe } from '../../models/recipe.model';
 import { userInfo } from '../../models/userInfo.model';
 import { history } from '../../models/history.model';
+import { shoppingList } from '../../models/shoppingList.model';
 import { RecipeService } from '../../services/recipe.service';
+import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,11 +19,15 @@ export class ProfileComponent implements OnInit {
   userRecipes: Array<recipe>;
   tmp: string;
   recipeId: number;
+  shoppingCart: Object;
 
   constructor(private recipeService: RecipeService,
-              private router: Router) { }
+              private router: Router,
+              private cookieService: CookieService) { }
 
   ngOnInit() {
+    //this.shoppingCart = [];
+    this.getShoppingList();
     this.tmp = localStorage.getItem("userInfo");
     this.userInfo = JSON.parse(this.tmp);
     this.tmp = localStorage.getItem("recipeHistory");
@@ -47,6 +53,24 @@ export class ProfileComponent implements OnInit {
       alert(data)
     });
   }
+
+  /**
+ * This function is called when the user clicks
+ * the "delete recipe" function next to a recipe
+ * on their profile. The recipe's ID is passed to the
+ * service, which then calls the deletion function
+ * on the server. The recipe is then deleted from the
+ * database.
+ * 
+ * @param recipeId the ID of the recipe to be deleted.
+ */
+
+getShoppingList() {
+  this.recipeService.getShoppingCart(this.cookieService.get("username"))
+  .subscribe((data: Object) => {
+    this.shoppingCart = data;
+  });
+}
 
 /**
  * This function is called when the user clicks

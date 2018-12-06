@@ -114,4 +114,19 @@ export class RecipeService {
     addToShoppingCart(ingredient: JSON) {
         return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserShopping/insert', ingredient, {responseType: 'text'});
     }
+
+    
+/**
+ * Returns a string to present to the user to indicate whether or not the
+ * ingredient was added to their shopping cart or not. The user has the chance,
+ * once logged in, to be able to add ingredients from a recipe's details page to
+ * their shopping cart. 
+ *
+ * @param  username   a string containing the user's username.
+ * @return            a JSON object containing the user's shopping list represented as an array of strings.
+ */
+
+    getShoppingCart(username: string) {
+        return this.http.get('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserShopping/get/' + username);
+    }
 }
