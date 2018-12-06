@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-header',
@@ -9,25 +9,23 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  loggedIn: boolean = false;
+  loggedIn: boolean;
 
   constructor(private router: Router,
-              private cookieService: CookieService) { 
+              private cookieService: CookieService,
+              private loginService: LoginService) { 
   }
 
   ngOnInit() {
-    if (this.cookieService.check('username') == true) {
-      this.loggedIn = true;
-    }
+    this.loginService.loggedIn.subscribe(loggedIn => this.loggedIn = loggedIn)
   }
 
-  /*
   logout() {
     this.cookieService.deleteAll();
     localStorage.clear();
+    this.loginService.loggedIn.next(false);
     this.router.navigate(['/home']);
   }
-  */
 
 /**
  * This function does a quick check to see if the user

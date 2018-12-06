@@ -1,31 +1,38 @@
-    Enter your registration information: <br> <br>
-
-    <div class="form-group">
-        <label for="exampleInputPassword1">Username</label>
-        <input type="text" class="form-control" id="user" [(ngModel)]="username" placeholder="Username">
-    </div>
-
-    <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input type="password" class="form-control" id="password" [(ngModel)]="password" placeholder="Password">
-    </div>
-
-    <div class="form-group">
-        <label for="exampleInputPassword1">Email</label>
-        <input type="text" class="form-control" id="email" [(ngModel)]="email" placeholder="Email">
-    </div>
-        
-    <div class="form-group">
-        <label for="exampleInputPassword1">Age</label>
-        <input type="text" class="form-control" id="age" [(ngModel)]="age" placeholder="Age">
-    </div>
-        
-    <div class="form-group">
-        <label for="exampleInputPassword1">Name</label>
-        <input type="text" class="form-control" id="name" [(ngModel)]="name" placeholder="Name">
+<div class="jumbotron">
+        <div class="container">
+            <div class="row">       
+                <div class="col-md-6 offset-md-3">
+                    <h3>Registration</h3>
+                  <div class="form-group">
+                        <label for="exampleInputPassword1" >Username</label>
+                        <input type="text" class="form-control" id="user" [(ngModel)]="username" placeholder="Username">
+                    </div>
+                
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-form-label"> Password</label>
+                        <input type="password" class="form-control" id="password" [(ngModel)]="password" placeholder="Password">
+                    </div>
+                
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Email</label>
+                        <input type="text" class="form-control" id="email" [(ngModel)]="email" placeholder="Email">
+                    </div>
+                        
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Age</label>
+                        <input type="text" class="form-control" id="age" [(ngModel)]="age" placeholder="Age">
+                    </div>
+                        
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Name</label>
+                        <input type="text" class="form-control" id="name" [(ngModel)]="name" placeholder="Name">
+                    </div>
+                    
+                    <div style="text-align:center;">
+                        <button type="button" class="test" (click)="registerUser()" class="btn btn-primary">Register!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
-    <div style="text-align:center;">
-        <button type="button" class="test" (click)="registerUser()" class="btn btn-primary">Register!</button>
-    </div>
-

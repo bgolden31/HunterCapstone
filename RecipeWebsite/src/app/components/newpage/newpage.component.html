@@ -1,15 +1,31 @@
-Input ingredients: <br><br>
+<div class="jumbotron">
+  <div class="container">
+      <div class="row">       
+          <div class="col-md-6 offset-md-3">
+              <h3>Input ingredients:</h3>
 
-<div class="form-group">
-    <input type="text" class="form-control" id="ing" [(ngModel)]="ing" placeholder="Potato Salad">
-</div>
+        <div class="form-group">
+                      <input type="text" class="form-control" id="ing" [(ngModel)]="ing" placeholder="Potato Salad">
+                      <input type="text" class="form-control" id="size" [(ngModel)]="size" placeholder="How many recipes do you want?">
+        </div>
+        
+        <button (click)="getRecipes(ing, size)" class="btn btn-primary" >Click me </button> 
+        <br><br>
+        <div *ngFor="let API of stuff?.APIRecipes">
 
-<button (click)="getRecipes(ing)">Click me </button> <br>
+            {{ API.label }} from {{ API.author }}
+            <br>
+            <button type="button" (click)="goToPage(API)" class="btn btn-primary">See Details</button>
 
-<div *ngFor="let user of stuff?.hits">
+        </div>
 
-  {{ user.recipe.label }} from {{ user.recipe.source }}
-
-  <button type="button" (click)="goToPage(user.recipe)" class="btn btn-primary">See Details</button>
-
+          <div *ngFor="let Database of stuff?.DatabaseRecipes">
+        
+            {{ Database.label }} from {{ Database.author }}
+            <br>
+            <button type="button" (click)="goToPage(Database)" class="btn btn-primary">See Details</button>
+  
+        </div>
+      </div>
+  </div>
 </div>

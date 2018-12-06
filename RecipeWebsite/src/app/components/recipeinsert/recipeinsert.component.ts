@@ -35,7 +35,17 @@ export class RecipeinsertComponent implements OnInit {
   constructor(private RecipeService: RecipeService) { }
 
   ngOnInit() {
-    this.recipe.ingredients = [{name:"x", amount:3}, {name:"y", amount:2}];
+    this.recipe.ingredients = [];
+  }
+
+  addIngredient() {
+    var ingredient = {
+      weight: this.amount,
+      text: this.ingredient,
+  }
+    this.recipe.ingredients.push(ingredient);
+    this.ingredient = "";
+    this.amount = null;
   }
 
 
@@ -53,7 +63,7 @@ export class RecipeinsertComponent implements OnInit {
     this.recipe.label = this.name;
     this.recipe.description = this.desc;
     this.recipe.image = this.link;
-    this.recipe.URL = this.url;
+    this.recipe.url = this.url;
     this.recipe.servings = this.servings;
     this.recipe.calories = this.calories;
     this.recipe.totalTime = this.time;
@@ -64,11 +74,7 @@ export class RecipeinsertComponent implements OnInit {
     this.nutrients.sodium = this.sodium;
     this.nutrients.cholesterol = this.chol;
     this.nutrients.carbs = this.carbs;
-    /*
-    this.ing.amount = this.amount;
-    this.ing.name = this.ingredient;*/
     this.recipe.nutrients = this.nutrients;
-    //this.recipe.ingredients.push(this.ing);
     var tmp = JSON.stringify(this.recipe);
     var recipe = JSON.parse(tmp);
     this.RecipeService.createRecipe(recipe)

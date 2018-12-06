@@ -12,7 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./newpage.component.css']
 })
 export class NewpageComponent implements OnInit {
-  stuff: APIRecipe;
+  stuff: APIRecipe = <APIRecipe>{};
   ing: string;
   recipe: history = <history>{};
 
@@ -23,6 +23,8 @@ export class NewpageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.stuff.APIRecipes = [];
+    this.stuff.DatabaseRecipes = [];
   }
 
 /**
@@ -33,10 +35,20 @@ export class NewpageComponent implements OnInit {
  * in the 'stuff' variable.
  * 
  * @param ing A string of ingredients the user wants to search for in recipes.
+ * @param size An integer representing how many recipes the user wants returned. Maaxes out at 50.
  */
 
-  getRecipes(ing) {
-    this.recipeService.getRecipes(ing)
+  getRecipes(ing, size) {
+    if (size > 50) {
+      size = 50;
+    }
+    var search = {
+      search: ing,
+      size: size
+    }
+    var tmp = JSON.stringify(search);
+    var temp = JSON.parse(tmp);
+    this.recipeService.getRecipes(temp)
       .subscribe((data: APIRecipe) => {
           this.stuff = data;
       });
@@ -57,7 +69,7 @@ export class NewpageComponent implements OnInit {
 
   goToPage(stuff) {
     if (this.cookieService.get('username') != null) {
-      this.recipe.author = stuff.source;
+      this.recipe.author = stuff.author;
       this.recipe.recipeId = -1;
       this.recipe.recipeName = stuff.label;
       this.recipe.username = this.cookieService.get('username');

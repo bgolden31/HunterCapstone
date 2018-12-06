@@ -1,4 +1,6 @@
+import { recipe } from "./recipe.model";
+
 export class APIRecipe {
-    label: string;
-    source: string;
+    APIRecipes: Array<recipe>
+    DatabaseRecipes: Array<recipe>
 }

@@ -1,19 +1,19 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand">Recipe App Stuff</a>
+    <a class="navbar-brand" href="/home">Recipe In Progress</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
   
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active" *ngIf="!loggedIn">
+        <li class="nav-item" *ngIf="!loggedIn">
           <a class="nav-link" href="javascript:void(0)" (click)="goToLogin()">Login</a>
         </li>
         <li class="nav-item" *ngIf="!loggedIn">
           <a class="nav-link" href="javascript:void(0)" (click)="goToRegister()">Register</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/test">Search Recipes</a>
+          <a class="nav-link" href="/search">Search Recipes</a>
         </li>
         <li class="nav-item" *ngIf="loggedIn">
           <a class="nav-link" href="/createrecipe">Create Recipes</a>
@@ -25,5 +25,6 @@
           <a class="nav-link" href="javascript:void(0)" (click)="logout()">Logout</a>
         </li>
       </ul>
+      <div *ngIf="loggedIn">You are logged in as: {{ this.cookieService.get('username') }}</div>
     </div>
   </nav>

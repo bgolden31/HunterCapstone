@@ -1,10 +1,12 @@
 p {
-    font-family: monospace;
-    font-variant: small-caps;
-    font-stretch: ultra-expanded;
-    font-size: 40px;
+    font-size: 95px;
 }
 
-.test {
-    width: 500px;
+img {
+    width: 20%;
+    height: 20%;
+}
+
+div {
+    text-align: center
 }

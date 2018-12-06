@@ -2,14 +2,17 @@ import { nutrients } from "./nutrients.model";
 import { ingredients } from "./ingredients.model";
 
 export class recipe {
-    username: string;
-    label: string;
+    author: string;
+    calories: number;
     description: string;
     image: string;
-    URL: string;
+    ingredients: Array<ingredients>;
+    label: string;
+    nutrients: nutrients;
+    rating: number;
+    recipeId: number;
+    username: string;
     servings: number;
-    calories: number;
     totalTime: number;
-    nutrients: nutrients
-    ingredients: Array<ingredients>
+    url: string;
 }

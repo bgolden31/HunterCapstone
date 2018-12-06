@@ -1,25 +1,13 @@
-<body>
-  <div style="text-align: center">
-  <br><br><br><br>
+<div>
+    <p>RECIPE IN PROGRESS</p>
+
+    <img src="assets/boo.png"> <br><br>
+
+      <button type="button" [routerLink]="['/search']" class="btn btn-primary btn-lg">Search Recipes</button> <br><br>
+      <button type="button" *ngIf="!loggedIn" [routerLink]="['/register']" class="btn btn-primary btn-lg">Register an Account</button> <br><br>
+      <button type="button" *ngIf="!loggedIn" [routerLink]="['/login']" class="btn btn-primary btn-lg">Login</button>
+</div>
 
 
-  <p>SEARCH</p>
-
-  <div class="form-group">
-      <label for="exampleInputPassword1">Ingredients</label>
-      <input type="text" class="form-control" id="ing" placeholder="Chicken with Rice" [(ngModel)]="ing">
-  </div>
-
-  <button type="button" (click)="loginUser()" class="btn btn-primary btn-lg">Search Recipes!</button>
 
 
-    <br><br><br>
-    <p>OR</p>
-    <br><br><br>
-
-    <p>REGISTER</p>
-
-    <button type="button" [routerLink]="['/register']" class="btn btn-primary btn-lg">Register an Account</button>
-
-  </div>
-</body>

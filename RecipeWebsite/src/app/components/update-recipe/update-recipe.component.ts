@@ -10,14 +10,13 @@ import { recipe } from '../../models/recipe.model';
 export class UpdateRecipeComponent implements OnInit {
   recipe: recipe;
   tmp: string;
-  test: string;
+  url: string;
 
   constructor(private recipeService: RecipeService) { }
 
   ngOnInit() {
     this.tmp = localStorage.getItem("recipe");
     this.recipe = JSON.parse(this.tmp);
-    this.test = this.recipe.URL;
   }
 
 /**
@@ -32,7 +31,6 @@ export class UpdateRecipeComponent implements OnInit {
  */
 
   updateRecipe(recipeId) {
-    this.recipe.ingredients = [{name:"x", amount:3}, {name:"y", amount:2}];
     this.tmp = JSON.stringify(this.recipe);
     var newRecipe = JSON.parse(this.tmp);
     this.recipeService.updateRecipe(recipeId, newRecipe)

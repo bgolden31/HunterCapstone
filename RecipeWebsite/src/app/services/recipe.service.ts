@@ -15,13 +15,12 @@ export class RecipeService {
  * but the recipes returned are the most relevant in terms of the
  * user's search parameters.
  *
- * @param  ingredients a string containing ingredients the user wants to search for.
+ * @param  ingredients a JSON object containing the ingredients and how many recipes the user wants to search for.
  * @return             recipes most relevant to the user's search parameters.
  */
 
-     getRecipes(ingredients) {
-        return this.http.get('https://api.edamam.com/search?q=' + ingredients + '&app_id=7aede50c&app_key=908364149d33f6c3fa9765757f65fcfb&from=0&to=3');
-        //return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/search', );
+     getRecipes(ingredients: JSON) {
+        return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/search', ingredients);
     }
 
 /**
@@ -84,5 +83,50 @@ export class RecipeService {
 
     createRecipe(recipe: JSON) {
         return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/insert', recipe, {responseType: 'text'});
+    }
+
+/**
+ * Returns a string to present to the user to indicate whether or not the
+ * recipe rating update was successful. The user has the chance, once logged in,
+ * to rate a recipe. The rating is then factored into the average, which is then
+ * displayed on the recipe details page. The user can only rate only if they're
+ * logged in, and while their rating can change, it will only be factored into
+ * the average of the recipe's rating once.
+ *
+ * @param  recipe a JSON object containing the recipe, recipeId, and rating.
+ * @return        a string indicating whether or not the recipe creation was successful.
+ */
+
+    rateRecipe(recipe: JSON) {
+        return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/update/rating', recipe, {responseType: 'text'});
+    }
+
+/**
+ * Returns a string to present to the user to indicate whether or not the
+ * ingredient was added to their shopping cart or not. The user has the chance,
+ * once logged in, to be able to add ingredients from a recipe's details page to
+ * their shopping cart. 
+ *
+ * @param  ingredient a JSON object containing the ingredient and the user's username.
+ * @return            a string indicating whether or not the ingredient was added.
+ */
+
+    addToShoppingCart(ingredient: JSON) {
+        return this.http.post('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserShopping/insert', ingredient, {responseType: 'text'});
+    }
+
+    
+/**
+ * Returns a string to present to the user to indicate whether or not the
+ * ingredient was added to their shopping cart or not. The user has the chance,
+ * once logged in, to be able to add ingredients from a recipe's details page to
+ * their shopping cart. 
+ *
+ * @param  username   a string containing the user's username.
+ * @return            a JSON object containing the user's shopping list represented as an array of strings.
+ */
+
+    getShoppingCart(username: string) {
+        return this.http.get('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserShopping/get/' + username);
     }
 }

@@ -1,16 +1,42 @@
-  Welcome to {{ userInfo.userName }}'s profile <br>
+  <div class="center">
 
-  User Info: <br>
-  Name: {{ userInfo.name }} <br>
-  Age: {{ userInfo.age }} <br>
-  Email: {{ userInfo.email }} <br>
+    Welcome to {{ userInfo.userName }}'s profile <br>
 
-  USER RECIPES: <br>
+    User Info: <br>
+    Name: {{ userInfo.name }} <br>
+    Age: {{ userInfo.age }} <br>
+    Email: {{ userInfo.email }} <br><br><br>
 
-  <div *ngFor="let recipe of userRecipes">
+  </div>
 
-    {{ recipe.label }}.
-    <button type="button" (click)="deleteRecipe(recipe.recipeId)" class="btn btn-primary btn-sm">Delete recipe</button> 
-    <button type="button" (click)="updateRecipe(recipe)" class="btn btn-primary btn-sm">Edit recipe</button>
+<div class="center">
 
-  </div> <br>
+  <div class="left">
+    YOUR RECIPES: <br><br>
+      <div *ngFor="let userRecipe of userRecipes">
+        {{ userRecipe.label }} <br>
+        <button type="button" (click)="deleteRecipe(userRecipe.recipeId)" class="btn btn-primary btn-sm">Delete recipe</button>
+        <button type="button" (click)="updateRecipe(userRrecipe)" class="btn btn-primary btn-sm">Edit recipe</button>  
+      </div>
+  </div>
+
+  <div class="middle">
+      YOUR SHOPPING LIST: <br><br>
+        <div *ngFor="let a of shoppingCart">
+          {{ a.ingredient }} <br>
+        </div>
+  </div>
+
+  <div class="right">
+    YOUR SEARCH HISTORY: <br><br>
+    <div *ngFor="let historyRecipe of recipeHistory">
+      {{ historyRecipe.label }}
+    </div>
+
+  </div>
+
+</div>
+
+    <br>
+    <br>
+    <br>
