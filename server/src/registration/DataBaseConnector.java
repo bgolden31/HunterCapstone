@@ -11,7 +11,7 @@ public class DataBaseConnector {
 	   String dbName = ("sys");
   	   String userName = ("RIP");
   	   String password = ("Food1516");
-  	   String hostname = ("aa1pxec1pjycn9h.cpquhfohdb53.us-east-2.rds.amazonaws.com");
+  	   String hostname = ("please1.cpquhfohdb53.us-east-2.rds.amazonaws.com");
   	   String port = ("3306");
   	   try {
   		   Class.forName("com.mysql.jdbc.Driver");
