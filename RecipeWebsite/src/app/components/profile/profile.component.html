@@ -5,6 +5,7 @@
     User Info: <br>
     Name: {{ userInfo.name }} <br>
     Age: {{ userInfo.age }} <br>
+    <img src={{image}}> <br>
     Email: {{ userInfo.email }} <br><br><br>
 
   </div>
@@ -16,7 +17,7 @@
       <div *ngFor="let userRecipe of userRecipes">
         {{ userRecipe.label }} <br>
         <button type="button" (click)="deleteRecipe(userRecipe.recipeId)" class="btn btn-primary btn-sm">Delete recipe</button>
-        <button type="button" (click)="updateRecipe(userRrecipe)" class="btn btn-primary btn-sm">Edit recipe</button>  
+        <button type="button" (click)="updateRecipe(userRecipe)" class="btn btn-primary btn-sm">Edit recipe</button>  
       </div>
   </div>
 

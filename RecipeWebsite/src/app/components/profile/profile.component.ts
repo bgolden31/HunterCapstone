@@ -26,15 +26,31 @@ export class ProfileComponent implements OnInit {
               private cookieService: CookieService) { }
 
   ngOnInit() {
-    //this.shoppingCart = [];
     this.getShoppingList();
     this.tmp = localStorage.getItem("userInfo");
     this.userInfo = JSON.parse(this.tmp);
     this.tmp = localStorage.getItem("recipeHistory");
     this.recipeHistory = JSON.parse(this.tmp);
-    this.tmp = localStorage.getItem("userRecipes");
-    this.userRecipes = JSON.parse(this.tmp);
+    this.getUserRecipes();
   }
+
+/**
+ * This function is called when the user goes back
+ * to their profile. This function ensures that the
+ * list of their created recipes is up-to-date and
+ * the user doesn't have to log out and log back in
+ * to update their list of created recipes.
+ * 
+ */
+
+  getUserRecipes() {
+    this.userRecipes = [];
+    this.recipeService.getUserRecipes(this.cookieService.get("username"))
+    .subscribe((data: Array<recipe>) => {
+      this.userRecipes = data;
+    });
+  }
+
 
 /**
  * This function is called when the user clicks
