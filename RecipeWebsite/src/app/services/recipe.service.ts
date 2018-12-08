@@ -117,10 +117,10 @@ export class RecipeService {
 
     
 /**
- * Returns a string to present to the user to indicate whether or not the
- * ingredient was added to their shopping cart or not. The user has the chance,
- * once logged in, to be able to add ingredients from a recipe's details page to
- * their shopping cart. 
+ * Returns an array of ingredients representing the user's
+ * shopping cart. The function takes the user's username,
+ * and makes the call to the server to retrieve an updated 
+ * array of ingredients in the user's shopping cart.
  *
  * @param  username   a string containing the user's username.
  * @return            a JSON object containing the user's shopping list represented as an array of strings.
@@ -128,5 +128,19 @@ export class RecipeService {
 
     getShoppingCart(username: string) {
         return this.http.get('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserShopping/get/' + username);
+    }
+
+/**
+ * Returns an array of recipes representing the user's
+ * created recipes. The function takes the user's username,
+ * and makes the call to the server to retrieve an updated 
+ * array of user created recipes.
+ *
+ * @param  username   a string containing the user's username.
+ * @return            a JSON object containing the user's created recipes.
+ */
+
+    getUserRecipes(username: string) {
+        return this.http.get('http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/userRecipe/' + username);
     }
 }

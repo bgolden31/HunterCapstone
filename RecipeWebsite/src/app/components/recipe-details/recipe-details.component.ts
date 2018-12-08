@@ -20,7 +20,37 @@ export class RecipeDetailsComponent implements OnInit {
   ngOnInit() {
     this.recipe = this.saveRecipe.recipe;
     this.recipe.calories = Math.round(this.recipe.calories);
+    this.recipe.totalTime = this.recipe.totalTime / 60;
   }
+
+  isThereImage() {
+    if (this.recipe.image == "no" || this.recipe.image == "n") {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+  isThereUrl() {
+    if (this.recipe.url == "no" || this.recipe.url == "n") {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+/**
+ * Allows the user to add an ingredient they found
+ * from a recipe to their shopping cart. This is only
+ * done from the recipe details page, and upon button
+ * click, the HTTP call is made to the server where the
+ * ingredient is stored in the user's shopping cart.
+ *
+ * @param  ing      a string representing an ingredient the user wants to add to their cart.
+ * @return          a string letting the user know whether the ingredient insertion was successful or not.
+ */
 
   addIngredientToCart(ing) {
     var ingredient = {
@@ -35,7 +65,7 @@ export class RecipeDetailsComponent implements OnInit {
       });
   }
 
-  /**
+/**
  * Allows the user to rate a recipe from 1 to 5.
  * A JSON object is created with the numerical rating,
  * the recipe's ID, author, name, and the user's ID.
