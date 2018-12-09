@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient">
+
+    <ProgressBar
+        android:id="@+id/rec_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/rec_form"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Try Cooking one of These Today!"
+            android:paddingTop="15dp"
+            android:paddingLeft="15dp"
+            android:fontFamily="@font/caviardreams"
+            android:textSize="25sp"
+            android:paddingBottom="20dp"/>
+
+        <ListView
+            android:id="@+id/recommend_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:stackFromBottom="true"
+            android:transcriptMode="normal">
+
+        </ListView>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient">
+
+    <ProgressBar
+        android:id="@+id/progress_form"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/shop_form"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/shopping_list"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:text="Shoping List"
+            android:paddingTop="15dp"
+            android:paddingLeft="15dp"
+            android:fontFamily="@font/caviardreams"
+            android:textSize="25sp"
+            android:paddingBottom="20dp"/>
+
+        <ListView
+            android:id="@+id/shop_list"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:stackFromBottom="true"
+            android:transcriptMode="normal">
+        </ListView>
+
+    </LinearLayout>
+
+</RelativeLayout>
