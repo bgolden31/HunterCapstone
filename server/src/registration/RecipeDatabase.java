@@ -344,7 +344,7 @@ public class RecipeDatabase {
 	 * @param  data the JSON containing search param data
 	 * @returns A JSON containing recipes from both the database and API
 	 */
-	public JSONObject DBAPISearchEx(JSONObject data) throws JSONException, IOException {
+	public JSONObject DBAPISearchEx(JSONObject data) throws JSONException, IOException, SQLException {
 		//todo : for better searching
 		int size = data.getInt("size");
 		String q = data.getString("search");
@@ -357,7 +357,7 @@ public class RecipeDatabase {
 	 * @param  search string with terms that needs to be parsed to search database and passed to the API
 	 * @returns A JSON containing recipes from both the database and API matching search
 	 */
-	public JSONObject DBAPISearchExHelper(int size, String search) throws JSONException, IOException {
+	public JSONObject DBAPISearchExHelper(int size, String search) throws JSONException, IOException, SQLException {
 	//50% of the recipes will come from the database and the API
 	 int tempSize = size/2;
 	 String [] words = search.split("%20");
@@ -375,6 +375,8 @@ public class RecipeDatabase {
 		while(rs.next()) {
 			temp.put( getRecipe( rs.getInt(1) ) );
 		}
+		st.close();
+		rs.close();
 	}catch(Exception e) {
 		JSONObject error = new JSONObject(e);
 		return error;
@@ -393,7 +395,7 @@ public class RecipeDatabase {
 	 * @param  search string with a term/ingredient to search database, and then passed to the API search
 	 * @returns A JSON containing recipes from both the database and API
 	 */
-	public JSONObject apiSearch(int size, String q) throws JSONException, IOException {
+	public JSONObject apiSearch(int size, String q) throws JSONException, IOException, SQLException {
 		String sql = "Select r.recipeID from recipe r "
 				+ "join nutrients n on r.recipeid = n.nutrientsid "
 				+ "join ingredients i on r.recipeId = i.recipeid"

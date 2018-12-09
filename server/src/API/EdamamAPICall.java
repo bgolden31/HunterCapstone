@@ -8,6 +8,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,8 +20,8 @@ public class EdamamAPICall {
 	final String APPKEY = "9f7f5f81a5d43726ab9b7ca292d7e583";
 	final String APPID = "ac3847c7";
     final String APIURL ="https://api.edamam.com/search";
-    private static Connection con= DataBaseConnector.connect();
-    public static JSONObject search(int size, String q, JSONObject newRecipeArray ) throws JSONException, IOException {
+    public static JSONObject search(int size, String q, JSONObject newRecipeArray ) throws JSONException, IOException, SQLException {
+    	try {
     	HttpURLConnection con = connect(size,q);
     	//read all string from con
     	BufferedReader in = new BufferedReader(
@@ -31,14 +32,22 @@ public class EdamamAPICall {
         	response.append(inputLine);
         }
         in.close(); //end the read
+        con.disconnect();
         JSONObject myResponse = new JSONObject(response.toString());
         JSONArray recipeArray = new JSONArray();
         recipeArray = myResponse.getJSONArray("hits");
         return getRecipes(size, recipeArray, newRecipeArray, q);
+    	}
+    	catch(Exception e) {
+    		String error1= "{\"Error\": \"" + e + "\"}";
+			JSONObject error = new JSONObject(error1);
+			return error;
+		}
     }
     
     //connect to recipe search api to edamam
     public static HttpURLConnection connect(int size, String q) {
+    	HttpURLConnection con=null;
     	try {
     		//todo : change url for search every things
     		final String APPKEY = "9f7f5f81a5d43726ab9b7ca292d7e583";
@@ -46,7 +55,7 @@ public class EdamamAPICall {
     	    final String APIURL ="https://api.edamam.com/search";
    	 		String url = APIURL + "?q=" + q + "&app_id=" + APPID + "&app_key=" + APPKEY + "&from=0&to=" + size;
    	 		URL obj = new URL(url);
-   	 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+   	 		con = (HttpURLConnection) obj.openConnection();
    	 		con.setRequestMethod("GET");
    	 		con.setRequestProperty("Content-Type", "application/json");
    	 		con.setRequestProperty("Accept", "application/json");
@@ -57,8 +66,10 @@ public class EdamamAPICall {
     	return null;
     }
     
-    public static JSONObject getRecipes(int size, JSONArray recipeArray, JSONObject newRecipeArray, String q) throws JSONException {
-	    for(int i =0; i < size && i < recipeArray.length(); i++) {
+    public static JSONObject getRecipes(int size, JSONArray recipeArray, JSONObject newRecipeArray, String q) throws JSONException, SQLException {
+        Connection con= DataBaseConnector.connect();
+        try {
+    	for(int i =0; i < size && i < recipeArray.length(); i++) {
 	   	 	JSONObject temp = new JSONObject(recipeArray.getJSONObject(i).getJSONObject("recipe").toString());
 	   	 	JSONObject recipe = new JSONObject();
 	   	 	recipe.accumulate("label", temp.getString("label"));
@@ -86,14 +97,19 @@ public class EdamamAPICall {
 	   	 	recipe.accumulate("nutrients", getNutrients(temp));
 	   	 	
 	   	 	st.close();
+	   	 	rs.close();
 			}catch(Exception e) {
 			System.out.println(e);
 		}
-	   	 	APIDatabase.insertEdamamRecipe(recipe, q);
+	   	 	//APIDatabase.insertEdamamRecipe(recipe, q);
 	   	 	newRecipeArray.append("APIRecipes", recipe);
 	    }
 	    //System.out.print(newRecipeArray)
 	    return newRecipeArray;
+        }
+        finally {
+        	con.close();
+        }
 	}
     
 	//setup all nutrients from edamam
@@ -111,7 +127,7 @@ public class EdamamAPICall {
 		return nutrients;
     }
     
-    //check weather nutrients have the key of different nutrients
+    //check if nutrients have the key of different nutrients
 	public static double getNutrient(JSONObject Nutrients, String nutrientName) throws JSONException {
 		if(Nutrients.has(nutrientName)) {
 			return Nutrients.getJSONObject(nutrientName).getDouble("quantity");
