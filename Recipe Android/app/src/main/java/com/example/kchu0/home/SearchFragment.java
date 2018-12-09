@@ -101,11 +101,17 @@ public class SearchFragment extends Fragment implements MaterialSearchBar.OnSear
     @Override
     public void onSearchConfirmed(CharSequence charSequence) {
         key = charSequence.toString();
-        //Toast.makeText(getContext(),"Searching "+ charSequence.toString()+" ......",Toast.LENGTH_SHORT).show();
-        showProgress(true);
-        mAuthTask = new SearchTask(20, key);
-        mAuthTask.execute((String) "hello");
-        key = "";
+        String newName;
+        if(key.contains(" ")) {
+            newName = key.replaceAll("\\s", "%20");
+            mAuthTask = new SearchTask(20, newName);
+            mAuthTask.execute((String) "hello");
+            key = "";
+        } else {
+            mAuthTask = new SearchTask(20, key);
+            mAuthTask.execute((String) "hello");
+            key = "";
+        }
         InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE); //Closes keyboard
         inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
@@ -156,8 +162,17 @@ public class SearchFragment extends Fragment implements MaterialSearchBar.OnSear
             String spokenText = results.get(0);
             // Do something with spokenText
             //Add Execute here.
-            mAuthTask = new SearchTask(20, spokenText);
-            mAuthTask.execute((String) "hello");
+            String newName;
+            if(key.contains(" ")) {
+                newName = spokenText.replaceAll("\\s", "%20");
+                mAuthTask = new SearchTask(20, newName);
+                mAuthTask.execute((String) "hello");
+                key = "";
+            } else {
+                mAuthTask = new SearchTask(20, spokenText);
+                mAuthTask.execute((String) "hello");
+                key = "";
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
