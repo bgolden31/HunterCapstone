@@ -39,11 +39,13 @@ export class NewpageComponent implements OnInit {
  */
 
   getRecipes(ing, size) {
+    this.ing = ing;
+    this.ing = this.ing.replace(" ", "%20");
     if (size > 50) {
       size = 50;
     }
     var search = {
-      search: ing,
+      search: this.ing,
       size: size
     }
     var tmp = JSON.stringify(search);
