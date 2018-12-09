@@ -1,5 +1,7 @@
 package registration;
 
+import java.sql.SQLException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,8 +15,6 @@ import org.json.JSONObject;
 
 @Path("list")
 public class UserListAPI {
-	UserListDatabase dataBase = new UserListDatabase();
-	
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String x() {
@@ -34,9 +34,14 @@ public class UserListAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String createList (String data){
+	public String createList (String data) throws SQLException{
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.createList(temp);
+		}finally {
+			dataBase.closeCon();
+		}
 	}
 	/*Takes JSON containing list info and deletes it from userList table
 	 * @param  data the data inserted
@@ -51,9 +56,14 @@ public class UserListAPI {
 	@Path("delete")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteList (String data) {
+	public String deleteList (String data) throws SQLException {
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.deleteList(temp);
+		}finally {
+			dataBase.closeCon();
+		}
 	}
 	/*Takes JSON containing user and recipe info and insert it into userRecipeList table
 	 * @param  data the data inserted
@@ -69,9 +79,14 @@ public class UserListAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String insertToList (String data){
+	public String insertToList (String data) throws SQLException{
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.insertToList(temp);
+		}finally {
+			dataBase.closeCon();
+		}
 	}
 	/*Takes JSON containing user and recipe info and removes it from userRecipeList table
 	 * @param  data the data inserted
@@ -88,9 +103,15 @@ public class UserListAPI {
 	@Path("remove")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteFromList (String data) {
+	public String deleteFromList (String data) throws SQLException {
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.deletefromList(temp);
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Returns all listname and listid created by user based on username, returns ONLY listnames and listId 
 	 * NO RECIPE INFO 
@@ -100,8 +121,13 @@ public class UserListAPI {
 	@Path("getList/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserList (@PathParam("username")String username) {
-		return dataBase.getUserList(username).toString();
+	public String getUserList (@PathParam("username")String username) throws SQLException {
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
+			return dataBase.getUserList(username).toString();
+		}finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Based on listId, returns info for ONE list with it's listnames and listId and recipe info
 	 * @param  data the data inserted
@@ -110,8 +136,13 @@ public class UserListAPI {
 	@Path("getListInfo/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserListInfo (@PathParam("id") int id) {
-		return dataBase.getUserListInfo(id).toString();
+	public String getUserListInfo (@PathParam("id") int id) throws SQLException {
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
+			return dataBase.getUserListInfo(id).toString();
+		}finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Returns all listname and listid created by user based on username, returns listnames and listId and recipe info
 	 * HAS RECIPE INFO
@@ -121,8 +152,13 @@ public class UserListAPI {
 	@Path("getListInfoAll/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getAllUserList (@PathParam("username")String username) {
+	public String getAllUserList (@PathParam("username")String username) throws SQLException {
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
 		return dataBase.getAllUserListInfo(username).toString();
+		}finally {
+			dataBase.closeCon();
+		}
 	}
 	/*Takes JSON containing user and recipe info and insert it into userFavorite table for that user
 	 * @param  data the data inserted
@@ -136,9 +172,14 @@ public class UserListAPI {
 	@Path("favorites/insert")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String favoritesInsert (String data) {
+	public String favoritesInsert (String data) throws SQLException {
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.favoriteInsert(temp).toString();
+		}finally {
+			dataBase.closeCon();
+		}
 	}
 	/*Takes JSON containing user and recipe info and removes it into userFavorite table for that user
 	 * @param  data the data inserted
@@ -152,9 +193,14 @@ public class UserListAPI {
 	@Path("favorites/delete")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String favoritesDelete (String data) {
+	public String favoritesDelete (String data) throws SQLException {
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.favoriteDelete(temp).toString();	
+		}finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Returns all favorites for a user
 	 * HAS RECIPE INFO
@@ -164,8 +210,14 @@ public class UserListAPI {
 	@Path("favorites/get/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String favoritesGet (@PathParam("username")String username) {
+	public String favoritesGet (@PathParam("username")String username) throws SQLException {
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
 		return dataBase.getUserFavorites(username).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	
 	/*Takes JSON containing user and recipe info and inserts it into likedTable for that user
@@ -180,9 +232,15 @@ public class UserListAPI {
 	@Path("like")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String listLike (String data) {
+	public String listLike (String data) throws SQLException {
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.likeList(temp).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	/*Takes JSON containing user and list info and inserts it into likedTable for that user
 	 * @param  data the data inserted
@@ -195,9 +253,15 @@ public class UserListAPI {
 	@Path("unlike")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String listUnlike (String data) {
+	public String listUnlike (String data) throws SQLException {
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.unlikeList(temp).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Returns all liked list for a user
 	 * HAS RECIPE INFO
@@ -207,7 +271,13 @@ public class UserListAPI {
 	@Path("liked/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String likedGetUser(@PathParam("username")String username) {
+	public String likedGetUser(@PathParam("username")String username) throws SQLException {
+		UserListDatabase dataBase = new UserListDatabase();
+		try {
 		return dataBase.getlikeList(username).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 }

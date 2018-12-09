@@ -1,5 +1,7 @@
 package registration;
 
+import java.sql.SQLException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,8 +16,6 @@ import org.json.JSONObject;
 
 @Path("UserFridge")
 public class UserFridgeAPI {
-	UserFridgeDatabase dataBase = new UserFridgeDatabase();
-	
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String x() {
@@ -35,9 +35,15 @@ public class UserFridgeAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String insertUserHistory (String data){
+	public String insertUserHistory (String data) throws SQLException{
+		UserFridgeDatabase dataBase = new UserFridgeDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.insertUserIngredient(temp);
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	
 	/* Gets a username and returns their entired fridge from UserIngredient table
@@ -47,8 +53,14 @@ public class UserFridgeAPI {
 	@Path("get/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserHistory (@PathParam("username") String username) {
+	public String getUserHistory (@PathParam("username") String username) throws SQLException {
+		UserFridgeDatabase dataBase = new UserFridgeDatabase();
+		try {
 		return dataBase.getUserIngredient(username).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Gets a username and deletes an ingredient from their fridge from UserIngredient table
 	 * @param username user
@@ -59,7 +71,13 @@ public class UserFridgeAPI {
 	@Path("delete/{username}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteUserHistory (@PathParam("username")String username, @QueryParam("ingredient")String ingredient ) {
+	public String deleteUserHistory (@PathParam("username")String username, @QueryParam("ingredient")String ingredient ) throws SQLException {
+		UserFridgeDatabase dataBase = new UserFridgeDatabase();
+		try {
 		return dataBase.deleteUserIngredient(username, ingredient).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 }

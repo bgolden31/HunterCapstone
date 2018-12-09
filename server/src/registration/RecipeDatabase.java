@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -485,5 +486,10 @@ public class RecipeDatabase {
 			JSONObject error = new JSONObject(e);
 			return error;
 		}
+	}
+	public void closeCon() throws SQLException {
+	       if(con != null) {
+	           con.close();
+	        }
 	}
 }

@@ -1,6 +1,7 @@
 package registration;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,11 +20,7 @@ import org.json.JSONObject;
 
 @Path("recipe")
 public class RecipeAPI {
-	RecipeDatabase dataBase = new RecipeDatabase();
-	UserRecipeDatabase UserRecipeDatabase = new UserRecipeDatabase();
-	UserDatabase UserDatabase = new UserDatabase();
-	RatingDatabase RecipeInfoDatabase = new RatingDatabase();
-	
+
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String x() {
@@ -61,24 +58,36 @@ public class RecipeAPI {
 	       {"text" : "egg", "weight": 2 }
 	    ]
 		}
-	 * 
+	 * @throws SQLException 
 	 */
+	
 	@Path("insert")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String insertRecipe (String data){
-		JSONObject temp = new JSONObject(data);
-		String username= temp.getString("username");
-		if(UserDatabase.checkUser(username)) {
-			int recipeID= dataBase.insertrecipe(temp);
-			if (recipeID == -1) {
-				return "Recipe insert fail";
+	public String insertRecipe (String data) throws SQLException {
+		RecipeDatabase dataBase = new RecipeDatabase();
+		UserRecipeDatabase UserRecipeDatabase = new UserRecipeDatabase();
+		UserDatabase UserDatabase = new UserDatabase();
+
+		try {
+			JSONObject temp = new JSONObject(data);
+			String username= temp.getString("username");
+			if(UserDatabase.checkUser(username)) {
+				int recipeID= dataBase.insertrecipe(temp);
+				if (recipeID == -1) {
+					return "Recipe insert fail";
+				}
+				UserRecipeDatabase.insertUserRecipes(recipeID, username);
+				return "recipe Insert success";
 			}
-			UserRecipeDatabase.insertUserRecipes(recipeID, username);
-			return "recipe Insert success";
+			return "User does not exist";
 		}
-		return "User does not exist";
+		finally {
+		  dataBase.closeCon();
+		  UserRecipeDatabase.closeCon();
+		  UserDatabase.closeCon();
+		}
 	}
 	/* Returns json with recipe info based on recipeID
 	 * Calls the getRecipe() function 
@@ -87,8 +96,14 @@ public class RecipeAPI {
 	@Path("get/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getRecipe (@PathParam("id") int recipeid) {
+	public String getRecipe (@PathParam("id") int recipeid) throws SQLException {
+		RecipeDatabase dataBase = new RecipeDatabase();
+		try {
 		return dataBase.getRecipe(recipeid).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Updates a recipe based on recipeID with new JSONObject info 
 	 * Calls the updateRecipe() function 
@@ -100,9 +115,14 @@ public class RecipeAPI {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateRecipe (@PathParam("id") int recipeid, String data) {
+	public String updateRecipe (@PathParam("id") int recipeid, String data) throws SQLException {
+		RecipeDatabase dataBase = new RecipeDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.updateRecipe(recipeid, temp);
+		}finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Deletes a recipe based on recipeID
 	 * Calls the deleteRecipe() function, will delete every trace of the recipe in database 
@@ -112,8 +132,13 @@ public class RecipeAPI {
 	@Path("delete/{id}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteRecipe (@PathParam("id") int recipeid) {
+	public String deleteRecipe (@PathParam("id") int recipeid) throws SQLException {
+		RecipeDatabase dataBase = new RecipeDatabase();
+		try {
 		return dataBase.deleteRecipe(recipeid);
+		}finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Gets all the recipes created by that user
 	 * Calls the getUserRecipe() function 
@@ -123,10 +148,13 @@ public class RecipeAPI {
 	@Path("userRecipe/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserRecipe (@PathParam("username") String username)  { 
+	public String getUserRecipe (@PathParam("username") String username) throws SQLException  { 
 		UserRecipeDatabase userrecipes = new UserRecipeDatabase();
-		JSONArray temp =  userrecipes.getUserRecipes(username);
-		return temp.toString();
+		try {
+		return userrecipes.getUserRecipes(username).toString();
+		}finally {
+			userrecipes.closeCon();
+		}
 	}
 	/* Updates the rating of a recipes for that user based on JSON info
 	 * Calls the updateRecipeInfo() function 
@@ -144,9 +172,14 @@ public class RecipeAPI {
 	@Path("update/rating")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getRecipeRating (String data)  { 
+	public String getRecipeRating (String data) throws SQLException  { 
+		RatingDatabase RecipeInfoDatabase = new RatingDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
-		return RecipeInfoDatabase.updateRecipeInfo(temp) + RecipeInfoDatabase.updateRating(temp);
+		return  RecipeInfoDatabase.updateRecipeInfo(temp) + RecipeInfoDatabase.updateRating(temp);
+		}finally {
+		RecipeInfoDatabase.closeCon();
+		}
 	}
 	/* Deletes the rating of a recipes for that user based on JSON info
 	 * Calls the deleterating and updateRating() function 
@@ -158,13 +191,18 @@ public class RecipeAPI {
 	@Path("delete/rating")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteRecipeRating (String data)  { 
+	public String deleteRecipeRating (String data) throws SQLException  { 
+		RatingDatabase RecipeInfoDatabase = new RatingDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		String temp1= RecipeInfoDatabase.deleteRecipeInfo(temp);
 		if (temp1== "RecipeRating was removed completely") {
 			return "RecipeRating was removed completely, because it only had one or no ratings";
 		}
 		return  temp1 + RecipeInfoDatabase.updateRating(temp);
+		}finally {
+			RecipeInfoDatabase.closeCon();
+		}
 	}
 	/* Gets the rating of a recipes based on recipe Id only works for database recipes
 	 * Calls the getRecipeInfo() function 
@@ -174,8 +212,14 @@ public class RecipeAPI {
 	@Path("get/rating/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getRating (@PathParam("id") int recipeId)  { 
+	public String getRating (@PathParam("id") int recipeId) throws SQLException  { 
+		RatingDatabase RecipeInfoDatabase = new RatingDatabase();
+		try {
 		return RecipeInfoDatabase.getRecipeInfo(recipeId);
+		}
+		finally {
+			RecipeInfoDatabase.closeCon();
+		}
 	}
 	/* Gets the rating of a recipes based on recipename and author
 	 * Calls the getRecipeInfo() function 
@@ -186,8 +230,14 @@ public class RecipeAPI {
 	@Path("get/rating/{recipe}/{author}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getRating (@PathParam("recipe")String recipeName, @PathParam("author")String author)  { 
-		return RecipeInfoDatabase.getRecipeInfo(recipeName, author);
+	public String getRating (@PathParam("recipe")String recipeName, @PathParam("author")String author) throws SQLException  { 
+		RatingDatabase RecipeInfoDatabase = new RatingDatabase();
+		try {
+			return RecipeInfoDatabase.getRecipeInfo(recipeName, author);
+		}
+		finally {
+			RecipeInfoDatabase.closeCon();
+		}
 	}
 	
 	/* Gets all the recipes in DATABASE AND API based on search params, recipes have extra ingredients
@@ -205,9 +255,15 @@ public class RecipeAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String databaseSearchEx (String data) throws JSONException, IOException { 
+	public String databaseSearchEx (String data) throws JSONException, IOException, SQLException { 
+		RecipeDatabase dataBase = new RecipeDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.DBAPISearchEx(temp).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Gets all the recipes that username can make based on their Fridge, recipes have extra ingredients  
 	 * Calls the getUserIngredient to get all their ingredients and build them into on string and passes it to DBAPISearchEx() 
@@ -219,8 +275,10 @@ public class RecipeAPI {
 	@Path("recommended/{username}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String recommendedSearchEx (@PathParam("username") String username, @QueryParam("size")int size) throws JSONException, IOException { 
+	public String recommendedSearchEx (@PathParam("username") String username, @QueryParam("size")int size) throws JSONException, IOException, SQLException { 
 		UserFridgeDatabase IngredientdataBase= new UserFridgeDatabase();
+		RecipeDatabase dataBase = new RecipeDatabase();
+		try {
 		JSONObject Fridge = IngredientdataBase.getUserIngredient(username);
 		JSONArray Ingredient= Fridge.getJSONArray("fridge");
 		String ingredients ="";
@@ -232,6 +290,10 @@ public class RecipeAPI {
 		String data = "{ size:"+ size + ", search: \"" + ingredients + "\" }";
 		JSONObject temp = new JSONObject(data);
 		return dataBase.DBAPISearchEx(temp).toString();
+		}finally {
+			dataBase.closeCon();
+			IngredientdataBase.closeCon();
+		}
 	}
 
 	//UNUSED?
@@ -249,11 +311,17 @@ public class RecipeAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String searchRecipe (String data) throws JSONException, IOException { 
+	public String searchRecipe (String data) throws JSONException, IOException, SQLException { 
+		RecipeDatabase dataBase = new RecipeDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		int size = temp.getInt("size");
 		String q = temp.getString("search");
 			return dataBase.apiSearch(size, q).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Gets all the recipes in DATABASE AND API based on search params, recipes DO NOT have extra ingredients 
 	 * Calls the apiSearch() function, only one word searches allowed
@@ -270,9 +338,14 @@ public class RecipeAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String databaseSearch (String data) throws JSONException, IOException { 
+	public String databaseSearch (String data) throws JSONException, IOException, SQLException { 
+		RecipeDatabase dataBase = new RecipeDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.databaseStrictSearch(temp).toString();
+		}finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Gets all the recipes that username can make based on their Fridge, recipes DONT HAVE extra ingredients  
 	 * Calls the getUserIngredient to get all their ingredients and build them into on string and passes it to databaseStrictSearch() 
@@ -283,8 +356,10 @@ public class RecipeAPI {
 	@Path("recommended/strict/{username}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String recommendedStrictSearch (@PathParam("username") String username, @QueryParam("size")int size) throws JSONException, IOException { 
+	public String recommendedStrictSearch (@PathParam("username") String username, @QueryParam("size")int size) throws JSONException, IOException, SQLException { 
 		UserFridgeDatabase IngredientdataBase= new UserFridgeDatabase();
+		RecipeDatabase dataBase = new RecipeDatabase();
+		try {
 		JSONObject Fridge = IngredientdataBase.getUserIngredient(username);
 		JSONArray Ingredient= Fridge.getJSONArray("fridge");
 		String ingredients ="";
@@ -297,5 +372,10 @@ public class RecipeAPI {
 		System.out.println(data);
 		JSONObject temp = new JSONObject(data);
 		return dataBase.databaseStrictSearch(temp).toString();
+		}finally {
+			dataBase.closeCon();
+			IngredientdataBase.closeCon();
+		}
 	}
+
 }

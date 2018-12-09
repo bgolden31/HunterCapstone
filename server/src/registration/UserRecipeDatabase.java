@@ -2,6 +2,8 @@ package registration;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,5 +48,10 @@ public class UserRecipeDatabase {
 		}catch(Exception e) {
 			System.out.println(e);
 		}		
+	}
+	public void closeCon() throws SQLException {
+	       if(con != null) {
+	           con.close();
+	        }
 	}
 }

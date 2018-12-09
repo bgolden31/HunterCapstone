@@ -3,6 +3,7 @@ package registration;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.json.JSONObject;
 
@@ -16,15 +17,17 @@ public class RatingDatabase {
 	 * @param  data the JSON containing user, recipe name, author, rating and recipeId
 	 * @returns Success/Failure/error and updated rating
 	 */
-	public String updateRecipeInfo(JSONObject data) {
+	public String updateRecipeInfo(JSONObject data) throws SQLException {
 		String sql = "select * from recipeRating where username =? AND recipe_name = ? AND  author = ? AND recipeId = ?";
+		PreparedStatement st= null;
+		ResultSet rs =null;
 		try {
-			PreparedStatement st = con.prepareStatement(sql);
+			st = con.prepareStatement(sql);
 			st.setString(1, data.getString("username"));
 			st.setString(2, data.getString("recipeName"));
 			st.setString(3, data.getString("author"));
 			st.setInt(4, data.getInt("recipeId"));
-			ResultSet rs = st.executeQuery();
+			rs = st.executeQuery();
 			if (rs.next()) {
 			    do {
 			    	sql = "UPDATE recipeRating SET rating= ? where username =? AND recipe_name = ? AND  author = ? AND recipeId = ?";
@@ -49,11 +52,13 @@ public class RatingDatabase {
 				st2.executeUpdate();
 				st2.close();
 			}
-			return "RecipeRating insert success";
+			rs.close();
+			st.close();
 		}catch(Exception e) {
 			System.out.println(e);
 			return e.toString(); //Returns the error related
 		}
+		return "RecipeRating insert success";
 	}
 	/* Updates the overall Recipes rating based on JSONObject info and updates it in recipeInfo table
 	 * If rating does not exist, it creates one and calculates accordingly
@@ -61,14 +66,16 @@ public class RatingDatabase {
 	 * @param  data the JSON containing recipe name, author, and recipeId
 	 * @returns Success/Failure/error and updated rating
 	 */
-	public String updateRating(JSONObject data) {
+	public String updateRating(JSONObject data) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		try {	
 			String sql = "select * from recipeRating where recipe_name = ? AND  author = ? AND recipeId = ?";
-			PreparedStatement st = con.prepareStatement(sql);
+			st = con.prepareStatement(sql);
 			st.setString(1, data.getString("recipeName"));
 			st.setString(2, data.getString("author"));
 			st.setInt(3, data.getInt("recipeId"));
-			ResultSet rs = st.executeQuery();
+			rs = st.executeQuery();
 			double sum = 0;
 			double count=0;
 			while(rs.next()) {
@@ -76,6 +83,7 @@ public class RatingDatabase {
 				count++;
 			}
 			double average = sum/count;
+			System.out.println("lol");
 			sql = "SELECT * FROM recipeInfo WHERE recipe_name = ? AND author = ? AND recipeId = ?";
 			st = con.prepareStatement(sql);
 			st.setString(1, data.getString("recipeName"));
@@ -117,10 +125,12 @@ public class RatingDatabase {
 	 * @param  data the JSON containing recipe name, author, and recipeId
 	 * @returns Success/Failure/error and updated rating
 	 */
-	public String deleteRecipeInfo(JSONObject data) {
+	public String deleteRecipeInfo(JSONObject data) throws SQLException {
 		String sql = "delete from recipeRating where username = ? AND recipe_name = ? AND  author = ? AND recipeId = ?";
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		try {
-			PreparedStatement st = con.prepareStatement(sql);
+			st = con.prepareStatement(sql);
 			st.setString(1, data.getString("username"));
 			st.setString(2, data.getString("recipeName"));
 			st.setString(3, data.getString("author"));
@@ -130,7 +140,7 @@ public class RatingDatabase {
 			sql = "select * from recipeRating where recipeId = ?";
 			PreparedStatement st2 = con.prepareStatement(sql);
 			st2.setInt(1, data.getInt("recipeId"));
-			ResultSet rs = st2.executeQuery();
+			rs = st2.executeQuery();
 			if (!rs.next()) {
 				System.out.println("DELETED");
 				sql = "delete from recipeInfo WHERE recipe_name = ? AND  author = ? AND recipeId = ?";
@@ -139,8 +149,11 @@ public class RatingDatabase {
 					st3.setString(2, data.getString("author"));
 					st3.setInt(3, data.getInt("recipeId"));
 					st3.executeUpdate();
+					st2.close();
+					st3.close();
 					return "RecipeRating was removed completely";
 			}
+			st2.close();
 			return "RecipeRating delete success";
 		}catch(Exception e) {
 			System.out.println(e);
@@ -152,21 +165,22 @@ public class RatingDatabase {
 	 * @param  data the JSON containing recipe name, author, and recipeId
 	 * @returns Success/Failure/error
 	 */
-	public String deleteRecipeInfoAll(JSONObject data) {
+	public String deleteRecipeInfoAll(JSONObject data) throws SQLException {
 		try {
 			String sql = "delete from recipeInfo WHERE recipe_name = ? AND  author = ? AND recipeId = ?";
-	    	PreparedStatement  st3 = con.prepareStatement(sql);
+	    	PreparedStatement st3 = con.prepareStatement(sql);
 			st3.setString(1, data.getString("recipeName"));
 			st3.setString(2, data.getString("author"));
 			st3.setInt(3, data.getInt("recipeId"));
 			st3.executeUpdate();
-			
+			st3.close();
 			sql = "delete from recipeRating where AND recipe_name = ? AND  author = ? AND recipeId = ?";
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, data.getString("recipeName"));
 			st.setString(2, data.getString("author"));
 			st.setInt(3, data.getInt("recipeId"));
 			st.executeUpdate();
+			st.close();
 			return "RecipeRatings Info was removed completely";
 		}catch(Exception e) {
 			System.out.println(e);
@@ -179,20 +193,20 @@ public class RatingDatabase {
 	 * @param  recipeId the recipeId
 	 * @returns Success/Failure/error
 	 */	
-	public String getRecipeInfo(int recipeId) {
-		
+	public String getRecipeInfo(int recipeId) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM recipeInfo WHERE recipeId = ?";
-			PreparedStatement st = con.prepareStatement(sql);
+			st = con.prepareStatement(sql);
 			st.setInt(1, recipeId);
-			ResultSet rs = st.executeQuery();
+			rs = st.executeQuery();
 			if(rs.next()) {
 				JSONObject recipeInfo = new JSONObject();
 				recipeInfo.put("recipeName", rs.getString(1));
 				recipeInfo.put("author", rs.getString(2));
 				recipeInfo.put("recipeId", rs.getInt(3));
 				recipeInfo.put("rating",rs.getDouble(4));
-				st.close();
 				return recipeInfo.toString();
 			}
 			return "No ratings found";
@@ -207,13 +221,15 @@ public class RatingDatabase {
 	 * @param  author the authors name
 	 * @returns Success/Failure/error
 	 */	
-	public String getRecipeInfo(String recipename, String author) {
+	public String getRecipeInfo(String recipename, String author) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM recipeInfo WHERE recipe_name = ? AND author = ?";
-			PreparedStatement st = con.prepareStatement(sql);
+			st = con.prepareStatement(sql);
 			st.setString(1, recipename);
 			st.setString(2, author);
-			ResultSet rs = st.executeQuery();
+			rs = st.executeQuery();
 			if(rs.next()) {
 				JSONObject recipeInfo = new JSONObject();
 				recipeInfo.put("recipeName", rs.getString(1));
@@ -229,5 +245,9 @@ public class RatingDatabase {
 			return e.toString(); //Returns the error related
 		}
 	}
-	
+	public void closeCon() throws SQLException {
+	       if(con != null) {
+	           con.close();
+	        }
+	}
 }

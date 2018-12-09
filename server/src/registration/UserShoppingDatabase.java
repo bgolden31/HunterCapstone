@@ -3,6 +3,7 @@ package registration;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -85,5 +86,10 @@ public class UserShoppingDatabase {
 			System.out.println(e);
 			return e.toString(); //Returns the error related
 		}
+	}
+	public void closeCon() throws SQLException {
+	       if(con != null) {
+	           con.close();
+	        }
 	}
 }

@@ -5,12 +5,14 @@ import security.PasswordUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.json.JSONObject;
 
 public class UserDatabase {
 	
 	private Connection con= DataBaseConnector.connect();
-	
+	public UserDatabase() {}
 	/* Registers a users based on JSON info and adds their info into user table 
 	 * Calls password hashing functions to encrypt password
 	 * @param  user JSON containing user info
@@ -194,5 +196,11 @@ public class UserDatabase {
 				System.out.println(e);
 			}
 		return false;
-		}
+	}
+	
+	public void closeCon() throws SQLException  {
+       if(con != null) {
+           con.close();
+        }
+	}
 }

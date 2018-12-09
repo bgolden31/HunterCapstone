@@ -1,5 +1,7 @@
 package registration;
 
+import java.sql.SQLException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -35,9 +37,15 @@ public class UserShoppingAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String insertUserHistory (String data){
+	public String insertUserHistory (String data) throws SQLException{
+		UserShoppingDatabase dataBase = new UserShoppingDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.insertUserShopping(temp);
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Gets a username and returns their entired Shopping list from UserShopping table
 	 * @param username user
@@ -46,8 +54,14 @@ public class UserShoppingAPI {
 	@Path("get/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserHistory (@PathParam("username") String username) {
-		return dataBase.getUserShopping(username).toString();
+	public String getUserHistory (@PathParam("username") String username) throws SQLException {
+		UserShoppingDatabase dataBase = new UserShoppingDatabase();
+		try {
+			return dataBase.getUserShopping(username).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Gets a username and deletes an ingredient from UserShopping table
 	 * @param username user
@@ -58,9 +72,13 @@ public class UserShoppingAPI {
 	@Path("delete/{username}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteUserHistory (@PathParam("username")String username, @QueryParam("ingredient")String ingredient ) {
-		System.out.println(username);
-		System.out.println(ingredient);
+	public String deleteUserHistory (@PathParam("username")String username, @QueryParam("ingredient")String ingredient ) throws SQLException {
+		UserShoppingDatabase dataBase = new UserShoppingDatabase();
+		try {
 		return dataBase.deleteUserShopping(username, ingredient).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 }

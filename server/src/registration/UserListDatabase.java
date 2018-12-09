@@ -3,6 +3,7 @@ package registration;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -390,5 +391,10 @@ public class UserListDatabase {
 			JSONArray error = new JSONArray(e);
 			return error;
 		}
+	}
+	public void closeCon() throws SQLException {
+	       if(con != null) {
+	           con.close();
+	        }
 	}
 }

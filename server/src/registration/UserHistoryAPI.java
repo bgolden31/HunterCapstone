@@ -1,5 +1,7 @@
 package registration;
 
+import java.sql.SQLException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,8 +16,6 @@ import org.json.JSONObject;
 
 @Path("UserHistory")
 public class UserHistoryAPI {
-	UserHistoryDatabase dataBase = new UserHistoryDatabase();
-	
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String x() {
@@ -39,9 +39,15 @@ public class UserHistoryAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String insertUserHistory (String data){
+	public String insertUserHistory (String data) throws SQLException{
+		UserHistoryDatabase dataBase = new UserHistoryDatabase();
+		try {
 		JSONObject temp = new JSONObject(data);
 		return dataBase.insertUserHistory(temp);
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	
 	/* Gets a username and returns their entired viewed history from UserHistory table
@@ -50,8 +56,14 @@ public class UserHistoryAPI {
 	@Path("get/{username}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserHistory (@PathParam("username") String username) {
+	public String getUserHistory (@PathParam("username") String username) throws SQLException {
+		UserHistoryDatabase dataBase = new UserHistoryDatabase();
+		try {
 		return dataBase.getUserHistory(username).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 	/* Deletes recipe from userHistory based on username and recipename
 	 * @param  username user
@@ -61,7 +73,13 @@ public class UserHistoryAPI {
 	@Path("delete/{username}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteUserHistory (@PathParam("username")String username, @QueryParam("recipe")String recipe) {
+	public String deleteUserHistory (@PathParam("username")String username, @QueryParam("recipe")String recipe) throws SQLException {
+		UserHistoryDatabase dataBase = new UserHistoryDatabase();
+		try {
 		return dataBase.deleteUserHistory(username, recipe).toString();
+		}
+		finally {
+			dataBase.closeCon();
+		}
 	}
 }

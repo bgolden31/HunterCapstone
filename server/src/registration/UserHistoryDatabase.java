@@ -3,6 +3,7 @@ package registration;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,7 +14,7 @@ public class UserHistoryDatabase {
 	/*Takes JSON info and insert it into userHistory table
 	 * @param  JSON the data inserted
 	 * @return Insert success/failure/error   */
-	public String insertUserHistory(JSONObject data) {
+	public String insertUserHistory(JSONObject data) throws SQLException {
 		try {	
 			String sql = "insert into userHistory (username, recipe_name, author, recipeId) value (?,?,?,?)";
 			PreparedStatement st2 = con.prepareStatement(sql);
@@ -28,29 +29,37 @@ public class UserHistoryDatabase {
 			System.out.println(e);
 			return e.toString(); //Returns the error related
 		}
+		finally {
+			con.close();
+		}
 	}	
 	/* Gets all the recipe viewed by user in userHistory table
 	 * Calls helper function buildHistoryObject ()
 	 * @param  username user
 	 * @return JSONArray of all the recipes viewed by user   */
-	public JSONArray getUserHistory(String username) {
+	public JSONArray getUserHistory(String username) throws SQLException {
 		System.out.println(username);
 		String sql = "select * from userHistory where username = ? ORDER BY lastUpdated ASC";
+		JSONArray  userHistory = new JSONArray(); 
 		try {
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1, username);
 			ResultSet rs = st.executeQuery();
-			JSONArray  userHistory = new JSONArray(); 
+			
 			
 			while (rs.next()) {
 				userHistory.put( buildHistoryObject ( rs.getString(2),rs.getString(3) , rs.getInt(4) ));	
 			}
 			st.close();
-		    return userHistory;
+		    
 		}catch(Exception e) {
 			System.out.println(e);
-		}		
-		return null;
+			return null;
+		}
+		finally {
+			con.close();
+		}
+		return userHistory;
 	}	
 	/* Helper function for getUserHistory, to build an object to fill history array
 	 * @param  username user
@@ -81,5 +90,10 @@ public class UserHistoryDatabase {
 			System.out.println(e);
 			return e.toString(); //Returns the error related
 		}
+	}
+	public void closeCon() throws SQLException {
+	       if(con != null) {
+	           con.close();
+	        }
 	}
 }
