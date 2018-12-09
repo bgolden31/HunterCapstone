@@ -70,7 +70,7 @@ export class NewpageComponent implements OnInit {
  */
 
   goToPage(stuff) {
-    if (this.cookieService.get('username') != null) {
+    if (this.cookieService.check('username')) {
       this.recipe.author = stuff.author;
       this.recipe.recipeId = -1;
       this.recipe.recipeName = stuff.label;
