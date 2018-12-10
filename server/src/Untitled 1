@@ -1,0 +1,77 @@
+SEE RECIPEAPI
+{
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/insert	
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/get/{id}
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/update/{id}
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/delete/{id}
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/userRecipe/{username}
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/update/rating
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/delete/rating
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/get/rating/{id}
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/get/rating/{recipe}/{author}
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/search
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/recommended/{username}?size={size}
+	
+	//UNUSED?
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/search/api
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/strict/database
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/recipe/recommended/strict/{username}?size={size}
+}
+
+USER API {
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/user/login
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/user/register
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/user/delete/{username}
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/user/update/{username}
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/user/refresh/{username}
+}
+
+FRIDGEAPI{
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/userFridge/insert
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/userFridge/get/{username}
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/userFridge/delete/{username}?ingredient={ingredient}
+}
+
+ShoppingListAPI{
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserShopping/insert
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserShopping/get/{username}
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserShopping/delete/{username}?ingredient={ingredient}
+}
+
+UserHistoryAPI{
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserHistory/insert
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserHistory/get/{username}
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserHistory/delete/{username}?recipe={recipe}
+}
+
+UserListAPI{
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/create
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/delete
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/insert
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/remove
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/getList/{username} //Possibly useless? @see getListInfoAll instead
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/getListInfo/{id}
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/getListInfoAll/{username}
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/favorites/insert
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/favorites/delete
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/favorites/get/{username}
+	
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/like
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/unlike
+	http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/list/liked/{username}
+	
+}
