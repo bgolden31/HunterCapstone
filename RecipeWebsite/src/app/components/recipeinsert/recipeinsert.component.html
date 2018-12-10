@@ -1,0 +1,31 @@
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">       
+            <div class="col-md-6 offset-md-3">
+                <h3>Enter Your Recipe:</h3>
+  
+          <div class="form-group">
+                        <input type="text" class="form-control" id="username" [(ngModel)]="username" placeholder="Username">
+                        <input type="text" class="form-control" id="name" [(ngModel)]="name" placeholder="Recipe Name">
+                        <input type="text" class="form-control" id="desc" [(ngModel)]="desc" placeholder="Recipe Description">
+                        <input type="text" class="form-control" id="time" [(ngModel)]="time" placeholder="How long does it take to make?">
+                        <input type="text" class="form-control" id="servings" [(ngModel)]="servings" placeholder="How many servings does it produce?">
+                        <input type="text" class="form-control" id="calories" [(ngModel)]="calories" placeholder="How many calories in each serving?">
+                        <input type="text" class="form-control" id="link" [(ngModel)]="link" placeholder="Do you have a picture link?">
+                        <input type="text" class="form-control" id="url" [(ngModel)]="url" placeholder="Do you have a URL to locate this recipe?">
+                        <input type="text" class="form-control" id="fat" [(ngModel)]="fat" placeholder="How much fat?">
+                        <input type="text" class="form-control" id="sugar" [(ngModel)]="sugar" placeholder="How much sugar?">
+                        <input type="text" class="form-control" id="protein" [(ngModel)]="protein" placeholder="How much protein?">
+                        <input type="text" class="form-control" id="fiber" [(ngModel)]="fiber" placeholder="How much fiber?">
+                        <input type="text" class="form-control" id="sodium" [(ngModel)]="sodium" placeholder="How much sodium?">
+                        <input type="text" class="form-control" id="chol" [(ngModel)]="chol" placeholder="How much cholesterol?">
+                        <input type="text" class="form-control" id="carbs" [(ngModel)]="carbs" placeholder="How many carbs?"> <br>
+                        <input type="text" class="form-control" id="ingredient" [(ngModel)]="ingredient" placeholder="Ingredient">
+                        <input type="text" class="form-control" id="amount" [(ngModel)]="amount" placeholder="How much?">
+
+                        <button type="button" (click)="addIngredient()" class="btn btn-primary">Add Ingredient</button> <br><br><br>
+                        <button type="button" (click)="createRecipe()" class="btn btn-primary btn-lg">Create Recipe</button>
+          </div>
+        </div>
+    </div>
+  </div><br> <br>

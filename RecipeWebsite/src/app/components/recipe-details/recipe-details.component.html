@@ -1,0 +1,34 @@
+  <br>
+  <div style="text-align:center;">
+    <h2>{{ recipe.label }} </h2>
+    <img *ngIf="isThereImage()" [src]=recipe.image> <br><br>
+    <div *ngIf="isThereUrl()">
+      This recipe can be found from {{ recipe.author }} at {{ recipe.url }}. <br><br>
+    </div>
+  </div>
+
+  This recipe produces {{ recipe.servings }} servings. <br><br>
+  There are {{ recipe.calories }} calories in this recipe. <br><br>
+  <div *ngIf="recipe.totalTime > 0">
+    This recipe takes {{ recipe.totalTime | number : '1.1-1' }} hours to make. 
+    <br><br> 
+  </div>
+
+  The recipe requires the following ingredients:
+  <div *ngFor="let ing of recipe?.ingredients">
+      <ul>
+        <li>{{ ing.text }}</li>
+        <button type="button" (click)="addIngredientToCart(ing.text)" class="btn btn-primary btn-sm">Add ingredient to shopping cart.</button>
+      </ul>
+  </div>
+
+  <div *ngIf="recipe.recipeId != -1">
+  The rating is {{ recipe.rating }}. Rate recipe? <br>
+  <button type="button" (click)="rateRecipe(1)" class="btn btn-primary btn-sm">1</button>
+  <button type="button" (click)="rateRecipe(2)" class="btn btn-primary btn-sm">2</button>
+  <button type="button" (click)="rateRecipe(3)" class="btn btn-primary btn-sm">3</button>
+  <button type="button" (click)="rateRecipe(4)" class="btn btn-primary btn-sm">4</button>
+  <button type="button" (click)="rateRecipe(5)" class="btn btn-primary btn-sm">5</button>
+</div>
+
+<br><br><br><br><br><br><br>

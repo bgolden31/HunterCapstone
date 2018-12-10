@@ -1,6 +1,13 @@
-<div style="text-align:center">
-  <h1>
-    <a routerLink="/test"><button class="btn btn-success pull-right" > Add Customer</button></a>
-  </h1>
+<div>
+    <p>RECIPE IN PROGRESS</p>
 
+    <img src="assets/boo.png"> <br><br>
+
+      <button type="button" [routerLink]="['/search']" class="btn btn-primary btn-lg">Search Recipes</button> <br><br>
+      <button type="button" *ngIf="!loggedIn" [routerLink]="['/register']" class="btn btn-primary btn-lg">Register an Account</button> <br><br>
+      <button type="button" *ngIf="!loggedIn" [routerLink]="['/login']" class="btn btn-primary btn-lg">Login</button>
 </div>
+
+
+
+
