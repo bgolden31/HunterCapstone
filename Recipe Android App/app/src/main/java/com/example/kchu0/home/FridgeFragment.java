@@ -241,6 +241,7 @@ public class FridgeFragment extends Fragment {
             //return result;
             //call method to handle after verification
             mAuthTask = null;
+            editText.setText("");
             Toast.makeText(getContext(), "Added!", Toast.LENGTH_SHORT).show();
             showProgress(false);
         }
@@ -363,7 +364,7 @@ public class FridgeFragment extends Fragment {
         @Override
         protected String doInBackground(String... arg0) {
             try {
-                URL url = new URL("http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/userFridge/delete/" + mUsername + "?ingredient=" + mIngredient); // here is your URL path
+                URL url = new URL("http://recipe-env.3ixtdbsqwn.us-east-2.elasticbeanstalk.com/UserFridge/delete/" + mUsername + "?ingredient=" + mIngredient); // here is your URL path
 
                 JSONObject postDataParams = new JSONObject();
                 //add name pair values to the connection
@@ -476,6 +477,7 @@ public class FridgeFragment extends Fragment {
                         mDeleteTask = new DeleteFridgeTask(Username, temp);
                         mDeleteTask.execute((String) "hello");
                         Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+                        arrayList.clear();
                         mLoadTask = new LoadFridgeTask(Username);
                         mLoadTask.execute((String) "hello");
                     }});
