@@ -25,7 +25,7 @@
             android:id="@+id/shopping_list"
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
-            android:text="Shoping List"
+            android:text="Shopping List"
             android:paddingTop="15dp"
             android:paddingLeft="15dp"
             android:fontFamily="@font/caviardreams"
