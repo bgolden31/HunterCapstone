@@ -141,7 +141,7 @@ public class SearchFragment extends Fragment implements MaterialSearchBar.OnSear
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-    // Start the activity, the intent will be populated with the speech text
+        // Start the activity, the intent will be populated with the speech text
         startActivityForResult(intent, SPEECH_REQUEST_CODE);
     }
 
@@ -155,7 +155,7 @@ public class SearchFragment extends Fragment implements MaterialSearchBar.OnSear
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
+                                 Intent data) {
         if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
             List<String> results = data.getStringArrayListExtra(
                     RecognizerIntent.EXTRA_RESULTS);
@@ -427,7 +427,6 @@ public class SearchFragment extends Fragment implements MaterialSearchBar.OnSear
             e.printStackTrace();
         }
     }
-
 
 
 }
