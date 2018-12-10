@@ -1,3 +1,9 @@
+/**
+* XML file take/refrence by 
+JayDoesCode (https://www.youtube.com/watch?v=CCpY66soGuE)
+
+*/
+
 package com.example.kchu0.home;
 
 import android.animation.Animator;
